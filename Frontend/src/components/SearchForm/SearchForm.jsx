@@ -13,8 +13,12 @@ export default function SearchForm({ query, onQueryChange, onSearch }) {
   function submit(event) {
     event.preventDefault();
     if (pending) return;
-    if (!query.trim()) {
-      setError('Enter a food name, such as rolled oats.');
+    if (!query.trim() || query.length > 100) {
+      setError(
+        query.length > 100
+          ? 'Use at most 100 search characters, then search again.'
+          : 'Enter a food name, such as rolled oats.',
+      );
       formRef.current.querySelector('input').focus();
       return;
     }

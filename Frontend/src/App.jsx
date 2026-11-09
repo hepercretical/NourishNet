@@ -15,6 +15,7 @@ const liveTitles = {
   recover: 'Recover account',
   reset: 'Reset password',
   dashboard: 'Your daily diary',
+  search: 'Search foods',
 };
 
 export default function App() {

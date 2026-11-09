@@ -18,6 +18,22 @@ function SearchHarness({ onSearch }) {
   return <SearchForm query={query} onQueryChange={setQuery} onSearch={onSearch} />;
 }
 
+it('associates the search length limit with the field and keeps the text for correction', async () => {
+  const user = userEvent.setup();
+  const onSearch = vi.fn();
+  render(<SearchHarness onSearch={onSearch} />);
+  const input = screen.getByRole('searchbox');
+  await user.type(input, `${'a'.repeat(101)}{Enter}`);
+  expect(input).toHaveFocus();
+  expect(input).toHaveAttribute('aria-invalid', 'true');
+  expect(input).toHaveAccessibleDescription(/100 search characters/);
+  expect(input).toHaveValue('a'.repeat(101));
+  expect(onSearch).not.toHaveBeenCalled();
+  await user.clear(input);
+  await user.type(input, `${'a'.repeat(100)}{Enter}`);
+  expect(onSearch).toHaveBeenCalledExactlyOnceWith('a'.repeat(100));
+});
+
 it('focuses a visible field error for an empty search and searches with Enter', async () => {
   const user = userEvent.setup();
   const onSearch = vi.fn();

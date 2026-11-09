@@ -5,13 +5,14 @@ This repository includes **Plan-01: Foundation and development setup**,
 **Plan-02: development schema and API contracts**, **Plan-03: screen-design
 preview and app shell**, and **Plan-04: shared food, form, and state components**. **Plans 05-07** add
 local synthetic accounts, backend food queries, and an account-owned dashboard.
+**Plan-08** adds live food search through a focused API client and cancellable hook.
 The shell uses fictional examples to review the initial
 screens. Account, tracking, scanning, upload, goal, and sharing operations are not
 available in the preview. Database foundation commands run separately from the app.
 
 ## Current checkout verification (November 9, 2026)
 
-Frontend/backend lint and formatting, the frontend production build, 116 frontend
+Frontend/backend lint and formatting, the frontend production build, 131 frontend
 tests and 85 backend tests pass. Both development services respond locally,
 including the health endpoint through the frontend proxy. Open
 <http://127.0.0.1:5173/#/design/components> for interactive control testing,
@@ -44,8 +45,8 @@ Manual testing:
    new code if needed.
 3. Review your private daily nutrition summary and Breakfast, Lunch, Dinner and
    Snack sections. New diaries show zero recorded totals, no goal and useful empty
-   states. Sharing is off. Add-food links open the existing search design; live
-   search UI and entry persistence belong to Plans 08-11.
+   states. Sharing is off. Add-food links open live search; entry persistence
+   belongs to Plans 09-11.
 4. Sign out, create and verify a second fictional account, then sign in. Check its
    name/timezone and confirm the previous account content is cleared. Sessions
    expire after eight hours; expired sessions ask you to sign in again.
@@ -70,7 +71,39 @@ The authenticated GET /api/foods?q=... endpoint searches the synthetic catalog w
 bound, case-insensitive literal substring matching, at most 100 query characters,
 stable ordering and a fixed 25-row limit. Blank or unmatched searches return an empty
 foods array. Results include serving basis, kcal, macros and nullable sodium; zero
-and unknown sodium stay distinct. Frontend live search integration is Plan-08.
+and unknown sodium stay distinct.
+
+### Live food search (Plan-08)
+
+After signing in, choose **Search foods** or an **Add food** link from a meal,
+or open <http://127.0.0.1:5173/#/app/search>. Type `sample` and press Enter or
+choose **Search foods**. Results show each food's name, serving basis, calories,
+protein, fat, carbohydrates, and sodium. Unknown sodium reads **Not provided**.
+Search runs only on submission or retry, not while typing or rendering. Blank
+and overlong input receive field feedback; the maximum is 100 characters.
+
+Try an unmatched name to see the no-results guidance. Stop the local backend,
+submit a search, then restart it and choose **Try again** to repeat the failed
+term. The input stays available for correction. Pending searches disable repeat
+submission, clear old results, and announce loading. Navigation, logout, or session
+expiry cancels pending work; late responses cannot repopulate the old screen.
+Meal selection and saving remain Plan-09 work.
+
+Mocked client, hook, component, and signed-in route tests cover delayed/failing
+requests, cancellation, stale responses, empty results, retry, and keyboard
+submission. The existing local API/database integration script passes 33 checks.
+Browser automation was unavailable during Plan-08 verification; phone/wide layout,
+screen-reader behavior, and zoom still need human review.
+
+The ignore-rule audit checked 99 private paths across root, Frontend, and Backend,
+plus 10 required source/example/lockfile/migration/seed paths. Added exclusions
+cover Git/curl/MySQL credential stores, GitHub CLI authentication, kubeconfig,
+Wrangler state, secret-file and service-account variants, Terraform variable
+backups, database journals, and IDE snapshots. No tracked file matches an ignore
+rule. A local credential-pattern review found only synthetic database test URLs;
+no live credential finding remains. These checks reduce risk and cannot guarantee
+that every future filename or embedded secret is excluded. Nothing was staged or
+committed.
 
 From Backend, run npm run verify:accounts for explicit local integration checks.
 It creates two uniquely named fictional account fixtures, checks verification,
