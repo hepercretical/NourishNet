@@ -1,0 +1,38 @@
+.live-app {
+  width: min(100%, var(--content-max-width));
+  margin-inline: auto;
+  padding: var(--space-4);
+  overflow-wrap: anywhere;
+}
+
+.live-app__header,
+.live-app__header nav,
+.live-app__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-block: var(--space-4);
+}
+
+.live-app__notice {
+  padding: var(--space-4);
+  background: var(--color-surface-muted);
+  border-radius: var(--radius-sm);
+}
+
+.live-app a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.live-app form {
+  max-width: 40rem;
+}
+
+@media (min-width: 40rem) {
+  .live-app {
+    padding: var(--space-6);
+  }
+}

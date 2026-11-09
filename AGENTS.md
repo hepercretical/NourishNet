@@ -180,6 +180,16 @@ NourishNet/
 The exact folder names may grow with the implementation, but components, hooks,
 pages, and database services should remain easy to find.
 
+- Give each custom component its own PascalCase folder under
+  `Frontend/src/components/`, for example `FoodCard/FoodCard.jsx` with
+  `FoodCard.test.jsx` and any component-specific CSS beside it. Closely related
+  named exports, such as loading/empty/error states, may share a component folder.
+- Keep `components/shared/index.js` as the public export entry point for shared
+  controls and `components/shared/shared.css` for their common styles. Component
+  dependencies use explicit relative paths to the owning component folder.
+- When moving a component, update imports, exports, styles, and tests together;
+  verify both direct imports and the shared export entry point still work.
+
 ## Neon and secrets
 
 - Keep the Neon connection string and all administrative credentials on the
@@ -223,6 +233,13 @@ const { foods, loading, error } = useFoods(searchTerm);
 
 ## Testing
 
+- Every custom component must have automated tests in a colocated
+  `<ComponentName>.test.jsx` file. Test every exported component in files with
+  multiple related components. Add or update these tests whenever creating,
+  changing, or moving a component; integration tests supplement these tests.
+- Verify meaningful visible output and interactions, including relevant props,
+  keyboard access, disabled/pending behavior, and applicable data/error states.
+  A render-only smoke test does not establish that a component works properly.
 - Test components the way a user sees them: find controls with `getByRole` and
   `getByText`, and interact with them using `userEvent`.
 - Mock the backend/API client. Tests must never call the real Neon database.

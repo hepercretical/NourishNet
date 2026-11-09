@@ -7,6 +7,7 @@ export const migrationNames = [
   '003_submissions.sql',
   '004_goals.sql',
   '005_connections.sql',
+  '006_local_accounts.sql',
 ];
 
 export async function loadMigration(name) {

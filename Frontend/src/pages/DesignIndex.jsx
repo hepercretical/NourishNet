@@ -5,6 +5,11 @@ export default function DesignIndex() {
     <>
       <h1 tabIndex={-1}>All screen designs</h1>
       <p>
+        <a className="design-action" href="#/app">
+          Open local accounts and diary
+        </a>
+      </p>
+      <p>
         Plan-03 review map. Open each screen, follow its preview links, and select each design
         state. Disabled controls show future operations without collecting data.
       </p>

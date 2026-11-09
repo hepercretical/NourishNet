@@ -1,8 +1,12 @@
 import { createServer } from 'node:http';
 import { handleHealth } from './routes/health.js';
+import { accountRoutes } from './routes/accounts.js';
+import { localServices } from './services/local.js';
 
-export function createApp() {
-  return createServer((request, response) => {
+export function createApp({ services, origin = 'http://127.0.0.1:5173' } = {}) {
+  let active = services;
+  const handleAccounts = accountRoutes({ getServices: () => (active ??= localServices()), origin });
+  const server = createServer(async (request, response) => {
     response.setHeader('Content-Type', 'application/json; charset=utf-8');
     response.setHeader('Cache-Control', 'no-store');
 
@@ -13,7 +17,11 @@ export function createApp() {
       return;
     }
 
+    if (await handleAccounts(request, response, new URL(request.url, 'http://localhost'))) return;
+
     response.writeHead(404);
     response.end(JSON.stringify({ error: 'Not found' }));
   });
+  server.on('close', () => active?.close?.());
+  return server;
 }

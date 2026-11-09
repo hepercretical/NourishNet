@@ -11,6 +11,7 @@ export default defineConfig({
   },
   build: { sourcemap: false },
   test: {
+    css: { include: /\.css/ },
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.js'],
     clearMocks: true,

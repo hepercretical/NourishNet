@@ -6,7 +6,7 @@ import {
   FoodExample,
   SharingExample,
   UploadExample,
-} from '../components/DesignExamples.jsx';
+} from '../components/DesignExamples/DesignExamples.jsx';
 import './ScreenDesign.css';
 
 const states = ['Example', 'Loading', 'Error', 'Empty', 'Validation', 'Success'];

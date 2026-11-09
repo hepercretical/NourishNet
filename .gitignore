@@ -138,6 +138,9 @@ backups/
 exports/
 private-fixtures/
 private-artifacts/
+outbox/
+auth-data/
+session-data/
 # Plan-specific review contracts stay local at the developer's request.
 contracts/
 .auth/

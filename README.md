@@ -2,10 +2,81 @@
 
 NourishNet is a mobile-first calorie and macronutrient tracker for adults 18+.
 This repository includes **Plan-01: Foundation and development setup**,
-**Plan-02: development schema and API contracts**, and the **Plan-03 screen-design
-preview and app shell**. The shell uses fictional examples to review the initial
+**Plan-02: development schema and API contracts**, **Plan-03: screen-design
+preview and app shell**, and **Plan-04: shared food, form, and state components**. **Plans 05-07** add
+local synthetic accounts, backend food queries, and an account-owned dashboard.
+The shell uses fictional examples to review the initial
 screens. Account, tracking, scanning, upload, goal, and sharing operations are not
 available in the preview. Database foundation commands run separately from the app.
+
+## Current checkout verification (November 9, 2026)
+
+Frontend/backend lint and formatting, the frontend production build, 116 frontend
+tests and 85 backend tests pass. Both development services respond locally,
+including the health endpoint through the frontend proxy. Open
+<http://127.0.0.1:5173/#/design/components> for interactive control testing,
+<http://127.0.0.1:5173/#/design> for the screen map, or
+<http://127.0.0.1:5173/#/development> for the API check.
+
+Local PostgreSQL 18.6 is now running only on 127.0.0.1:55432. The approved
+foundation migration and synthetic seed were applied; all five schema designs
+passed 27 integration checks in a separate transaction that rolled back. The
+Plan-04 preview was opened in the default browser. No hosted services were used.
+
+Original ignored contracts were unavailable and have been reconstructed from
+source, with missing historical review evidence clearly identified.
+
+## Local accounts, food queries and dashboard (Plans 05-07)
+
+Open <http://127.0.0.1:5173/#/app> for the working local app. The screen-design
+previews remain at <http://127.0.0.1:5173/#/design>. Use fictional input only.
+Accounts and session records persist in the isolated local PostgreSQL database.
+This is an internal development implementation, not a public authentication release.
+
+Manual testing:
+
+1. Choose **Create account**. Use a fictional address such as avery@example.test,
+   a fictional display name, a test-only password of 15-128 characters, a valid
+   timezone and the adult eligibility confirmation.
+2. Open the newest matching verification message in the ignored Backend/outbox
+   folder. Copy its code into **Verify email**, then sign in. No external email is
+   delivered. Codes expire after 30 minutes and can be used only once; request a
+   new code if needed.
+3. Review your private daily nutrition summary and Breakfast, Lunch, Dinner and
+   Snack sections. New diaries show zero recorded totals, no goal and useful empty
+   states. Sharing is off. Add-food links open the existing search design; live
+   search UI and entry persistence belong to Plans 08-11.
+4. Sign out, create and verify a second fictional account, then sign in. Check its
+   name/timezone and confirm the previous account content is cleared. Sessions
+   expire after eight hours; expired sessions ask you to sign in again.
+5. Use **Forgot password**, open the matching recovery message in Backend/outbox,
+   and enter its code and a replacement test-only password. Reset revokes earlier
+   sessions. Confirm the old password fails and the replacement works.
+6. Check Tab/Enter, pending buttons, invalid/expired codes, short passwords,
+   invalid fictional email, and recovery after stopping/restarting the backend.
+   Review phone/wide layout and 200% zoom. Human visual review is still required.
+
+Passwords are salted scrypt hashes; cookies are HttpOnly and SameSite=Strict.
+Verification, recovery and session tokens are hashed in PostgreSQL. Plain delivery
+codes exist only in the ignored local outbox. Never commit or share that folder,
+Backend/.env, database data, browser sessions or private testing artifacts.
+
+The approved account schema is migration 006_local_accounts.sql, applied after 001.
+Only 001 and 006 are persisted; later diary/submission/goal/connection migrations
+remain staged. No provider, external email service, paid resource or new npm package
+was added. Public deployment and production authentication review remain later work.
+
+The authenticated GET /api/foods?q=... endpoint searches the synthetic catalog with
+bound, case-insensitive literal substring matching, at most 100 query characters,
+stable ordering and a fixed 25-row limit. Blank or unmatched searches return an empty
+foods array. Results include serving basis, kcal, macros and nullable sodium; zero
+and unknown sodium stay distinct. Frontend live search integration is Plan-08.
+
+From Backend, run npm run verify:accounts for explicit local integration checks.
+It creates two uniquely named fictional account fixtures, checks verification,
+login, logout, recovery/reset, expiry, owner isolation and catalog responses, and
+rolls back temporary catalog fixtures used to verify the result bound. It never
+prints credentials or codes. Unit tests mock repositories and never contact Neon.
 
 ## Shared controls (Plan-04)
 
@@ -22,8 +93,10 @@ clicks. Errors remain beside their fields or retry controls, and retry preserves
 input. The estimate example displays the mathematical-estimate notice and leaves
 values uncalculated pending formula review.
 
-Reusable controls live in `Frontend/src/components/shared/`. Import components
-from its `index.js` to include their shared CSS. `SearchForm` takes controlled
+Reusable controls live in their own folders, such as
+`Frontend/src/components/FoodCard/FoodCard.jsx`, with tests beside each component.
+Import shared controls from `Frontend/src/components/shared/index.js`, or import
+the component directly; both include the common shared CSS. `SearchForm` takes controlled
 `query`/`onQueryChange` props and an `onSearch(text)` callback. `ServingMealForm`
 takes controlled `draft`/`onDraftChange` props, a serving basis, and an
 `onSubmit({ amount, meal })` callback. Parent screens own drafts so validation,
@@ -61,25 +134,28 @@ values remain unchanged. The human developer reviewed and approved the mobile/wi
 layouts, navigation, state patterns, and existing tokens on 2026-11-09. All three
 Plan-03 acceptance criteria are complete.
 
-Local review notes and the acceptance-evidence checklist are in the ignored
+The reconstructed local review summary and manual checklist are in the ignored
 `Frontend/contracts/plan-03.md`. The original API check remains at
 <http://127.0.0.1:5173/#/development>.
 
 ## Plan-02 development database
 
-Read the local development data/API proposal at `Backend/contracts/plan-02.md` for the
+Read the reconstructed local data/API contract at `Backend/contracts/plan-02.md` for the
 identity/ownership contract, food/serving/nutrient model, diary snapshots, goals,
 submissions, private connections, API payloads, validation, and migration order.
-It links five approved, staged SQL migrations and a synthetic seed fixture.
+It links the five existing staged SQL migrations and synthetic seed fixture.
+Unavailable original future endpoint payloads are not reconstructed as new approvals.
 Plan-specific contracts are intentionally ignored by Git and are available only
 in the developer's local workspace.
 
 The backend uses pinned `pg` with parameterized values, validated configuration,
-and an explicit migration ledger with checksums. Only the shared foundation is
-applied to the local development database. All five designs and synthetic seeds
-were verified using local PostgreSQL 18.6 in a separate transaction that rolled
-back. Later feature migrations are applied only when that feature is requested
-and its additional decisions are approved. No new HTTP routes are implemented.
+and an explicit migration ledger with checksums. The repository records earlier
+local PostgreSQL 18.6 verification: only the shared foundation was persisted;
+all five designs and synthetic seeds were also checked in a transaction that
+rolled back. This checkout has now repeated the local foundation setup and all 27 rollback
+verification checks successfully. Later feature migrations are applied only when that feature is requested
+and its additional decisions are approved. Plans 05-07 add the approved local
+account, catalog-query and dashboard routes described above.
 
 The developer selected **local PostgreSQL only**. No Neon/Netlify resources or
 connections were created. Hosted database verification is not claimed. For a
@@ -101,6 +177,7 @@ node scripts/local-postgres.js start
 npm run db:check
 npm run db:migrate -- 001_identity_catalog.sql
 npm run db:seed
+npm run db:migrate -- 006_local_accounts.sql
 npm run db:verify
 ```
 
@@ -132,12 +209,15 @@ it is not a production runtime-role configuration.
 
 ## First-time local setup
 
-Install the pinned dependencies in each package:
+Install the pinned dependencies in each package. For the working local account app,
+first complete the portable PostgreSQL setup above, including migrations 001/006
+and the synthetic seed. Preserve the generated Backend/.env; do not overwrite it
+with the placeholder example. Then start the backend:
 
 ```powershell
 cd Backend
 npm ci
-Copy-Item .env.example .env
+node scripts/local-postgres.js start
 npm run dev
 ```
 
@@ -150,8 +230,9 @@ Copy-Item .env.example .env
 npm run dev
 ```
 
-Only copy the examples when creating a new local environment; do not overwrite
-an existing `.env`. Both services also work with defaults when `.env` is absent.
+Only copy frontend examples when creating a new local environment; do not overwrite
+an existing `.env`. The health endpoint and design previews work without database
+configuration; the working account app requires the approved local database setup.
 On Windows, use `npm.cmd` if PowerShell blocks `npm.ps1`. On macOS/Linux, use
 `cp .env.example .env` in place of `Copy-Item`.
 
@@ -178,8 +259,9 @@ after changing environment configuration. For local development, use the proxy
 instead of a cross-origin API URL; CORS is not configured in this foundation.
 
 Every `VITE_` value is exposed to the browser. Database settings belong only in
-the backend. The normal app currently makes no database requests; manual database
-commands are opt-in and use the ignored backend environment.
+the backend. The local account app calls the backend API, which accesses only the configured
+synthetic loopback database. The design previews make no database requests.
+Manual migration/verification commands are explicit and use the ignored backend environment.
 
 ## Local API
 
@@ -192,6 +274,13 @@ the HTTP server and health endpoint still work without database configuration.
 | `GET /api/health`              | `200`, `{"status":"ok"}`                              |
 | Other methods on `/api/health` | `405`, `{"error":"Method not allowed"}`, `Allow: GET` |
 | Unknown route                  | `404`, `{"error":"Not found"}`                        |
+
+The local account app also uses POST `/api/auth/signup`, `/verify`, `/resend`,
+`/login`, `/logout`, `/recover`, and `/reset` under `/api/auth`; GET
+`/api/auth/session`; and authenticated GET `/api/foods` and `/api/dashboard`.
+Mutation requests must come from `http://127.0.0.1:5173` and contain JSON.
+Verification/recovery use the ignored local outbox. Session cookies are set by
+login and cleared on logout or expiry; session tokens are never returned in JSON.
 
 All responses are JSON with `Cache-Control: no-store`. Health reports only that
 the process can respond; it does not claim database, authentication, or deployment readiness.

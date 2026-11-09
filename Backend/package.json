@@ -16,7 +16,8 @@
     "db:check": "node --env-file-if-exists=.env scripts/database.js check",
     "db:migrate": "node --env-file-if-exists=.env scripts/database.js migrate",
     "db:seed": "node --env-file-if-exists=.env scripts/database.js seed",
-    "db:verify": "node --env-file-if-exists=.env scripts/verify-database.js"
+    "db:verify": "node --env-file-if-exists=.env scripts/verify-database.js",
+    "verify:accounts": "node --env-file-if-exists=.env scripts/verify-accounts.js"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

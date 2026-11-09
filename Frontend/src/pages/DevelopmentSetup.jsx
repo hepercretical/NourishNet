@@ -1,4 +1,4 @@
-import ApiConnection from '../components/ApiConnection.jsx';
+import ApiConnection from '../components/ApiConnection/ApiConnection.jsx';
 import './DevelopmentSetup.css';
 
 export default function DevelopmentSetup() {
