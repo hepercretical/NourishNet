@@ -29,7 +29,7 @@ it('shows five nutrient totals, private status, all four meals and useful empty 
     expect(within(meal).getByText(/No food recorded/)).toBeVisible();
     expect(
       within(meal).getByRole('link', { name: `Add food to ${name.toLowerCase()}` }),
-    ).toHaveAttribute('href', '#/search');
+    ).toHaveAttribute('href', '#/app/search');
   }
 });
 it('shows supplied long food names, serving basis, decimals and unknown sodium in the correct meal', () => {

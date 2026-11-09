@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { accountRequest } from '../../services/accounts.js';
 import AccountForm from '../AccountForm/AccountForm.jsx';
 import AccountDiary from '../AccountDiary/AccountDiary.jsx';
+import FoodSearch from '../FoodSearch/FoodSearch.jsx';
 import Button from '../Button/Button.jsx';
 import { ErrorState, LoadingState } from '../DataState/DataState.jsx';
 import './LiveApp.css';
@@ -100,6 +101,7 @@ export default function LiveApp({ route }) {
         <a href="#/app/dashboard">NourishNet</a>
         <nav aria-label="Development app navigation">
           <a href="#/app/dashboard">Diary</a>
+          <a href="#/app/search">Search foods</a>
           <a href="#/design">Screen designs</a>
           {session.account && (
             <Button pending={loggingOut} onClick={logout}>
@@ -131,7 +133,11 @@ export default function LiveApp({ route }) {
             />
           </>
         ) : session.account ? (
-          <AccountDiary key={session.account.id} account={session.account} />
+          requested === 'search' ? (
+            <FoodSearch key={session.account.id} />
+          ) : (
+            <AccountDiary key={session.account.id} account={session.account} />
+          )
         ) : (
           <>
             <h1>{titles[mode]}</h1>

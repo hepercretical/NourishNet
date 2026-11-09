@@ -204,10 +204,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 **Acceptance criteria**
 
-- [ ] Search uses a focused API service/hook, avoids requests on every render, and shows name,
+- [x] Search uses a focused API service/hook, avoids requests on every render, and shows name,
       serving, calories, and macros.
-- [ ] Loading, error/retry, empty, and no-results states work.
-- [ ] Hook/client tests use mocked responses, including failed and delayed requests.
+- [x] Loading, error/retry, empty, and no-results states work.
+- [x] Hook/client tests use mocked responses, including failed and delayed requests.
 
 ### Plan-09 Add food to a meal
 

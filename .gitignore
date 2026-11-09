@@ -236,3 +236,35 @@ report.*.json
 *.sqlite-*
 *.sqlite3-*
 Desktop.ini
+
+# Credential stores, CLI authentication, and private local configuration copies
+.git-credentials
+.git-credentials.*
+.curlrc
+.curlrc.*
+_curlrc
+_curlrc.*
+.htpasswd
+.htpasswd.*
+.my.cnf
+.my.cnf.*
+.mylogin.cnf
+.mylogin.cnf.*
+**/.config/gh/
+**/.config/hub
+**/.config/hub.*
+.wrangler/
+kubeconfig
+kubeconfig.*
+secrets.json
+secrets.json.*
+secrets.yaml
+secrets.yaml.*
+secrets.yml
+secrets.yml.*
+serviceAccount*.json
+serviceAccount*.json.*
+*.tfvars.*
+# Database journals/copies and IDE snapshots may retain credentials or private data.
+*.db3.*
+.vs/

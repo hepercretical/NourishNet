@@ -44,15 +44,15 @@ export default function Dashboard({ account, diary, loading = false, error, onRe
                       to start this meal.
                     </p>
                   )}
-                  <a className="design-action" href="#/search">
+                  <a className="design-action" href="#/app/search">
                     Add food to {meal.name.toLowerCase()}
                   </a>
                 </section>
               ))}
             </div>
             <p>
-              The add-food links open the existing search design. Live search and logging are later
-              plans; nothing is added yet.
+              The add-food links open live food search. Meal saving arrives in a later plan; nothing
+              is added yet.
             </p>
           </>
         )

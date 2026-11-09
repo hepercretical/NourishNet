@@ -73,3 +73,36 @@ it('signs into the account returned by the API after verification', async () => 
   expect(await screen.findByText('10 kcal')).toBeVisible();
   expect(window.location.hash).toBe('#/app/dashboard');
 });
+
+it('opens live search for a signed-in account and aborts a pending search on session expiry', async () => {
+  let resolveSearch;
+  accountRequest.mockImplementation((path) =>
+    path === '/auth/session'
+      ? Promise.resolve({ account })
+      : new Promise((resolve) => {
+          resolveSearch = resolve;
+        }),
+  );
+  const user = userEvent.setup();
+  render(<LiveApp route="/app/search" />);
+  await screen.findByRole('searchbox');
+  await user.type(screen.getByRole('searchbox'), 'sample{Enter}');
+  expect(accountRequest).toHaveBeenCalledTimes(2);
+  const [path, options] = accountRequest.mock.calls[1];
+  expect(path).toBe('/foods?q=sample');
+  expect(options.signal.aborted).toBe(false);
+  await act(async () => window.dispatchEvent(new Event('nourishnet:expired')));
+  expect(options.signal.aborted).toBe(true);
+  await act(async () => resolveSearch({ foods: [{ servingId: 'old', name: 'Old account food' }] }));
+  expect(screen.queryByRole('searchbox')).not.toBeInTheDocument();
+  expect(screen.queryByText('Old account food')).not.toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Sign in to NourishNet' })).toBeVisible();
+});
+
+it('requires a session before showing live search', async () => {
+  accountRequest.mockRejectedValueOnce(Object.assign(new Error(), { status: 401 }));
+  render(<LiveApp route="/app/search" />);
+  expect(await screen.findByRole('heading', { name: 'Sign in to NourishNet' })).toBeVisible();
+  expect(screen.queryByRole('searchbox')).not.toBeInTheDocument();
+  expect(accountRequest).toHaveBeenCalledOnce();
+});
