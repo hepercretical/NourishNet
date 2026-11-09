@@ -1,0 +1,128 @@
+.shared-card,
+.shared-state,
+.shared-notice {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  padding: var(--space-5);
+  margin-block-end: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.shared-card__title {
+  margin-block: 0 var(--space-3);
+  font-size: var(--text-lg);
+}
+
+.shared-notice {
+  background: var(--color-surface-muted);
+}
+
+.shared-notice__title,
+.shared-field__label {
+  font-weight: bold;
+}
+
+.shared-notice--warning {
+  border-color: var(--color-warning);
+}
+
+.shared-notice--success {
+  border-color: var(--color-success);
+}
+
+.shared-state--error {
+  border-color: var(--color-danger);
+}
+
+.shared-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  margin-block-end: var(--space-5);
+}
+
+.shared-field__control {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: var(--space-3);
+  border: 1px solid var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.shared-field__control[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.shared-field__control:disabled {
+  color: var(--color-text-muted);
+  background: var(--color-surface-muted);
+}
+
+.shared-field__error {
+  color: var(--color-danger);
+}
+
+.shared-field__hint,
+.shared-field__error {
+  margin: 0;
+}
+
+.shared-button {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.shared-button:hover:not(:disabled) {
+  background: var(--color-primary-strong);
+}
+
+.shared-button--secondary {
+  background: var(--color-surface);
+  color: var(--color-primary-strong);
+}
+
+.shared-button--secondary:hover:not(:disabled) {
+  background: var(--color-surface-muted);
+}
+
+.shared-form-feedback {
+  margin-block-start: var(--space-4);
+}
+
+.shared-preview-results {
+  list-style: none;
+  padding: 0;
+}
+
+.shared-form-row,
+.shared-nutrition {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.shared-nutrition {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.shared-nutrition dd {
+  margin: var(--space-1) 0 0;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 40rem) {
+  .shared-form-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .shared-nutrition {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

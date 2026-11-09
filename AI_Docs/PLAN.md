@@ -151,11 +151,11 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 **Acceptance criteria**
 
-- [ ] Reusable search, serving, meal, estimate, notice, pending, loading, empty, and error controls
+- [x] Reusable search, serving, meal, estimate, notice, pending, loading, empty, and error controls
       follow STYLE_GUIDE.md.
-- [ ] Inputs have visible labels; buttons support focus/disabled/pending states; important errors
+- [x] Inputs have visible labels; buttons support focus/disabled/pending states; important errors
       persist beside fields or retry controls.
-- [ ] Keyboard behavior, user input preservation, validation, and common interactions are tested.
+- [x] Keyboard behavior, user input preservation, validation, and common interactions are tested.
 
 ### Plan-05 Account functionality and private ownership
 

@@ -7,6 +7,37 @@ preview and app shell**. The shell uses fictional examples to review the initial
 screens. Account, tracking, scanning, upload, goal, and sharing operations are not
 available in the preview. Database foundation commands run separately from the app.
 
+## Shared controls (Plan-04)
+
+Open <http://127.0.0.1:5173/#/design/components> or choose **Try shared food, form,
+and state components** on the design map. Search for **oats**, choose the fictional
+food, enter a decimal serving amount, select a meal, and choose **Confirm preview**.
+Nothing is saved or sent. **Back to search** keeps both your search and serving
+choices during this flow. Use fictional input only; leaving the preview resets it.
+
+Choose **Recoverable error** or **No results** in **Preview response** to review
+failure/retry and empty states. Actions pause briefly to show disabled pending
+controls. Try an empty search, a zero serving, keyboard Tab/Enter, and repeated
+clicks. Errors remain beside their fields or retry controls, and retry preserves
+input. The estimate example displays the mathematical-estimate notice and leaves
+values uncalculated pending formula review.
+
+Reusable controls live in `Frontend/src/components/shared/`. Import components
+from its `index.js` to include their shared CSS. `SearchForm` takes controlled
+`query`/`onQueryChange` props and an `onSearch(text)` callback. `ServingMealForm`
+takes controlled `draft`/`onDraftChange` props, a serving basis, and an
+`onSubmit({ amount, meal })` callback. Parent screens own drafts so validation,
+retries, and step navigation can preserve input. Callbacks may return promises;
+forms prevent overlapping submissions, show pending feedback, and replace thrown
+errors with product messages. Backend idempotency and persistence belong to later
+feature plans. `FoodCard`, `NutritionFacts`, `EstimateSummary`, `Notice`,
+`PendingStatus`, `LoadingState`, `EmptyState`, `ErrorState`, `FormField`,
+`ServingInput`, `MealSelect`, and `Button` can also be used separately.
+
+Nutrition presentation keeps supplied precision, shows kcal/g/mg, and displays
+missing values as **Not provided**. These controls perform no nutrition scaling
+or goal calculations. Existing design tokens are used unchanged.
+
 ## Screen-design preview (Plan-03)
 
 Open <http://127.0.0.1:5173/#/design> after starting the frontend. The screen map

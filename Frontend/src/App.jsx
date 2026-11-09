@@ -5,6 +5,7 @@ import { useDesignRoute } from './hooks/useDesignRoute.js';
 import DesignIndex from './pages/DesignIndex.jsx';
 import DevelopmentSetup from './pages/DevelopmentSetup.jsx';
 import ScreenDesign from './pages/ScreenDesign.jsx';
+import SharedComponents from './pages/SharedComponents.jsx';
 
 export default function App() {
   const route = useDesignRoute();
@@ -12,11 +13,13 @@ export default function App() {
   const screen = screens[route];
   const title =
     screen?.title ||
-    (route === '/design'
-      ? 'All screen designs'
-      : route === '/development'
-        ? 'Development setup'
-        : 'Page not found');
+    (route === '/design/components'
+      ? 'Shared components'
+      : route === '/design'
+        ? 'All screen designs'
+        : route === '/development'
+          ? 'Development setup'
+          : 'Page not found');
 
   useEffect(() => {
     document.title = `NourishNet | ${title}`;
@@ -45,6 +48,8 @@ export default function App() {
       <main id="main-content" ref={mainRef} tabIndex={-1}>
         {screen ? (
           <ScreenDesign key={route} screen={screen} route={route} />
+        ) : route === '/design/components' ? (
+          <SharedComponents />
         ) : route === '/design' ? (
           <DesignIndex />
         ) : (
