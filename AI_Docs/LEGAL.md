@@ -3,7 +3,7 @@
 ## Implementation timing approved 2026-11-09
 
 Implement and verify this document's legal-readiness requirements only after
-Sprint 3, in the post-Sprint-3 phase of `PLAN.md` (Plan-20, Plan-29, and Plan-27).
+Sprint 3, in the post-Sprint-3 phase of `PLAN.md` (Plan-26, Plan-28, and Plan-29).
 They are not acceptance gates for the initial feature milestone or Sprint 3's
 bug-fix/quality week. All existing requirements below are preserved; this timing
 clarification governs their project implementation schedule.

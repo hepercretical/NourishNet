@@ -67,6 +67,33 @@ p {
 
 button {
   font: inherit;
+  min-height: 44px;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  color: var(--color-on-primary);
+  background: var(--color-primary);
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
+}
+
+a {
+  color: var(--color-primary-strong);
+  text-underline-offset: var(--space-1);
+}
+
+main {
+  min-width: 0;
+}
+
+li {
+  line-height: 1.5;
 }
 
 :focus-visible {
