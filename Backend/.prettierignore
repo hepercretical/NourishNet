@@ -1,4 +1,7 @@
 node_modules/
+outbox/
+auth-data/
+session-data/
 coverage/
 package-lock.json
 .env

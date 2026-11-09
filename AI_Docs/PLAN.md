@@ -8,12 +8,13 @@ This replaces the previous seven-sprint schedule. Dates below are targets, not
 completion claims. No acceptance criterion is completed by this document update.
 
 | Phase | Dates (2026) | Required outcome |
-| --- | --- | --- |
-| Sprint 1 | November 1-14 | Complete initial screen/flow design, foundations, accounts, and core tracking |
-| Sprint 2 | November 15-28 | Build barcode scanning, photo submissions/review, goals, and connection controls |
-| Sprint 3 Week 1 | November 29-December 5 | Finish calendars, integrate every initial feature, and freeze features |
-| Sprint 3 Week 2 | December 6-12 | Final bug fixes, regression tests, accessibility/visual/performance quality checks |
-| After Sprint 3 | December 13 onward | Implement SECURE.md and LEGAL.md, then approve public release |
+| --------------- | ------------- | ---------------------------------------------------------------------------------- |
+| Sprint 1        | Nov 1-14      | Complete initial screen/flow design, foundations, accounts, and core tracking      |
+| Sprint 2        | Nov 15-28     | Build barcode scanning, photo submissions/review, goals, and connection controls   |
+| Sprint 3 Week 1 | Nov 29-Dec 5  | Finish calendars, integrate every initial feature, and freeze features             |
+| Sprint 3 Week 2 | Dec 6-12      | Final bug fixes, regression tests, accessibility/visual/performance quality checks |
+| After Sprint 3  | Dec 13 onward | Implement SECURE.md and LEGAL.md, then approve public release                      |
+| --------------- | ------------- | ---------------------------------------------------------------------------------- |
 
 All initial design and functionality must be finished by December 5. December
 6-12 is reserved exclusively for final bug fixes and quality checks; it is not
@@ -91,7 +92,7 @@ approval requirements remain unchanged.
 | Database and Data         | Approved schemas, API contracts, diary/goal history, catalog and connection data |
 | Searching, Logging, Logic | Search, totals, scanning, estimates, goal outcomes, calendar comparison          |
 | Design, Lists and Quality | All screen designs, forms/navigation, responsive states, integration and testing |
-| ------------------------- | ------------------------------------------------------------------------------- |
+| ------------------------- | -------------------------------------------------------------------------------- |
 
 ## Sprint 1: Design, foundations, and core tracking (November 1-14)
 
@@ -164,14 +165,12 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 **Acceptance criteria**
 
-- [ ] Human approves authentication approach/provider, backend hosting, account schema, and API
+- [x] Human approves authentication approach/provider, backend hosting, account schema, and API
       rules before adoption or added packages.
-- [ ] Signup, login, logout, verification/recovery, and expired-session flows work with synthetic
+- [x] Signup, login, logout, verification/recovery, and expired-session flows work with synthetic
       test accounts; adult 18+ product scope is reflected in the initial UI.
-- [ ] Normal account switching loads the correct diary and clears previous account UI. Sharing is
+- [x] Normal account switching loads the correct diary and clears previous account UI. Sharing is
       off by default; no home-grown plaintext password store is introduced.
-- [ ] Production authentication hardening, adversarial tests, final policy acceptance, and
-      compliance evidence are explicitly deferred to Plan-27/28.
 
 ### Plan-06 Seed foods and food queries
 
@@ -180,11 +179,11 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 **Acceptance criteria**
 
-- [ ] Synthetic foods include names, serving basis, calories, protein, fat, carbohydrates, and
+- [x] Synthetic foods include names, serving basis, calories, protein, fat, carbohydrates, and
       sodium.
-- [ ] Case-insensitive parameterized search returns bounded results and predictable empty/no-result
+- [x] Case-insensitive parameterized search returns bounded results and predictable empty/no-result
       responses.
-- [ ] Query tests use mocks and never call production or real Neon.
+- [x] Query tests use mocks and never call production or real Neon.
 
 ### Plan-07 Dashboard and meal sections
 
@@ -193,10 +192,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 **Acceptance criteria**
 
-- [ ] Dashboard shows calorie/macro/sodium summaries and Breakfast, Lunch, Dinner, and Snack
+- [x] Dashboard shows calorie/macro/sodium summaries and Breakfast, Lunch, Dinner, and Snack
       sections.
-- [ ] Each meal has an understandable add-food action and useful empty state.
-- [ ] Headings, controls, realistic long names, and mobile layout are tested.
+- [x] Each meal has an understandable add-food action and useful empty state.
+- [x] Headings, controls, realistic long names, and mobile layout are tested.
 
 ### Plan-08 Food search API client and hook
 
@@ -274,8 +273,6 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       effective dates, day completion, and historical edits are specified.
 - [ ] Unknown/incomplete/no-goal/future-day states and timezone alignment rules are defined; do not
       invent clinical thresholds.
-- [ ] The visible mathematical-estimate/not-medical-advice notice is reviewed as initial product
-      copy. Formal legal applicability review remains post-Sprint-3.
 
 ## Sprint 2: Barcode, submissions, goals, and connections (November 15-28)
 
@@ -333,8 +330,6 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       states; pending data is not searchable as catalog food.
 - [ ] Submitter can see status and correct requested fields; basic upload failure/retry and
       duplicate-submission behavior are tested.
-- [ ] Production upload hardening, signed-URL abuse testing, quarantine/scanning, retention, and
-      processor deletion are Plan-27/26 work after Sprint 3.
 
 ### Plan-18 Catalog review and reusable publication
 
@@ -349,8 +344,6 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       defined outcomes and provenance.
 - [ ] A second synthetic account scans the approved product and logs it; past diary nutrition
       remains unchanged and uploader measurements/identity are not catalog fields.
-- [ ] Reviewer MFA, comprehensive privilege/abuse verification, and production audit controls are
-      Plan-27 work.
 
 ### Plan-19 Goal menu and estimate acceptance
 
@@ -381,8 +374,6 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       selected goal progress can be shared and revoked.
 - [ ] Biological sex, age, body measurements, and detailed diaries remain private; removal/blocking
       stop normal subsequent comparison access.
-- [ ] Block/report controls and pending/accepted/removed/unavailable states function; comprehensive
-      adversarial permission/cache/race testing is deferred to Plan-27.
 
 ## Sprint 3 Week 1: Calendars and complete integration (November 29-December 5)
 
@@ -403,6 +394,8 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       zoom, and narrow layout work.
 - [ ] Tests cover changed goals, edited logs, leap days, local midnight, and timezone/daylight-
       saving behavior.
+- [ ] The visible mathematical-estimate/not-medical-advice notice is reviewed as initial product
+      copy. Formal legal applicability review.
 
 ### Plan-22 Friend progress comparison calendar
 
@@ -417,8 +410,6 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       alignment and readable labels.
 - [ ] No-data, incomplete, no-goal, not-shared, unavailable, and met/unmet states stay distinct; no
       ranking, shame, or measurement/diary disclosure.
-- [ ] Sharing/revocation and normal data-failure/retry flows work on phone, desktop, and keyboard;
-      production attack/race testing remains Plan-27 work.
 
 ### Plan-23 Full initial-feature integration and freeze
 
@@ -512,6 +503,17 @@ their combined result before release.
       backups/restore, monitoring, incident response, and reporting contacts.
 - [ ] Complete documented ASVS applicability/threat review and attack/cross-account/abuse tests;
       resolve critical/high findings and record approved residual risks.
+- [ ] Production authentication hardening, adversarial tests, final policy acceptance, and
+      compliance evidence.
+- [ ] Production upload hardening, signed-URL abuse testing, quarantine/scanning, retention, and
+      processor deletion.
+- [ ] Reviewer MFA, comprehensive privilege/abuse verification, and production audit controls.
+- [ ] Block/report controls and pending/accepted/removed/unavailable states function; comprehensive
+      adversarial permission/cache/race testing.
+- [ ] Sharing/revocation and normal data-failure/retry flows work on phone, desktop, and keyboard;
+      production attack/race testing.
+
+      
 
 ### Plan-28 LEGAL.md implementation and readiness review
 

@@ -1,0 +1,6 @@
+.account-form__adult {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  accent-color: var(--color-primary);
+}
