@@ -1,0 +1,5 @@
+Copyright (c) 2026 Talamge Trebilcock. All rights reserved.
+
+This software and associated documentation files are proprietary. Distribution, 
+modification, commercial use, or sublicensing is strictly prohibited without 
+the explicit written permission of the copyright holder.
