@@ -1,0 +1,118 @@
+.design-panel,
+.design-state-picker,
+.design-feedback {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  margin: 0 0 var(--space-5);
+  min-width: 0;
+}
+
+.design-state-picker {
+  background: var(--color-surface-muted);
+}
+
+.design-fields,
+.design-meals {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.design-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-block-end: var(--space-4);
+  font-weight: bold;
+}
+
+.design-field input,
+.design-field select {
+  font: inherit;
+  font-weight: normal;
+  min-height: 44px;
+  min-width: 0;
+  width: 100%;
+  padding: var(--space-3);
+  border: 1px solid var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.design-field-error {
+  color: var(--color-danger);
+  font-weight: normal;
+}
+
+.design-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-block: var(--space-4);
+}
+
+.design-action {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  margin-block-start: var(--space-2);
+}
+
+.design-action:hover {
+  background: var(--color-surface-muted);
+}
+
+.design-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+  gap: var(--space-5);
+}
+
+.design-summary dd {
+  margin: var(--space-2) 0 0;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+}
+
+.design-image-placeholder {
+  padding: var(--space-6);
+  background: var(--color-surface-muted);
+  border: 1px dashed var(--color-text-muted);
+}
+
+.design-choice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 44px;
+  margin-block-end: var(--space-4);
+}
+
+.design-detail-list {
+  line-height: 1.5;
+  padding-inline-start: var(--space-5);
+}
+
+.design-detail-list li {
+  margin-block-end: var(--space-4);
+}
+
+.design-index a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-block: var(--space-2);
+}
+
+@media (min-width: 40rem) {
+  .design-fields,
+  .design-meals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

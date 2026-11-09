@@ -1,11 +1,38 @@
 # NourishNet
 
 NourishNet is a mobile-first calorie and macronutrient tracker for adults 18+.
-This repository currently implements **Plan-01: Foundation and development setup**
-and **Plan-02: development schema and API contracts**, approved by the human developer.
-The setup screen can check the local API connection. Accounts, food tracking,
-and the complete app shell belong to later plans. Database foundation commands
-run separately from the app.
+This repository includes **Plan-01: Foundation and development setup**,
+**Plan-02: development schema and API contracts**, and the **Plan-03 screen-design
+preview and app shell**. The shell uses fictional examples to review the initial
+screens. Account, tracking, scanning, upload, goal, and sharing operations are not
+available in the preview. Database foundation commands run separately from the app.
+
+## Screen-design preview (Plan-03)
+
+Open <http://127.0.0.1:5173/#/design> after starting the frontend. The screen map
+links accounts, diary, food search/confirmation/edit/removal, scan/manual fallback,
+photo submission/review, goals/history, connections/sharing, and calendars. The
+footer includes settings and clearly labeled future privacy, terms, and account
+rights locations. Unknown routes offer a recovery link.
+
+Each screen has a **Preview state** selector for example, loading, error/retry,
+empty, validation, and success layouts. Navigation links work; disabled operation
+buttons and fields illustrate later functionality without collecting credentials,
+measurements, or files. Refresh and browser back/forward retain the selected hash
+route. Goal estimates are not calculated before formula approval.
+
+For layout review, compare a narrow phone viewport (390 px) and a wide viewport
+(1440 px), then check 200% zoom and keyboard access. Navigation wraps above the
+screen on phones and sits beside it on wide screens. A skip link moves focus to
+the main content; route changes focus the main landmark. Calendar previews offer
+native month buttons and an announced day-detail list. All established design-token
+values remain unchanged. The human developer reviewed and approved the mobile/wide
+layouts, navigation, state patterns, and existing tokens on 2026-11-09. All three
+Plan-03 acceptance criteria are complete.
+
+Local review notes and the acceptance-evidence checklist are in the ignored
+`Frontend/contracts/plan-03.md`. The original API check remains at
+<http://127.0.0.1:5173/#/development>.
 
 ## Plan-02 development database
 
@@ -97,7 +124,7 @@ an existing `.env`. Both services also work with defaults when `.env` is absent.
 On Windows, use `npm.cmd` if PowerShell blocks `npm.ps1`. On macOS/Linux, use
 `cp .env.example .env` in place of `Copy-Item`.
 
-Open <http://127.0.0.1:5173> and click **Check API connection**. A successful
+Open <http://127.0.0.1:5173/#/development> and click **Check API connection**. A successful
 check displays "The API is running. Your local services can communicate."
 Stop the backend and check again to see the persistent error and **Try again**
 action. The check times out after five seconds and disables the button while pending.

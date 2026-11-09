@@ -3,7 +3,7 @@
 ## Implementation timing approved 2026-11-09
 
 Implement and verify this document's security requirements only after Sprint 3,
-in the post-Sprint-3 phase of `PLAN.md` (Plan-20, Plan-28, and Plan-27). They are
+in the post-Sprint-3 phase of `PLAN.md` (Plan-26, Plan-27, and Plan-29). They are
 not acceptance gates for completing initial design/functionality by Sprint 3
 Week 1 or its bug-fix/quality week. The requirements below are preserved in full;
 this timing clarification governs earlier wording about when they are required.

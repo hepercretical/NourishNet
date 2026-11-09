@@ -255,7 +255,7 @@ just to check documentation.
 
 - Commit only when asked. Suggest the commit message and wait for an OK.
 - Use a short summary line followed by a few bullets, for example:
-  `Plan-06: Add barcode lookup`
+  `Plan-14: Add barcode lookup`
   `- Add the barcode search hook and API route.`
   `- Show the not-found submission form.`
 - Open a pull request to `main` only after `npm run lint`, `npm test`,

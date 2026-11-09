@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import App from './App.jsx';
+import DevelopmentSetup from './pages/DevelopmentSetup.jsx';
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -9,7 +9,7 @@ describe('development setup', () => {
   it('explains the internal setup before making a connection check', () => {
     const request = vi.fn();
     vi.stubGlobal('fetch', request);
-    render(<App />);
+    render(<DevelopmentSetup />);
 
     expect(screen.getByRole('heading', { level: 1, name: 'NourishNet' })).toBeVisible();
     expect(screen.getByText(/Food tracking and accounts are not available yet/)).toBeVisible();
@@ -27,7 +27,7 @@ describe('development setup', () => {
     );
     vi.stubGlobal('fetch', request);
     const user = userEvent.setup();
-    render(<App />);
+    render(<DevelopmentSetup />);
 
     await user.dblClick(screen.getByRole('button', { name: 'Check API connection' }));
     expect(screen.getByRole('button', { name: 'Checking…' })).toBeDisabled();
@@ -67,7 +67,7 @@ describe('development setup', () => {
       });
     vi.stubGlobal('fetch', request);
     const user = userEvent.setup();
-    render(<App />);
+    render(<DevelopmentSetup />);
 
     await user.click(screen.getByRole('button', { name: 'Check API connection' }));
     expect(await screen.findByText(/Cannot reach the API/)).toBeVisible();

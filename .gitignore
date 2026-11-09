@@ -16,6 +16,12 @@ secrets/
 *.pfx.*
 *.key.*
 *.pem.*
+*.der.*
+*.p8.*
+*.jks.*
+*.keystore.*
+*.kdbx.*
+*.ppk.*
 
 node_modules/
 dist/
@@ -32,6 +38,7 @@ coverage/
 uploads/
 storage/
 *.log
+*.log.*
 
 .DS_Store
 Thumbs.db
@@ -53,14 +60,19 @@ Thumbs.db
 .yarnrc.yml
 .yarnrc.yml.*
 .netrc
+.netrc.*
 _netrc
+_netrc.*
 .pgpass
 .pgpass.*
 pgpass.conf
 pgpass.conf.*
 .pg_service.conf
+.pg_service.conf.*
 credentials.json
+credentials.json.*
 service-account*.json
+service-account*.json.*
 *.jks
 *.keystore
 *.kdbx
@@ -88,6 +100,7 @@ id_ed25519
 firebase-debug.log*
 *-firebase-adminsdk-*.json
 application_default_credentials.json
+application_default_credentials.json.*
 
 # Private exports, operational evidence, and browser authentication state
 backups/
@@ -101,14 +114,27 @@ playwright/.auth/
 test-results/
 playwright-report/
 *.har
+*.har.*
 *.heapsnapshot
 *.cpuprofile
 *.sql
 *.sql.*
 *.backup
+*.backup.*
 *.bak
+*.bak.*
 *.pgdump
+*.pgdump.*
 *.dmp
+*.dmp.*
+*.dump.*
+# Compressed local database files are not source migrations.
+*.db.gz
+*.db.zip
+*.sqlite.gz
+*.sqlite.zip
+*.sqlite3.gz
+*.sqlite3.zip
 # Local HTTP-client environments can contain credentials and session tokens.
 http-client.private.env.json
 *.postman_environment.json

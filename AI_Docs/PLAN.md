@@ -32,7 +32,7 @@ than silently using the quality week or moving features into the later phase.
   Sprint 3. They do not gate initial design, functionality, or the quality week.
   Their detailed requirements remain preserved in those documents. This timing
   also applies to security/legal requirements repeated in HUMAN.md and
-  STYLE_GUIDE.md. Plan-20, Plan-28, Plan-29, and Plan-27 implement the later phase.
+  STYLE_GUIDE.md. Plan-26, Plan-27, Plan-28, and Plan-29 implement the later phase.
 - Sprints 1-3 deliver an internal development version using synthetic accounts,
   measurements, diaries, and sample photos. A feature-complete internal version
   is not public-release approval. Real-user onboarding and public deployment
@@ -81,8 +81,9 @@ unfinished actions. Initial quality review covers implemented flows. Repeat the
 relevant reviews after security/legal features are implemented.
 
 Points are retained as relative story estimates where available; they are not
-staffing or deadline guarantees. Preserve story IDs for existing references;
-implementation order follows sprint placement and dependencies, not ID order.
+staffing or deadline guarantees. Story IDs are numbered in delivery order;
+dependencies and cross-references use those same IDs. Sprint placement and
+approval requirements remain unchanged.
 
 | ------------------------- | -------------------------------------------------------------------------------- |
 | Track                     | Initial delivery responsibility                                                  |
@@ -136,17 +137,17 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 **Acceptance criteria**
 
-- [ ] All initial routes/flows are designed: accounts, dashboard, search/log/edit, scan/manual
+- [x] All initial routes/flows are designed: accounts, dashboard, search/log/edit, scan/manual
       fallback, photo submission/review, goal setup/history, connections, and comparison calendars.
-- [ ] Human reviews mobile/wide layouts, navigation, state patterns, and existing design tokens;
+- [x] Human reviews mobile/wide layouts, navigation, state patterns, and existing design tokens;
       changes follow approval rules.
-- [ ] Semantic landmarks, visible focus, responsive navigation, and locations for later
+- [x] Semantic landmarks, visible focus, responsive navigation, and locations for later
       legal/account-rights screens are defined.
 
-### Plan-06 Shared food, form, and state components
+### Plan-04 Shared food, form, and state components
 
 - **Phase:** S1 W1 | **Due:** 2026-11-07 | **Points:** 5
-- **Branch:** `/plan-06` | **Depends on:** Plan-03
+- **Branch:** `/plan-04` | **Depends on:** Plan-03
 
 **Acceptance criteria**
 
@@ -156,10 +157,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       persist beside fields or retry controls.
 - [ ] Keyboard behavior, user input preservation, validation, and common interactions are tested.
 
-### Plan-19 Account functionality and private ownership
+### Plan-05 Account functionality and private ownership
 
 - **Phase:** S1 W2 | **Due:** 2026-11-14 | **Points:** 13
-- **Branch:** `/plan-19` | **Depends on:** Plan-02, Plan-06
+- **Branch:** `/plan-05` | **Depends on:** Plan-02, Plan-04
 
 **Acceptance criteria**
 
@@ -170,12 +171,12 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Normal account switching loads the correct diary and clears previous account UI. Sharing is
       off by default; no home-grown plaintext password store is introduced.
 - [ ] Production authentication hardening, adversarial tests, final policy acceptance, and
-      compliance evidence are explicitly deferred to Plan-28/29.
+      compliance evidence are explicitly deferred to Plan-27/28.
 
-### Plan-04 Seed foods and food queries
+### Plan-06 Seed foods and food queries
 
 - **Phase:** S1 W2 | **Due:** 2026-11-14 | **Points:** 5
-- **Branch:** `/plan-04` | **Depends on:** Plan-02
+- **Branch:** `/plan-06` | **Depends on:** Plan-02
 
 **Acceptance criteria**
 
@@ -185,10 +186,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       responses.
 - [ ] Query tests use mocks and never call production or real Neon.
 
-### Plan-05 Dashboard and meal sections
+### Plan-07 Dashboard and meal sections
 
 - **Phase:** S1 W2 | **Due:** 2026-11-14 | **Points:** 5
-- **Branch:** `/plan-05` | **Depends on:** Plan-06
+- **Branch:** `/plan-07` | **Depends on:** Plan-04
 
 **Acceptance criteria**
 
@@ -197,10 +198,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Each meal has an understandable add-food action and useful empty state.
 - [ ] Headings, controls, realistic long names, and mobile layout are tested.
 
-### Plan-07 Food search API client and hook
+### Plan-08 Food search API client and hook
 
 - **Phase:** S1 W2 | **Due:** 2026-11-14 | **Points:** 8
-- **Branch:** `/plan-07` | **Depends on:** Plan-04, Plan-06
+- **Branch:** `/plan-08` | **Depends on:** Plan-06, Plan-04
 
 **Acceptance criteria**
 
@@ -209,10 +210,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Loading, error/retry, empty, and no-results states work.
 - [ ] Hook/client tests use mocked responses, including failed and delayed requests.
 
-### Plan-08 Add food to a meal
+### Plan-09 Add food to a meal
 
 - **Phase:** S1 W2 | **Due:** 2026-11-14 | **Points:** 8
-- **Branch:** `/plan-08` | **Depends on:** Plan-07, Plan-19
+- **Branch:** `/plan-09` | **Depends on:** Plan-08, Plan-05
 
 **Acceptance criteria**
 
@@ -221,10 +222,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Confirmation shows the food, serving, meal, and scaled nutrition.
 - [ ] Save feedback returns to the tracker; repeated taps do not produce duplicate visible entries.
 
-### Plan-09 Diary persistence and daily totals
+### Plan-10 Diary persistence and daily totals
 
 - **Phase:** S1 W2 | **Due:** 2026-11-14 | **Points:** 8
-- **Branch:** `/plan-09` | **Depends on:** Plan-02, Plan-08, Plan-19
+- **Branch:** `/plan-10` | **Depends on:** Plan-02, Plan-09, Plan-05
 
 **Acceptance criteria**
 
@@ -236,10 +237,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       logs.
 - [ ] Tests cover decimal servings, multiple meals, empty days, and local-day boundaries.
 
-### Plan-10 Tracker integration
+### Plan-11 Tracker integration
 
 - **Phase:** S1 W2 | **Due:** 2026-11-14 | **Points:** 8
-- **Branch:** `/plan-10` | **Depends on:** Plan-05, Plan-09
+- **Branch:** `/plan-11` | **Depends on:** Plan-07, Plan-10
 
 **Acceptance criteria**
 
@@ -248,10 +249,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Loading, empty, failed-load/retry, and successful-save flows pass component/integration
       checks.
 
-### Plan-11 Edit and remove diary entries
+### Plan-12 Edit and remove diary entries
 
 - **Phase:** S1 W2 | **Due:** 2026-11-14 | **Points:** 5
-- **Branch:** `/plan-11` | **Depends on:** Plan-10
+- **Branch:** `/plan-12` | **Depends on:** Plan-11
 
 **Acceptance criteria**
 
@@ -259,16 +260,16 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Meal lists and totals update correctly after edits/removal.
 - [ ] Invalid input, cancel, recoverable errors, and repeated actions have tested behavior.
 
-### Plan-21 Goal formula and outcome specification
+### Plan-13 Goal formula and outcome specification
 
 - **Phase:** S1 W2 | **Due:** 2026-11-14 | **Points:** 5
-- **Branch:** `/plan-21` | **Depends on:** Plan-02, Plan-03
+- **Branch:** `/plan-13` | **Depends on:** Plan-02, Plan-03
 
 **Acceptance criteria**
 
 - [ ] Human approval and qualified formula review required by AGENTS.md record source/version,
       biological-sex semantics, age/height/weight units, activity assumptions, supported cases, and
-      calculation limits before Plan-22.
+      calculation limits before Plan-19.
 - [ ] Gain/lose/maintain and muscle-gain objectives, target/range/limit semantics, tolerances,
       effective dates, day completion, and historical edits are specified.
 - [ ] Unknown/incomplete/no-goal/future-day states and timezone alignment rules are defined; do not
@@ -280,10 +281,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 **Goal:** Deliver the remaining product workflows before calendar integration.
 
-### Plan-13 Barcode lookup service
+### Plan-14 Barcode lookup service
 
 - **Phase:** S2 W1 | **Due:** 2026-11-21 | **Points:** 8
-- **Branch:** `/plan-13` | **Depends on:** Plan-04, Plan-09
+- **Branch:** `/plan-14` | **Depends on:** Plan-06, Plan-10
 
 **Acceptance criteria**
 
@@ -293,10 +294,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       duplicate rules.
 - [ ] Tests cover known, unknown, malformed, and leading-zero examples.
 
-### Plan-14 Camera scanner and manual fallback
+### Plan-15 Camera scanner and manual fallback
 
 - **Phase:** S2 W1 | **Due:** 2026-11-21 | **Points:** 8
-- **Branch:** `/plan-14` | **Depends on:** Plan-13
+- **Branch:** `/plan-15` | **Depends on:** Plan-14
 
 **Acceptance criteria**
 
@@ -306,10 +307,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Denial, unsupported camera, scanner failure, and unknown barcode states explain recovery;
       camera tracks stop on leaving.
 
-### Plan-15 Unknown-food photo submission interface
+### Plan-16 Unknown-food photo submission interface
 
 - **Phase:** S2 W1 | **Due:** 2026-11-21 | **Points:** 5
-- **Branch:** `/plan-15` | **Depends on:** Plan-14, Plan-06
+- **Branch:** `/plan-16` | **Depends on:** Plan-15, Plan-04
 
 **Acceptance criteria**
 
@@ -319,10 +320,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       success states work on mobile and keyboard.
 - [ ] Pending data is clearly distinct from approved catalog nutrition.
 
-### Plan-16 Submission API and review-ready records
+### Plan-17 Submission API and review-ready records
 
 - **Phase:** S2 W2 | **Due:** 2026-11-28 | **Points:** 8
-- **Branch:** `/plan-16` | **Depends on:** Plan-15, Plan-19
+- **Branch:** `/plan-17` | **Depends on:** Plan-16, Plan-05
 
 **Acceptance criteria**
 
@@ -333,12 +334,12 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Submitter can see status and correct requested fields; basic upload failure/retry and
       duplicate-submission behavior are tested.
 - [ ] Production upload hardening, signed-URL abuse testing, quarantine/scanning, retention, and
-      processor deletion are Plan-28/20 work after Sprint 3.
+      processor deletion are Plan-27/26 work after Sprint 3.
 
-### Plan-26 Catalog review and reusable publication
+### Plan-18 Catalog review and reusable publication
 
 - **Phase:** S2 W2 | **Due:** 2026-11-28 | **Points:** 8
-- **Branch:** `/plan-26` | **Depends on:** Plan-16
+- **Branch:** `/plan-18` | **Depends on:** Plan-17
 
 **Acceptance criteria**
 
@@ -349,12 +350,12 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] A second synthetic account scans the approved product and logs it; past diary nutrition
       remains unchanged and uploader measurements/identity are not catalog fields.
 - [ ] Reviewer MFA, comprehensive privilege/abuse verification, and production audit controls are
-      Plan-28 work.
+      Plan-27 work.
 
-### Plan-22 Goal menu and estimate acceptance
+### Plan-19 Goal menu and estimate acceptance
 
 - **Phase:** S2 W2 | **Due:** 2026-11-28 | **Points:** 13
-- **Branch:** `/plan-22` | **Depends on:** Plan-21, Plan-10, Plan-19
+- **Branch:** `/plan-19` | **Depends on:** Plan-13, Plan-11, Plan-05
 
 **Acceptance criteria**
 
@@ -367,10 +368,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Known reviewed examples, conversions, boundaries, unsupported cases, data states, and
       successful persistence are tested.
 
-### Plan-24 Accepted connections and selected sharing
+### Plan-20 Accepted connections and selected sharing
 
 - **Phase:** S2 W2 | **Due:** 2026-11-28 | **Points:** 13
-- **Branch:** `/plan-24` | **Depends on:** Plan-19, Plan-22
+- **Branch:** `/plan-20` | **Depends on:** Plan-05, Plan-19
 
 **Acceptance criteria**
 
@@ -381,16 +382,16 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Biological sex, age, body measurements, and detailed diaries remain private; removal/blocking
       stop normal subsequent comparison access.
 - [ ] Block/report controls and pending/accepted/removed/unavailable states function; comprehensive
-      adversarial permission/cache/race testing is deferred to Plan-28.
+      adversarial permission/cache/race testing is deferred to Plan-27.
 
 ## Sprint 3 Week 1: Calendars and complete integration (November 29-December 5)
 
 **Goal:** Finish all initial design and functionality and freeze features by December 5.
 
-### Plan-23 Personal goal history and calendar
+### Plan-21 Personal goal history and calendar
 
 - **Phase:** S3 W1 | **Due:** 2026-12-05 | **Points:** 8
-- **Branch:** `/plan-23` | **Depends on:** Plan-22, Plan-11
+- **Branch:** `/plan-21` | **Depends on:** Plan-19, Plan-12
 
 **Acceptance criteria**
 
@@ -403,10 +404,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Tests cover changed goals, edited logs, leap days, local midnight, and timezone/daylight-
       saving behavior.
 
-### Plan-25 Friend progress comparison calendar
+### Plan-22 Friend progress comparison calendar
 
 - **Phase:** S3 W1 | **Due:** 2026-12-05 | **Points:** 8
-- **Branch:** `/plan-25` | **Depends on:** Plan-23, Plan-24
+- **Branch:** `/plan-22` | **Depends on:** Plan-21, Plan-20
 
 **Acceptance criteria**
 
@@ -417,12 +418,12 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] No-data, incomplete, no-goal, not-shared, unavailable, and met/unmet states stay distinct; no
       ranking, shame, or measurement/diary disclosure.
 - [ ] Sharing/revocation and normal data-failure/retry flows work on phone, desktop, and keyboard;
-      production attack/race testing remains Plan-28 work.
+      production attack/race testing remains Plan-27 work.
 
-### Plan-17 Full initial-feature integration and freeze
+### Plan-23 Full initial-feature integration and freeze
 
 - **Phase:** S3 W1 | **Due:** 2026-12-05 | **Points:** 8
-- **Branch:** `/plan-17` | **Depends on:** Plan-10, Plan-11, Plan-26, Plan-25
+- **Branch:** `/plan-23` | **Depends on:** Plan-11, Plan-12, Plan-18, Plan-22
 
 **Acceptance criteria**
 
@@ -439,10 +440,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 **Goal:** Reserve the whole second week for stabilization of existing features.
 
-### Plan-12 Final bug fixes and functional regression
+### Plan-24 Final bug fixes and functional regression
 
 - **Phase:** S3 W2 | **Due:** 2026-12-12 | **Points:** 5
-- **Branch:** `/plan-12` | **Depends on:** Plan-17
+- **Branch:** `/plan-24` | **Depends on:** Plan-23
 
 **Acceptance criteria**
 
@@ -454,10 +455,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       recovery are checked; relevant package checks pass.
 - [ ] No SECURE.md or LEGAL.md implementation or new feature is scheduled in this week.
 
-### Plan-18 Final visual, accessibility, and quality checks
+### Plan-25 Final visual, accessibility, and quality checks
 
 - **Phase:** S3 W2 | **Due:** 2026-12-12 | **Points:** 5
-- **Branch:** `/plan-18` | **Depends on:** Plan-17
+- **Branch:** `/plan-25` | **Depends on:** Plan-23
 
 **Acceptance criteria**
 
@@ -474,14 +475,14 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 **Starts:** December 13, 2026. Completion dates and capacity are TBD; the human
 developer schedules this phase separately. No requirement in this phase is a
-Sprint 3 acceptance gate. Public release depends on its completion. Plan-20/28/29
-can progress alongside one another after the Sprint 3 handoff, but Plan-27 checks
+Sprint 3 acceptance gate. Public release depends on its completion. Plan-26/27/28
+can progress alongside one another after the Sprint 3 handoff, but Plan-29 checks
 their combined result before release.
 
-### Plan-20 Data rights and operational privacy implementation
+### Plan-26 Data rights and operational privacy implementation
 
 - **Phase:** Post-Sprint-3 | **Due:** TBD | **Points:** 8
-- **Branch:** `/plan-20` | **Depends on:** Plan-12, Plan-18
+- **Branch:** `/plan-26` | **Depends on:** Plan-24, Plan-25
 
 **Acceptance criteria**
 
@@ -494,10 +495,10 @@ their combined result before release.
 - [ ] Test failures/retry, identity verification, all data categories, and restoration/deletion
       behavior; align notices with actual operations.
 
-### Plan-28 SECURE.md implementation and verification
+### Plan-27 SECURE.md implementation and verification
 
 - **Phase:** Post-Sprint-3 | **Due:** TBD | **Points:** TBD
-- **Branch:** `/plan-28` | **Depends on:** Plan-12, Plan-18
+- **Branch:** `/plan-27` | **Depends on:** Plan-24, Plan-25
 
 **Acceptance criteria**
 
@@ -512,10 +513,10 @@ their combined result before release.
 - [ ] Complete documented ASVS applicability/threat review and attack/cross-account/abuse tests;
       resolve critical/high findings and record approved residual risks.
 
-### Plan-29 LEGAL.md implementation and readiness review
+### Plan-28 LEGAL.md implementation and readiness review
 
 - **Phase:** Post-Sprint-3 | **Due:** TBD | **Points:** TBD
-- **Branch:** `/plan-29` | **Depends on:** Plan-12, Plan-18
+- **Branch:** `/plan-28` | **Depends on:** Plan-24, Plan-25
 
 **Acceptance criteria**
 
@@ -531,14 +532,14 @@ their combined result before release.
 - [ ] Qualified review and tests verify published promises against implemented behavior; unresolved
       applicability and compliance blockers remain explicit.
 
-### Plan-27 Post-Sprint-3 public-release gate
+### Plan-29 Post-Sprint-3 public-release gate
 
 - **Phase:** Post-Sprint-3 | **Due:** TBD | **Points:** 13
-- **Branch:** `/plan-27` | **Depends on:** Plan-20, Plan-28, Plan-29
+- **Branch:** `/plan-29` | **Depends on:** Plan-26, Plan-27, Plan-28
 
 **Acceptance criteria**
 
-- [ ] Plan-20/28/29 are complete with evidence. Security and legal implementation changes receive
+- [ ] Plan-26/27/28 are complete with evidence. Security and legal implementation changes receive
       functional, accessibility, and human-quality regression checks.
 - [ ] Full multi-account journeys pass in a production-like environment with isolated test data;
       Netlify frontend, backend-only Neon, private storage, and operational recovery are verified.
