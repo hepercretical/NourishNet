@@ -1,5 +1,7 @@
 .env
 .env.*
+*.env
+*.env.*
 !.env.example
 *.pem
 *.key
@@ -26,9 +28,14 @@ storage/
 .DS_Store
 Thumbs.db
 .idea/
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.example.json
+**/.vscode/*
+!**/.vscode/extensions.json
+!**/.vscode/settings.example.json
+*.swp
+*.swo
+*~
+*.orig
+*.rej
 
 # Additional credentials and local provider/CLI state
 .envrc
@@ -44,7 +51,10 @@ service-account*.json
 *.jks
 *.keystore
 *.kdbx
+*.ppk
 id_rsa
+id_dsa
+id_ecdsa
 id_ed25519
 *.tfstate
 *.tfstate.*
@@ -81,7 +91,9 @@ playwright-report/
 # Local caches and output
 .tools/
 .cache/
+.npm/
 .eslintcache
+report.*.json
 *.tsbuildinfo
 *.db-*
 *.sqlite-*
