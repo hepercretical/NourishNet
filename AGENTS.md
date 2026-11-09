@@ -264,6 +264,35 @@ just to check documentation.
 - Keep `.env`, `node_modules/`, `dist/`, and local database copies out of commits.
   Stage files by name instead of using `git add .`.
 
+### Ongoing ignore-rule maintenance
+
+The human developer explicitly requested this guidance on 2026-11-09. It applies
+throughout development, including Sprints 1-3; it does not defer existing secret
+protection until the later security phase.
+
+- Review and update the root `.gitignore` whenever a tool, dependency, environment,
+  database, upload flow, test, or export creates a new kind of local/private file.
+  Add the exclusion before generating sensitive output. Check root, `Frontend/`,
+  and `Backend/`, including nested files and credential/backup filename variants.
+- Follow the checks in
+  [SECURE.md's ongoing ignore-rule maintenance](AI_Docs/SECURE.md#ongoing-ignore-rule-maintenance)
+  before staging, before each commit, and after changing ignore rules. Verify
+  representative private paths are ignored and required source, lockfiles,
+  reviewed migrations, synthetic seeds, and safe examples remain visible to Git.
+- Keep plan-specific review contracts in ignored `contracts/` directories. Keep
+  private artifacts in the existing ignored private-output directories. Do not
+  hide required application source or actual migration history with broad rules.
+- Inspect tracked/untracked filenames and staged content for credentials and
+  personal data without printing secrets. `.gitignore` neither protects an
+  already tracked file nor detects secrets inside an allowed source file. Stop
+  staging/committing if a sensitive file is tracked or staged; report it safely
+  and obtain approval for any required untracking/history changes. Exposed
+  credentials require revocation/rotation, not just a new ignore rule.
+- Include ignore-rule verification and any unresolved findings in the completion
+  report. Do not claim these patterns guarantee that every possible secret is
+  excluded. This maintenance rule does not authorize commits, pushes, paid
+  services, or edits to protected guidance beyond the human's explicit request.
+
 ## Boundaries
 
 - **Costs:** No action that could cost money is approved by default. Before any

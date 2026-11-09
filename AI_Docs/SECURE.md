@@ -18,6 +18,11 @@ removing them. Functional account ownership, sharing choices, and catalog-review
 behavior remain product features; adversarial verification and production
 hardening are scheduled after Sprint 3.
 
+The human developer explicitly requested ongoing repository exclusion maintenance
+on 2026-11-09. The ignore-rule maintenance procedure below applies immediately
+throughout development as part of existing secret protection. This exception does
+not move the other post-Sprint-3 security or release work into the initial phase.
+
 ## Purpose
 
 This document defines the minimum security practices for NourishNet before any
@@ -325,6 +330,48 @@ the tools actually adopted by the project.
   If shared package configuration becomes necessary, create a reviewed secret-free
   example and inject credentials at runtime. Do not use ignore rules to conceal
   required application source or replace pre-commit/CI secret scanning.
+
+### Ongoing ignore-rule maintenance
+
+Follow this procedure whenever local output changes and before staging or
+committing. Repeat it after changes to `.gitignore`; do not treat a previous
+plan's audit as permanent coverage.
+
+1. Inventory new files and output locations before adopting a tool or generating
+   credentials, uploads, screenshots, database clusters/dumps, exports, browser
+   sessions, request-client environments, or diagnostics. Use the existing
+   ignored private-output folders, regardless of file extension. Extend the root
+   `.gitignore` before generating a new sensitive artifact category, including
+   nested paths and likely local/backup variants. Histories and editor snapshots
+   can retain secrets even after the original file is edited.
+2. Keep plan-specific review contracts in ignored `contracts/` directories, as
+   requested by the developer. This is a local-workspace policy, not a claim that
+   every contract contains secrets. Required application schemas/source, package
+   lockfiles, approved migrations, and synthetic seeds remain versioned. Never
+   store real dumps or private data in the migration/seed exception directories.
+3. Check representative paths with `git check-ignore -v --no-index -- <path>`.
+   Verify both sides: private paths must be ignored; required source and reviewed
+   placeholder-only examples must remain eligible for tracking. Cover repository
+   root, `Frontend/`, `Backend/`, nested outputs, and any new file category. Test
+   actual ignore behavior rather than assuming a pattern matches.
+4. Inspect `git status --short --untracked-files=all`, tracked paths, and staged
+   filenames/content. Audit tracked files against ignore rules with `--no-index`,
+   because normal ignore checks omit already tracked files. Use NUL-delimited
+   paths in scripted audits so spaces and Windows line endings cannot hide a
+   match. Check allowed source/examples for embedded credentials and private
+   data; never print suspected secret values into logs, reports, or chat.
+5. Stop before committing if a sensitive file is already tracked/staged or a
+   secret is embedded in source. Adding `.gitignore` does not remove it from the
+   index or history. Identify the affected path without revealing its contents,
+   get human approval for untracking/history changes, and revoke/rotate exposed
+   credentials through the approved process. Never delete a working private file
+   just to clean up Git status.
+6. Report the exclusions and source-visibility checks performed and unresolved
+   findings. Use approved secret scanning when available, with safe output;
+   do not silently add a scanner dependency or external upload service. Local
+   hooks and CI enforcement must not be described as installed unless implemented
+   and verified. Ignore patterns, instructions, and scanners reduce risk but
+   cannot guarantee that arbitrary future filenames/content contain no secrets.
 
 ### Additional official implementation references
 

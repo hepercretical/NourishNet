@@ -59,6 +59,13 @@ than silently using the quality week or moving features into the later phase.
 Mark each acceptance criterion as `[x]` when its requirements have been completed
 and verified. Leave incomplete or unverified criteria as `[ ]`.
 
+Human approval granted 2026-11-09: AI agents may change an acceptance-criterion
+checkbox from `[ ]` to `[x]` once that criterion is completed and verified, without
+asking for separate approval for that checkbox update. Report the verification
+evidence and any limitations. This approval covers checkbox completion only; it
+does not authorize changing criterion text, scope, dependencies, schedules, other
+documentation, or actions that require their own approval under AGENTS.md.
+
 Every applicable initial story includes loading, error, empty, validation, and
 success states; accessible controls; responsive UI; useful copy; and user-focused
 Vitest/React Testing Library coverage using mocked APIs and userEvent. Tests never
@@ -110,13 +117,17 @@ implementation order follows sprint placement and dependencies, not ID order.
 
 **Acceptance criteria**
 
-- [ ] Human approves the development schema, account identity contract, migrations, and API rules
+- [x] Human approves the development schema, account identity contract, migrations, and API rules
       before application.
-- [ ] Food, serving, nutrients, account ownership, meal/diary dates, goals, submissions, and
+- [x] Food, serving, nutrients, account ownership, meal/diary dates, goals, submissions, and
       connections have documented contracts; each feature applies its approved migration when
       requested.
-- [ ] Neon access stays in the backend with parameterized queries, input validation, synthetic
+- [x] Neon access stays in the backend with parameterized queries, input validation, synthetic
       seeds, and separate development data as required by AGENTS.md.
+
+Verified 2026-11-09 with human-approved local PostgreSQL only: shared foundation
+applied, synthetic fixtures seeded, all five schema designs checked in a
+rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 ### Plan-03 Complete initial screen design and app shell
 

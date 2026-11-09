@@ -12,7 +12,11 @@
     "lint": "eslint . --max-warnings 0",
     "test": "vitest run",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "db:check": "node --env-file-if-exists=.env scripts/database.js check",
+    "db:migrate": "node --env-file-if-exists=.env scripts/database.js migrate",
+    "db:seed": "node --env-file-if-exists=.env scripts/database.js seed",
+    "db:verify": "node --env-file-if-exists=.env scripts/verify-database.js"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
@@ -20,5 +24,8 @@
     "globals": "17.14.0",
     "prettier": "3.9.10",
     "vitest": "5.1.0"
+  },
+  "dependencies": {
+    "pg": "8.23.1"
   }
 }
