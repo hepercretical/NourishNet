@@ -20,6 +20,11 @@ export default function DesignIndex() {
           </li>
         ))}
       </ol>
+      <p>
+        <a className="design-action" href="#/design/components">
+          Try shared food, form, and state components
+        </a>
+      </p>
     </>
   );
 }

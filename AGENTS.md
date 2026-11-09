@@ -302,9 +302,12 @@ protection until the later security phase.
   deployment instructions do not authorize spending money.
 - **Always:** stay inside the requested plan and run lint and tests before
   committing.
-- **Ask first:** changing a database table or API rule, changing design tokens or
-  another teammate's component, adding an npm package, deleting records, touching
+- **Ask first:** changing a database table or API rule, changing design tokens,
+  adding an npm package, deleting records, touching
   the live database, force-pushing, or changing this file.
+- **Component ownership:** The human developer is the sole developer working with AI.
+  Existing components may be edited within the explicitly requested plan or task;
+  separate teammate-component approval is not required.
 - **Secrets:** never put an admin password or API key in `Frontend/src/`, in a
   `VITE_` variable, in a commit, or in output and logs. Do not print `.env`.
 - **Failing tests:** fix the code, never the test.
