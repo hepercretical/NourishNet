@@ -1,9 +1,69 @@
 # NourishNet
 
 NourishNet is a mobile-first calorie and macronutrient tracker for adults 18+.
-This repository currently implements **Plan-01: Foundation and development setup**.
+This repository currently implements **Plan-01: Foundation and development setup**
+and **Plan-02: development schema and API contracts**, approved by the human developer.
 The setup screen can check the local API connection. Accounts, food tracking,
-database integration, and the complete app shell belong to later plans.
+and the complete app shell belong to later plans. Database foundation commands
+run separately from the app.
+
+## Plan-02 development database
+
+Read the local development data/API proposal at `Backend/contracts/plan-02.md` for the
+identity/ownership contract, food/serving/nutrient model, diary snapshots, goals,
+submissions, private connections, API payloads, validation, and migration order.
+It links five approved, staged SQL migrations and a synthetic seed fixture.
+Plan-specific contracts are intentionally ignored by Git and are available only
+in the developer's local workspace.
+
+The backend uses pinned `pg` with parameterized values, validated configuration,
+and an explicit migration ledger with checksums. Only the shared foundation is
+applied to the local development database. All five designs and synthetic seeds
+were verified using local PostgreSQL 18.6 in a separate transaction that rolled
+back. Later feature migrations are applied only when that feature is requested
+and its additional decisions are approved. No new HTTP routes are implemented.
+
+The developer selected **local PostgreSQL only**. No Neon/Netlify resources or
+connections were created. Hosted database verification is not claimed. For a
+future approved remote backend target, the driver requires TLS certificate
+verification; connection secrets remain backend-only. Development, preview and
+production must use separate data and credentials. Runtime health/startup does
+not open a database connection or apply migrations.
+
+For optional local database setup, obtain the PostgreSQL Windows binary archive
+from the [official download page](https://www.postgresql.org/download/windows/)
+and extract its `pgsql/bin`, `pgsql/lib`, and `pgsql/share` folders under the ignored
+`.tools/postgresql/` directory. The local helper uses these portable binaries;
+it does not install a Windows service or require a hosted subscription.
+From `Backend/`, on a fresh setup with **no existing `.env`**:
+
+```powershell
+node scripts/local-postgres.js init
+node scripts/local-postgres.js start
+npm run db:check
+npm run db:migrate -- 001_identity_catalog.sql
+npm run db:seed
+npm run db:verify
+```
+
+Initialization generates a random password and an ignored backend `.env`; it
+refuses to overwrite existing environment/data files. If `.env` already exists,
+preserve it and configure the database settings shown in `.env.example` instead.
+The helper's start/stop commands manage only the cluster it initialized. The local
+server listens only on `127.0.0.1:55432`. Stop it when finished:
+
+```powershell
+node scripts/local-postgres.js stop
+```
+
+Migration commands require a pinned expected host/database, `DATABASE_ENV=development`
+and `DATABASE_SYNTHETIC_ONLY=true`. The migration filename must be on the approved
+list; there is no automatic “apply all” command. Reapplying unchanged SQL is a no-op;
+checksum drift fails. Seeding is explicit and refuses duplicate data rather than
+overwriting it. `db:verify` runs only on the dedicated loopback development target;
+it validates all schema designs with synthetic data and rolls back its work.
+The local setup uses a local cluster-owner credential for these manual commands;
+it is not a production runtime-role configuration.
 
 ## Prerequisites
 
@@ -59,13 +119,15 @@ update `server.proxy` in `Frontend/vite.config.js` to match. Restart the service
 after changing environment configuration. For local development, use the proxy
 instead of a cross-origin API URL; CORS is not configured in this foundation.
 
-Every `VITE_` value is exposed to the browser. The backend currently has no
-database client and makes no Neon connections.
+Every `VITE_` value is exposed to the browser. Database settings belong only in
+the backend. The normal app currently makes no database requests; manual database
+commands are opt-in and use the ignored backend environment.
 
 ## Local API
 
 `npm run dev` from `Backend/` starts Node's built-in HTTP server with file watching.
-`npm start` starts it without watching. The backend has no runtime npm dependencies.
+`npm start` starts it without watching. The backend's database driver is `pg`;
+the HTTP server and health endpoint still work without database configuration.
 
 | Request                        | Response                                              |
 | ------------------------------ | ----------------------------------------------------- |
@@ -117,7 +179,7 @@ databases, and uploads while allowing safe `.env.example` files.
 Dependency note (2026-11-09): npm reports four moderate development-tool advisories
 through ESLint 10's `minimatch` dependency (GHSA-g3hv-75wg-m249). npm's suggested
 ESLint 9 downgrade is marked unsupported by its publisher, so this scaffold keeps
-the current ESLint release. No backend runtime packages are installed.
+the current ESLint release. Plan-02 adds the approved `pg` runtime dependency.
 
 ## Project guidance
 
