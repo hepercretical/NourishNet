@@ -56,6 +56,9 @@ than silently using the quality week or moving features into the later phase.
 
 ## Shared initial acceptance criteria
 
+Mark each acceptance criterion as `[x]` when its requirements have been completed
+and verified. Leave incomplete or unverified criteria as `[ ]`.
+
 Every applicable initial story includes loading, error, empty, validation, and
 success states; accessible controls; responsive UI; useful copy; and user-focused
 Vitest/React Testing Library coverage using mocked APIs and userEvent. Tests never
@@ -93,11 +96,11 @@ implementation order follows sprint placement and dependencies, not ID order.
 
 **Acceptance criteria**
 
-- [ ] Frontend React/Vite dev and production build work; backend has a health endpoint and
+- [x] Frontend React/Vite dev and production build work; backend has a health endpoint and
       documented local start command.
-- [ ] Frontend provides dev/lint/test/build/format; backend provides dev/lint/test/format.
+- [x] Frontend provides dev/lint/test/build/format; backend provides dev/lint/test/format.
       Repeatable setup is documented.
-- [ ] Environment examples contain safe placeholders; .gitignore excludes secrets, dependencies,
+- [x] Environment examples contain safe placeholders; .gitignore excludes secrets, dependencies,
       builds, local databases, and uploads.
 
 ### Plan-02 Neon development schema and API contracts

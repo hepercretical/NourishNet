@@ -104,7 +104,7 @@ user onboarding require the later security/legal implementation and release gate
 Run these from `Frontend/` after the Vite app has been scaffolded:
 
 ```bash
-npm install
+npm ci
 npm run dev
 npm run lint
 npm test
@@ -115,7 +115,7 @@ npm run format
 Run these from `Backend/` after the server package has been scaffolded:
 
 ```bash
-npm install
+npm ci
 npm run dev
 npm run lint
 npm test
@@ -124,6 +124,19 @@ npm run format
 
 If a command is not available yet, add the matching package script as part of the
 scaffolding plan instead of silently substituting an unrelated command.
+
+### Dependency and setup rules
+
+- Use `npm ci` for repeatable installs from each package's lockfile. Use
+  `npm install` only for human-approved dependency changes, and retain the
+  resulting lockfile.
+- Do not run `npm audit fix --force`. Review a supported upstream fix before
+  updating dependencies; do not automatically adopt an unsupported downgrade
+  suggested by an audit tool.
+- Keep README.md focused on project information, local setup, configuration,
+  usage, and verification commands. Put agent workflow rules and approval
+  requirements in AGENTS.md, consolidating existing rules instead of duplicating
+  them in the README. Changes to AGENTS.md still require explicit human approval.
 
 ## Tech stack
 
@@ -232,11 +245,11 @@ const { foods, loading, error } = useFoods(searchTerm);
 4. At the end, go through the story's acceptance criteria one by one and say
    which pass and how you checked them.
 
-The project currently has no scaffolded package scripts. Documentation-only work
-requires document/link/consistency and ignore-rule checks; report unavailable
-application checks honestly. Once scaffolded, run frontend lint, tests, build, and
-format, and backend lint, tests, and format. Start the development services for
-runtime changes. Do not add unrelated packages just to check documentation.
+Documentation-only work requires document/link/consistency and ignore-rule checks;
+report unavailable application checks honestly. For scaffolded packages, run
+frontend lint, tests, build, and format, and backend lint, tests, and format.
+Start the development services for runtime changes. Do not add unrelated packages
+just to check documentation.
 
 ## Git
 
@@ -253,6 +266,11 @@ runtime changes. Do not add unrelated packages just to check documentation.
 
 ## Boundaries
 
+- **Costs:** No action that could cost money is approved by default. Before any
+  potentially paid action, including hosting or pushing/deploying to Netlify or
+  Neon, ask the human developer for explicit approval and display the exact text
+  **THIS MAY COST MONEY** in the permission request. General feature, setup, or
+  deployment instructions do not authorize spending money.
 - **Always:** stay inside the requested plan and run lint and tests before
   committing.
 - **Ask first:** changing a database table or API rule, changing design tokens or

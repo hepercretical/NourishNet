@@ -1,0 +1,22 @@
+.development-setup {
+  width: min(100%, var(--content-max-width));
+  margin-inline: auto;
+  padding: var(--space-6) var(--space-4);
+  overflow-wrap: anywhere;
+}
+
+.development-setup__eyebrow,
+.development-setup__note {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.development-setup__eyebrow {
+  font-weight: bold;
+}
+
+@media (min-width: 40rem) {
+  .development-setup {
+    padding: var(--space-7) var(--space-6);
+  }
+}
