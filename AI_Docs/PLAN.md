@@ -228,13 +228,13 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 **Acceptance criteria**
 
-- [ ] Backend creates and retrieves the signed-in synthetic account's entries for a selected local
+- [x] Backend creates and retrieves the signed-in synthetic account's entries for a selected local
       diary day.
-- [ ] Calories, macros, and sodium scale consistently by quantity and aggregate by meal/day; unknown
+- [x] Calories, macros, and sodium scale consistently by quantity and aggregate by meal/day; unknown
       nutrients remain unknown.
-- [ ] Entries preserve serving/nutrition snapshots so later catalog corrections do not rewrite past
+- [x] Entries preserve serving/nutrition snapshots so later catalog corrections do not rewrite past
       logs.
-- [ ] Tests cover decimal servings, multiple meals, empty days, and local-day boundaries.
+- [x] Tests cover decimal servings, multiple meals, empty days, and local-day boundaries.
 
 ### Plan-11 Tracker integration
 

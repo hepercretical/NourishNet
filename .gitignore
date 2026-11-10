@@ -300,3 +300,33 @@ terraform.rc.*
 .lesshst
 ConsoleHost_history.txt
 ConsoleHost_history.txt.*
+
+# Additional credential-store and request-client backup variants
+.dockercfg
+.dockercfg.*
+.vault-token
+.vault-token.*
+.wgetrc
+.wgetrc.*
+_wgetrc
+_wgetrc.*
+credentials.xml
+credentials.xml.*
+secrets.csv
+secrets.csv.*
+*.jceks
+*.jceks.*
+http-client.private.env.json.*
+
+# SQLite backup/renamed copies and compressed journal files
+*.sqlite.*
+*.sqlite3.*
+*.db-wal.*
+*.db-shm.*
+*.db-journal.*
+*.sqlite-wal.*
+*.sqlite-shm.*
+*.sqlite-journal.*
+*.sqlite3-wal.*
+*.sqlite3-shm.*
+*.sqlite3-journal.*

@@ -7,6 +7,9 @@ preview and app shell**, and **Plan-04: shared food, form, and state components*
 local synthetic accounts, backend food queries, and an account-owned dashboard.
 **Plan-08** adds live food search through a focused API client and cancellable hook.
 **Plan-09** adds serving/meal selection, scaled confirmation, and session-only meal entries.
+**Plan-10** adds the authenticated diary API, persistent snapshots, and meal/day totals.
+The browser tracker still uses Plan-09 session entries; connecting it to persistence
+and reloading saved entries is Plan-11.
 The shell uses fictional examples to review the initial
 screens. Account, tracking, scanning, upload, goal, and sharing operations are not
 available in the preview. Database foundation commands run separately from the app.
@@ -14,7 +17,8 @@ available in the preview. Database foundation commands run separately from the a
 ## Current checkout verification (November 9, 2026)
 
 Frontend/backend lint and formatting, the frontend production build, 143 frontend
-tests and 85 backend tests pass. Both development services respond locally,
+tests and 126 backend tests pass. The 31 explicit Plan-10 local integration checks
+also pass. Both development services respond locally,
 including the health endpoint through the frontend proxy. Open
 <http://127.0.0.1:5173/#/design/components> for interactive control testing,
 <http://127.0.0.1:5173/#/design> for the screen map, or
@@ -27,6 +31,70 @@ Plan-04 preview was opened in the default browser. No hosted services were used.
 
 Original ignored contracts were unavailable and have been reconstructed from
 source, with missing historical review evidence clearly identified.
+
+## Persistent diary API (Plan-10)
+
+The approved `002_diary.sql` migration is applied to the local synthetic database.
+On another approved local setup, run from `Backend/` after foundation/account setup:
+
+```powershell
+npm run db:migrate -- 002_diary.sql
+npm run verify:diary
+```
+
+The verification command starts its own temporary API port and tests real local
+PostgreSQL storage using two new fictional accounts. It retains those synthetic
+accounts and diary fixtures; temporary catalog corrections roll back. It does not
+print passwords or session cookies. Unit tests remain mocked and separate.
+
+With a signed-in session, `GET /api/diary?date=2026-11-01` returns the selected
+local date, its recorded timezone, four meals with entries/totals, and daily totals.
+There must be exactly one `date` query field. Empty days return empty meals and
+zero recorded totals; that does not mean the day is complete.
+
+`POST /api/diary` accepts exactly these JSON fields:
+
+```json
+{
+  "date": "2026-11-01",
+  "servingId": "20000000-0000-4000-8000-000000000001",
+  "quantity": 1.5,
+  "meal": "breakfast",
+  "requestKey": "30000000-0000-4000-8000-000000000001"
+}
+```
+
+Use an actual `servingId` from `/api/foods?q=sample` and a new UUID `requestKey`
+for each intentional save. Meals are `breakfast`, `lunch`, `dinner`, or `snack`;
+quantity must be positive, below 100000000, and have at most four decimal places.
+Send JSON from the existing local app origin. Ownership and timezone come only
+from the session; client-supplied owner IDs or nutrients are rejected.
+Success returns 201 with `{ date, entry }`. Retry the identical payload/key after
+a connection failure: it returns the same entry, including concurrent retries.
+Reusing a key with changed data returns 409. Missing servings return 404;
+invalid input returns 400; expired sessions return 401. Responses are not cached.
+
+Entries keep the food name, catalog version, serving label/grams, and per-serving
+nutrition at save time. `nutrients` contains that snapshot; `contribution` contains
+quantity-scaled values. Meal/day totals sum snapshot contributions, retaining all
+eight product decimal places internally and returning JSON numbers. Display may
+round to the existing two-decimal convention. Unknown sodium stays `null` in
+contributions and any containing total; known zero stays zero. Dates are literal
+local calendar dates, never UTC conversions, including DST, leap, and year boundaries.
+The saved day's timezone is retained if the account timezone later changes.
+
+All four Plan-10 criteria are verified: owner/day create/read, scaled meal/day
+totals with unknown values, durable catalog snapshots, and coverage for decimal
+servings, multiple meals, empty days, and local-day boundaries. For browser testing,
+sign in at `/#/app`, then open `/api/diary?date=2026-11-01` on the same local host.
+Use `npm run verify:diary` to exercise saves and retries until Plan-11 connects
+the tracker to this API.
+
+The repository ignore audit checked 630 representative private paths and 18
+required source/example paths, with no tracked ignored files or exposed local
+database password found in allowed files or the frontend build. Credential-pattern
+matches were reviewed as placeholders, generated-value code, or synthetic tests.
+Ignore rules cannot detect every secret embedded in an otherwise allowed file.
 
 ## Local accounts, food queries and dashboard (Plans 05-07)
 

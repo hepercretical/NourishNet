@@ -50,11 +50,17 @@ export function accountRoutes({ getServices, origin = 'http://127.0.0.1:5173' })
       ? url.pathname.slice('/api/auth/'.length)
       : null;
     const isAuth = action && Object.hasOwn(methods, action);
-    if (!isAuth && !['/api/foods', '/api/dashboard'].includes(url.pathname)) return false;
+    const isDiary = url.pathname === '/api/diary';
+    if (!isAuth && !['/api/foods', '/api/dashboard', '/api/diary'].includes(url.pathname))
+      return false;
     try {
-      const method = isAuth ? methods[action] : 'GET';
+      const method = isAuth
+        ? methods[action]
+        : isDiary && request.method === 'POST'
+          ? 'POST'
+          : 'GET';
       if (request.method !== method) {
-        response.setHeader('Allow', method);
+        response.setHeader('Allow', isDiary ? 'GET, POST' : method);
         throw new AccountError('Method not allowed', 405);
       }
       if (method === 'POST' && request.headers.origin !== origin)
@@ -63,7 +69,18 @@ export function accountRoutes({ getServices, origin = 'http://127.0.0.1:5173' })
       const sessionToken = readCookie(request);
       if (!isAuth) {
         const account = await services.auth.session(sessionToken);
-        if (url.pathname === '/api/foods') {
+        if (isDiary) {
+          if (method === 'POST') {
+            send(response, 201, await services.diary.create(account, await readBody(request)));
+          } else {
+            if (
+              [...url.searchParams.keys()].some((key) => key !== 'date') ||
+              url.searchParams.getAll('date').length !== 1
+            )
+              throw new AccountError('Select one local diary date.');
+            send(response, 200, await services.diary.get(account, url.searchParams.get('date')));
+          }
+        } else if (url.pathname === '/api/foods') {
           const query = url.searchParams.get('q') ?? '';
           if (query.length > 100) throw new AccountError('Use at most 100 search characters.');
           send(response, 200, { foods: await services.foods.search(query) });
