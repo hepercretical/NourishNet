@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { accountRequest } from '../../services/accounts.js';
 import Dashboard from '../Dashboard/Dashboard.jsx';
 
-export default function AccountDiary({ account }) {
+export default function AccountDiary({ account, entries = [] }) {
   const [state, setState] = useState({ loading: true });
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
@@ -23,6 +23,7 @@ export default function AccountDiary({ account }) {
     <Dashboard
       account={account}
       {...state}
+      sessionEntries={entries.filter((entry) => entry.date === state.diary?.date)}
       onRetry={() => {
         setState({ loading: true });
         setAttempt((current) => current + 1);

@@ -6,6 +6,7 @@ import FoodSearch from '../FoodSearch/FoodSearch.jsx';
 import Button from '../Button/Button.jsx';
 import { ErrorState, LoadingState } from '../DataState/DataState.jsx';
 import './LiveApp.css';
+import { meals } from '../../utils/foodForm.js';
 
 const titles = {
   signup: 'Create a fictional account',
@@ -18,6 +19,7 @@ export default function LiveApp({ route }) {
   const [session, setSession] = useState({ status: 'loading', account: null });
   const [email, setEmail] = useState('');
   const [notice, setNotice] = useState('');
+  const [entries, setEntries] = useState([]);
   const [attempt, setAttempt] = useState(0);
   const [loggingOut, setLoggingOut] = useState(false);
   const main = useRef(null);
@@ -39,6 +41,7 @@ export default function LiveApp({ route }) {
       });
     const expire = () => {
       generation.current += 1;
+      setEntries([]);
       setSession({ status: 'ready', account: null });
       setNotice('Your session expired. Sign in again.');
       window.location.hash = '/app/login';
@@ -57,6 +60,7 @@ export default function LiveApp({ route }) {
     setEmail(body.email);
     if (mode === 'login') {
       generation.current += 1;
+      setEntries([]);
       setSession({ status: 'ready', account: result.account });
       setNotice('');
       window.location.hash = '/app/dashboard';
@@ -74,6 +78,7 @@ export default function LiveApp({ route }) {
     try {
       await accountRequest('/auth/logout', { body: {} });
       generation.current += 1;
+      setEntries([]);
       setSession({ status: 'ready', account: null });
       setEmail('');
       setNotice('Signed out. Your private diary is cleared.');
@@ -134,9 +139,29 @@ export default function LiveApp({ route }) {
           </>
         ) : session.account ? (
           requested === 'search' ? (
-            <FoodSearch key={session.account.id} />
+            <FoodSearch
+              key={session.account.id}
+              initialMeal={meals.includes(route.split('/')[3]) ? route.split('/')[3] : ''}
+              onSave={(entry) => {
+                const date = new Intl.DateTimeFormat('en-CA', {
+                  timeZone: session.account.timeZone,
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                }).format(new Date());
+                setEntries((current) =>
+                  current.some((item) => item.id === entry.id)
+                    ? current
+                    : [...current, { ...entry, date }],
+                );
+                setNotice(
+                  `Added ${entry.name} to ${entry.meal.toLowerCase()} for this app session.`,
+                );
+                window.location.hash = '/app/dashboard';
+              }}
+            />
           ) : (
-            <AccountDiary key={session.account.id} account={session.account} />
+            <AccountDiary key={session.account.id} account={session.account} entries={entries} />
           )
         ) : (
           <>

@@ -268,3 +268,35 @@ serviceAccount*.json.*
 # Database journals/copies and IDE snapshots may retain credentials or private data.
 *.db3.*
 .vs/
+
+# Additional local credential stores, infrastructure plans, and shell histories
+.credentials/
+credentials
+credentials.csv
+credentials.csv.*
+secrets.toml
+secrets.toml.*
+secrets.xml
+secrets.xml.*
+.secrets.*
+.pypirc
+.pypirc.*
+.s3cfg
+.s3cfg.*
+.boto
+.boto.*
+.terraformrc
+.terraformrc.*
+terraform.rc
+terraform.rc.*
+*.tfplan
+*.tfplan.*
+**/.config/doctl/
+**/.config/rclone/
+.httr-oauth
+.Renviron
+.Renviron.*
+.Rhistory
+.lesshst
+ConsoleHost_history.txt
+ConsoleHost_history.txt.*

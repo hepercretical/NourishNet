@@ -29,6 +29,23 @@ it('refuses diary data belonging to another account', async () => {
   expect(await screen.findByRole('alert')).toBeVisible();
   expect(screen.queryByText('0 kcal')).not.toBeInTheDocument();
 });
+
+it('shows session entries only on their diary date', async () => {
+  accountRequest.mockResolvedValueOnce({ ...diary, meals: [{ name: 'Lunch', entries: [] }] });
+  const entry = {
+    id: 'entry',
+    date: diary.date,
+    name: 'Session oats',
+    meal: 'Lunch',
+    amount: 1.5,
+    servingBasis: '40 g',
+    nutrients: { calories: 225 },
+  };
+  const { rerender } = render(<AccountDiary account={account} entries={[entry]} />);
+  expect(await screen.findByRole('article', { name: 'Session oats' })).toBeVisible();
+  rerender(<AccountDiary account={account} entries={[{ ...entry, date: '2026-11-08' }]} />);
+  expect(screen.queryByRole('article', { name: 'Session oats' })).not.toBeInTheDocument();
+});
 it('cancels an old account request and ignores its late response after switching owners', async () => {
   let resolve;
   accountRequest

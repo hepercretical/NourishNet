@@ -6,13 +6,14 @@ This repository includes **Plan-01: Foundation and development setup**,
 preview and app shell**, and **Plan-04: shared food, form, and state components**. **Plans 05-07** add
 local synthetic accounts, backend food queries, and an account-owned dashboard.
 **Plan-08** adds live food search through a focused API client and cancellable hook.
+**Plan-09** adds serving/meal selection, scaled confirmation, and session-only meal entries.
 The shell uses fictional examples to review the initial
 screens. Account, tracking, scanning, upload, goal, and sharing operations are not
 available in the preview. Database foundation commands run separately from the app.
 
 ## Current checkout verification (November 9, 2026)
 
-Frontend/backend lint and formatting, the frontend production build, 131 frontend
+Frontend/backend lint and formatting, the frontend production build, 143 frontend
 tests and 85 backend tests pass. Both development services respond locally,
 including the health endpoint through the frontend proxy. Open
 <http://127.0.0.1:5173/#/design/components> for interactive control testing,
@@ -46,7 +47,7 @@ Manual testing:
 3. Review your private daily nutrition summary and Breakfast, Lunch, Dinner and
    Snack sections. New diaries show zero recorded totals, no goal and useful empty
    states. Sharing is off. Add-food links open live search; entry persistence
-   belongs to Plans 09-11.
+   belongs to Plan-10; Plan-09 entries stay in the current app session.
 4. Sign out, create and verify a second fictional account, then sign in. Check its
    name/timezone and confirm the previous account content is cleared. Sessions
    expire after eight hours; expired sessions ask you to sign in again.
@@ -87,7 +88,7 @@ submit a search, then restart it and choose **Try again** to repeat the failed
 term. The input stays available for correction. Pending searches disable repeat
 submission, clear old results, and announce loading. Navigation, logout, or session
 expiry cancels pending work; late responses cannot repopulate the old screen.
-Meal selection and saving remain Plan-09 work.
+Choose a result to open the serving and meal flow described below.
 
 Mocked client, hook, component, and signed-in route tests cover delayed/failing
 requests, cancellation, stale responses, empty results, retry, and keyboard
@@ -95,15 +96,42 @@ submission. The existing local API/database integration script passes 33 checks.
 Browser automation was unavailable during Plan-08 verification; phone/wide layout,
 screen-reader behavior, and zoom still need human review.
 
-The ignore-rule audit checked 99 private paths across root, Frontend, and Backend,
-plus 10 required source/example/lockfile/migration/seed paths. Added exclusions
-cover Git/curl/MySQL credential stores, GitHub CLI authentication, kubeconfig,
-Wrangler state, secret-file and service-account variants, Terraform variable
-backups, database journals, and IDE snapshots. No tracked file matches an ignore
-rule. A local credential-pattern review found only synthetic database test URLs;
-no live credential finding remains. These checks reduce risk and cannot guarantee
-that every future filename or embedded secret is excluded. Nothing was staged or
-committed.
+The Plan-09 ignore-rule audit checked 472 private paths across root, Frontend,
+Backend, and nested folders, plus 13 required source/example/lockfile/migration/seed
+paths. Added exclusions cover additional credential stores, Terraform plan files,
+and shell histories. No tracked file matches an ignore rule. Credential-pattern
+matches were reviewed as safe placeholders, generated-value source, or synthetic
+test URLs. These checks reduce risk and cannot guarantee that every future filename
+or embedded secret is excluded. Nothing was staged or committed.
+
+### Add food to a meal (Plan-09)
+
+Sign in to the local app, choose **Add food to lunch**, search for `sample`, and
+choose a food. The meal shortcut preselects Lunch; the general search link asks
+you to choose a meal. Enter `1.5` servings and choose **Review entry**. Confirmation
+shows the food, serving basis, amount, meal, and scaled calories, macros, and sodium.
+For example, 150 kcal per serving becomes 225 kcal for 1.5 servings. Unknown sodium
+stays **Not provided**, while known zero stays zero. Calculations retain precision;
+confirmation and session cards show at most two decimal places.
+
+Choose **Edit serving and meal** to revise your choices, or **Back to search** from
+the form to keep the query, results, and draft for the selected food. Blank, zero,
+negative, nonnumeric, and nonfinite amounts receive field feedback. Amounts whose
+nutrition would overflow receive a recovery message. Choose **Save entry** to return
+to the diary with success feedback and one entry in the selected meal. Repeated
+taps stay one operation; deliberately starting a new entry allows another serving.
+
+Entries exist only in memory for the current signed-in app session and local diary
+date. Refresh, sign-out, expiry, or leaving the live app clears them. Daily summary
+totals do not include these entries yet; database persistence and aggregation belong
+to Plan-10. No API rules, packages, migrations, or database schema were changed.
+
+Mocked component and integration tests cover keyboard selection/submission, decimal
+scaling, validation, editing, retained search/drafts, failed/pending saves, retry
+identity, duplicate taps, meal placement, local-day filtering, and logout/expiry.
+The frontend has 143 passing tests; the backend has 85, with 33 additional explicit
+local integration checks. Browser automation could not connect to this machine;
+phone/wide layout, 200% zoom, and screen-reader review remain manual checks.
 
 From Backend, run npm run verify:accounts for explicit local integration checks.
 It creates two uniquely named fictional account fixtures, checks verification,

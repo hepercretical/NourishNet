@@ -37,3 +37,17 @@ it('labels unreviewed food and prevents catalog selection', async () => {
   expect(choose).not.toHaveBeenCalled();
   expect(screen.getAllByText('Not provided')).toHaveLength(5);
 });
+
+it('labels logged nutrition as the selected amount rather than per serving', () => {
+  render(
+    <FoodCard
+      name="Sample oats"
+      servingLabel="Logged amount"
+      servingBasis="1.5 servings × 40 g"
+      nutrients={{ calories: 225 }}
+    />,
+  );
+  expect(screen.getByText('Logged amount: 1.5 servings × 40 g')).toBeVisible();
+  expect(screen.getByText('225 kcal')).toBeVisible();
+  expect(screen.queryByText(/Per serving:/)).not.toBeInTheDocument();
+});
