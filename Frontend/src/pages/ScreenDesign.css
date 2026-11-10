@@ -3,9 +3,8 @@
 .design-feedback {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-5);
-  margin: 0 0 var(--space-5);
+  padding: var(--space-3);
+  margin: 0 0 var(--space-3);
   min-width: 0;
 }
 
@@ -16,14 +15,14 @@
 .design-fields,
 .design-meals {
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-3);
 }
 
 .design-field {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  margin-block-end: var(--space-4);
+  margin-block-end: var(--space-3);
   font-weight: bold;
 }
 
@@ -71,7 +70,7 @@
 .design-summary {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
-  gap: var(--space-5);
+  gap: var(--space-3);
 }
 
 .design-summary dd {
@@ -81,7 +80,7 @@
 }
 
 .design-image-placeholder {
-  padding: var(--space-6);
+  padding: var(--space-4);
   background: var(--color-surface-muted);
   border: 1px dashed var(--color-text-muted);
 }
@@ -91,7 +90,7 @@
   align-items: center;
   gap: var(--space-3);
   min-height: 44px;
-  margin-block-end: var(--space-4);
+  margin-block-end: var(--space-3);
 }
 
 .design-detail-list {
@@ -100,7 +99,7 @@
 }
 
 .design-detail-list li {
-  margin-block-end: var(--space-4);
+  margin-block-end: var(--space-3);
 }
 
 .design-index a {
@@ -115,4 +114,46 @@
   .design-meals {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+.design-state-picker {
+  border-inline: 0;
+}
+.design-state-picker .design-field {
+  margin: 0;
+}
+.design-state-picker p {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+.design-detail-list,
+.design-index {
+  list-style: none;
+  padding: 0;
+}
+.design-detail-list li,
+.design-index li {
+  padding: var(--space-3);
+  margin: 0;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+.design-meal-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-surface-muted);
+}
+.design-meal-header h2 {
+  margin: 0;
+}
+.design-meal-header a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  text-decoration: none;
+  font-size: var(--text-lg);
 }

@@ -19,6 +19,8 @@ it('shows fictional food with a serving basis and explicitly missing sodium', ()
 it('provides an add-food path for each meal and identifies an incomplete day', () => {
   render(<DiaryExample />);
   expect(screen.getByText(/Day incomplete/)).toBeVisible();
+  expect(screen.getByRole('heading', { name: /November 9/ })).toHaveAttribute('tabindex', '-1');
+  expect(screen.getByRole('link', { name: 'Add food to breakfast' })).toHaveTextContent('＋');
   for (const meal of ['breakfast', 'lunch', 'dinner', 'snack'])
     expect(screen.getByRole('link', { name: 'Add food to ' + meal })).toHaveAttribute(
       'href',

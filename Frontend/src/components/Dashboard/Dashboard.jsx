@@ -24,7 +24,12 @@ export default function Dashboard({
       ) : (
         diary && (
           <>
-            <section className="dashboard-summary" aria-label="Recorded daily nutrition">
+            <section
+              className="dashboard-summary"
+              id="daily-summary"
+              tabIndex={-1}
+              aria-label="Recorded daily nutrition"
+            >
               <h2>Recorded nutrition</h2>
               <p>
                 {diary.date} · {diary.timeZone} · No goal · Day incomplete
@@ -42,7 +47,23 @@ export default function Dashboard({
                   key={meal.name[0].toUpperCase() + meal.name.slice(1)}
                   aria-label={meal.name[0].toUpperCase() + meal.name.slice(1)}
                 >
-                  <h2>{meal.name[0].toUpperCase() + meal.name.slice(1)}</h2>
+                  <div className="dashboard-meal__header">
+                    <h2>{meal.name[0].toUpperCase() + meal.name.slice(1)}</h2>
+                    <a
+                      className="dashboard-meal__add"
+                      aria-label={`Add food to ${meal.name.toLowerCase()}`}
+                      href={`#/app/search/${meal.name[0].toUpperCase() + meal.name.slice(1)}`}
+                    >
+                      <span aria-hidden="true">＋</span>
+                    </a>
+                    {meal.totals && (
+                      <span className="dashboard-meal__total">
+                        {meal.totals.calories == null
+                          ? 'Not provided'
+                          : `${displayNutrition(meal.totals).calories} kcal`}
+                      </span>
+                    )}
+                  </div>
                   {meal.entries.length ? (
                     <ul className="dashboard-entries">
                       {meal.entries.map((entry) => (
@@ -72,15 +93,28 @@ export default function Dashboard({
                       to start this meal.
                     </p>
                   )}
-                  <a
-                    className="design-action"
-                    href={`#/app/search/${meal.name[0].toUpperCase() + meal.name.slice(1)}`}
-                  >
-                    Add food to {meal.name.toLowerCase()}
-                  </a>
                 </section>
               ))}
             </div>
+            <section className="dashboard-extras" aria-label="Additional tracking options">
+              <h2>Additional tracking</h2>
+              <p>Exercise · Weigh-in · Water</p>
+              <p>
+                Not included in Sprint 1. Food tracking does not estimate calories burned or a
+                remaining calorie allowance.
+              </p>
+            </section>
+            <button
+              type="button"
+              className="dashboard-summary-link"
+              onClick={() => {
+                const summary = document.getElementById('daily-summary');
+                summary?.focus();
+                summary?.scrollIntoView?.();
+              }}
+            >
+              View daily summary
+            </button>
             <p>
               Search and confirm a food to save it to this diary date. Saved entries reload when you
               return or refresh.

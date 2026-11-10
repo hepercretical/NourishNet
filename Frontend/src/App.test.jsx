@@ -2,8 +2,25 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import DevelopmentSetup from './pages/DevelopmentSetup.jsx';
+import App from './App.jsx';
 
 afterEach(() => vi.unstubAllGlobals());
+
+it('opens the opt-in local diary at the root without checking authentication', async () => {
+  const fetch = vi.fn();
+  vi.stubGlobal('fetch', fetch);
+  window.history.replaceState({}, '', '/?demo=1');
+  localStorage.clear();
+  try {
+    render(<App />);
+    expect(await screen.findByRole('heading', { name: 'Your daily diary' })).toBeVisible();
+    expect(await screen.findByRole('region', { name: 'Recorded daily nutrition' })).toBeVisible();
+    expect(screen.queryByLabelText('Password')).not.toBeInTheDocument();
+    expect(fetch).not.toHaveBeenCalled();
+  } finally {
+    window.history.replaceState({}, '', '/');
+  }
+});
 
 describe('development setup', () => {
   it('explains the internal setup before making a connection check', () => {
@@ -12,7 +29,11 @@ describe('development setup', () => {
     render(<DevelopmentSetup />);
 
     expect(screen.getByRole('heading', { level: 1, name: 'NourishNet' })).toBeVisible();
-    expect(screen.getByText(/Food tracking and accounts are not available yet/)).toBeVisible();
+    expect(screen.getByText(/open the food diary demo without signing in/)).toBeVisible();
+    expect(screen.getByRole('link', { name: 'Open local demo' })).toHaveAttribute(
+      'href',
+      '?demo=1#/app/dashboard',
+    );
     expect(screen.getByRole('status')).toHaveTextContent('No connection check yet');
     expect(request).not.toHaveBeenCalled();
   });

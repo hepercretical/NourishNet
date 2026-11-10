@@ -1,4 +1,4 @@
-import { primaryRoutes } from '../../design/screens.js';
+import TrackerNavigation from '../TrackerNavigation/TrackerNavigation.jsx';
 import './AppShell.css';
 
 export default function AppShell({ route, children }) {
@@ -14,29 +14,17 @@ export default function AppShell({ route, children }) {
       >
         Skip to main content
       </a>
-      <header className="app-shell__header">
-        <a className="app-shell__brand" href="#/dashboard">
-          NourishNet
-        </a>
-        <p className="app-shell__tagline">A clearer picture of your daily food.</p>
-        <a href="#/account">Account</a>
-      </header>
+      <TrackerNavigation route={route} preview />
       <div className="app-shell__notice">
         <strong>Internal screen design preview</strong> · Fictional data only. Nothing is saved,
         scanned, uploaded, calculated, or shared. Do not enter personal information.
       </div>
-      <div className="app-shell__layout">
-        <nav className="app-shell__nav" aria-label="Main navigation">
-          {primaryRoutes.map(([path, label]) => (
-            <a key={path} href={`#${path}`} aria-current={route === path ? 'page' : undefined}>
-              {label}
-            </a>
-          ))}
-        </nav>
-        {children}
-      </div>
+      <div className="app-shell__layout">{children}</div>
       <footer className="app-shell__footer">
         <nav className="app-shell__footer-links" aria-label="Account and information">
+          {import.meta.env.DEV && (
+            <a href="?demo=1#/app/dashboard">Try local diary without login</a>
+          )}
           <a href="#/design">All screen designs</a>
           <a href="#/settings">Settings</a>
           <a href="#/privacy">Privacy (planned)</a>

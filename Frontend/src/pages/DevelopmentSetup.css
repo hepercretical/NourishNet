@@ -1,7 +1,7 @@
 .development-setup {
   width: min(100%, var(--content-max-width));
   margin-inline: auto;
-  padding: var(--space-6) var(--space-4);
+  padding: var(--space-3);
   overflow-wrap: anywhere;
 }
 
@@ -17,6 +17,6 @@
 
 @media (min-width: 40rem) {
   .development-setup {
-    padding: var(--space-7) var(--space-6);
+    padding: var(--space-4);
   }
 }

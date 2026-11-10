@@ -7,14 +7,13 @@ and clarified that Sprint 1 began November 1 and Sprint 3 ends December 12.
 This replaces the previous seven-sprint schedule. Dates below are targets, not
 completion claims. No acceptance criterion is completed by this document update.
 
-| Phase | Dates (2026) | Required outcome |
+| Phase           | Dates (2026)  | Required outcome                                                                   |
 | --------------- | ------------- | ---------------------------------------------------------------------------------- |
 | Sprint 1        | Nov 1-14      | Complete initial screen/flow design, foundations, accounts, and core tracking      |
 | Sprint 2        | Nov 15-28     | Build barcode scanning, photo submissions/review, goals, and connection controls   |
 | Sprint 3 Week 1 | Nov 29-Dec 5  | Finish calendars, integrate every initial feature, and freeze features             |
 | Sprint 3 Week 2 | Dec 6-12      | Final bug fixes, regression tests, accessibility/visual/performance quality checks |
 | After Sprint 3  | Dec 13 onward | Implement SECURE.md and LEGAL.md, then approve public release                      |
-| --------------- | ------------- | ---------------------------------------------------------------------------------- |
 
 All initial design and functionality must be finished by December 5. December
 6-12 is reserved exclusively for final bug fixes and quality checks; it is not
@@ -83,16 +82,68 @@ relevant reviews after security/legal features are implemented.
 
 Points are retained as relative story estimates where available; they are not
 staffing or deadline guarantees. Story IDs are numbered in delivery order;
-dependencies and cross-references use those same IDs. Sprint placement and
-approval requirements remain unchanged.
+dependencies and cross-references use those same IDs. The sequencing update below
+moves Plan-19 into Sprint 2 Week 1; sprint boundaries and approval requirements
+remain unchanged.
 
-| ------------------------- | -------------------------------------------------------------------------------- |
+## Mobile UI and dependency sequencing update (2026-11-09)
+
+The human developer requested future-module alignment with the mobile reference
+and more space between dependent deliveries. This changes planning only; no
+future acceptance box is completed and no package, API rule, migration, formula
+or paid service is approved by a target date.
+
+Every future feature follows the green toolbar, compact lists/section headers,
+existing tokens and five bottom items in
+[STYLE_GUIDE.md](STYLE_GUIDE.md#mobile-diary-reference-requested-2026-11-09).
+Implement and review phone/wide layouts, focus, safe areas, keyboard behavior and
+data states within each module. Exercise, water, standalone weigh-in logging and
+recipes remain outside this schedule; approved goal weight input remains in scope.
+Do not leave initial UI construction for the final quality week.
+
+| Completion target (2026) | Module           | Required handoff                                                 |
+| ------------------------ | ---------------- | ---------------------------------------------------------------- |
+| Nov 17                   | Plan-14          | Barcode results/unknown states before scanner integration        |
+| Nov 19                   | Plan-15          | Working toolbar scan/manual flow                                 |
+| Nov 21                   | Plan-16          | Mobile sample-photo form before submission persistence           |
+| Nov 21                   | Plan-19          | Goal acceptance/persistence, independent of barcode work         |
+| Nov 24                   | Plan-17          | Submission status/correction before catalog review               |
+| Nov 25                   | Plan-20          | Connections and selected sharing before comparisons              |
+| Nov 26                   | Plan-18          | Review/publication and second-account barcode reuse              |
+| Nov 27-28                | Sprint 2 handoff | Verify both feature chains and resolve integration defects       |
+| Nov 30                   | Plan-21          | Historical goals and personal calendar before comparison         |
+| Dec 2                    | Plan-22          | Friend calendar complete before final combined verification      |
+| Dec 3-5                  | Plan-23          | Final integration/demo journeys, human review and feature freeze |
+| Dec 6-12                 | Plan-24/25       | Existing-feature fixes, regression and quality checks only       |
+
+These are completion targets, including tests and usable handoffs. Prepare
+contracts, fixtures, layout and approval questions early; connect real services
+only after prerequisites and applicable approvals pass. Independent barcode and
+goal tracks may progress alongside one another; this does not assume additional
+developers. Plan-16 needs barcode results and shared controls, not a completed
+camera: manual/unknown-barcode fixtures allow form work without waiting for camera
+testing. Plan-18 still verifies the whole Plan-15/16/17 journey. Keep the true
+goal -> sharing/history -> comparison dependencies. Integrate each module as it
+lands; December 3-5 is the final combined check, not the first integration attempt.
+
+Resolve barcode/scanner package and API questions before Plan-14/15, sample-image
+storage/submission/reviewer rules before Plan-17/18, and discovery/report rules
+before Plan-20. Carry forward Plan-13's documented review status before Plan-19.
+Flag blocked prerequisites immediately; seek a human scope/timing decision if
+December 5 is threatened. Never use December 6-12 to finish missing features.
+
+Extend the development-only no-login demo with each delivered feature, using
+synthetic actors/data and non-personal sample images, the real feature components
+and approved calculation utilities. Separately test authenticated API ownership
+and multiple accounts. Demo actor selection must never grant real API privileges
+or work in production. All initial non-authentication journeys must be reachable
+without login in the isolated demo by Plan-23; previews stay labeled until built.
+
 | Track                     | Initial delivery responsibility                                                  |
 | ------------------------- | -------------------------------------------------------------------------------- |
 | Database and Data         | Approved schemas, API contracts, diary/goal history, catalog and connection data |
 | Searching, Logging, Logic | Search, totals, scanning, estimates, goal outcomes, calendar comparison          |
 | Design, Lists and Quality | All screen designs, forms/navigation, responsive states, integration and testing |
-| ------------------------- | -------------------------------------------------------------------------------- |
 
 ## Sprint 1: Design, foundations, and core tracking (November 1-14)
 
@@ -280,7 +331,7 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 ### Plan-14 Barcode lookup service
 
-- **Phase:** S2 W1 | **Due:** 2026-11-21 | **Points:** 8
+- **Phase:** S2 W1 | **Due:** 2026-11-17 | **Points:** 8
 - **Branch:** `/plan-14` | **Depends on:** Plan-06, Plan-10
 
 **Acceptance criteria**
@@ -290,10 +341,12 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Supported barcode strings preserve leading zeros with documented normalization/check-digit and
       duplicate rules.
 - [ ] Tests cover known, unknown, malformed, and leading-zero examples.
+- [ ] Result/unknown fixtures support compact scanner confirmation and the local demo;
+      a lookup alone never saves a diary entry or creates a catalog record.
 
 ### Plan-15 Camera scanner and manual fallback
 
-- **Phase:** S2 W1 | **Due:** 2026-11-21 | **Points:** 8
+- **Phase:** S2 W1 | **Due:** 2026-11-19 | **Points:** 8
 - **Branch:** `/plan-15` | **Depends on:** Plan-14
 
 **Acceptance criteria**
@@ -303,11 +356,14 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       logs one entry.
 - [ ] Denial, unsupported camera, scanner failure, and unknown barcode states explain recovery;
       camera tracks stop on leaving.
+- [ ] Toolbar barcode and Track shortcuts reach the same scan/manual flow. Reuse serving/meal
+      confirmation, preserve selected local date/meal and return to the diary after save.
+      Bottom tabs never obscure camera recovery or confirmation controls.
 
 ### Plan-16 Unknown-food photo submission interface
 
 - **Phase:** S2 W1 | **Due:** 2026-11-21 | **Points:** 5
-- **Branch:** `/plan-16` | **Depends on:** Plan-15, Plan-04
+- **Branch:** `/plan-16` | **Depends on:** Plan-14, Plan-04
 
 **Acceptance criteria**
 
@@ -316,10 +372,13 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Preview/replace/remove, required fields, basic file limits, pending/upload/error/retry, and
       success states work on mobile and keyboard.
 - [ ] Pending data is clearly distinct from approved catalog nutrition.
+- [ ] Stack package/label previews and compact labeled fields on phones; keyboard and tabs
+      leave correction/save reachable. Returning to scan/search preserves recoverable input.
+      Build with manual barcode fixtures first; verify the Plan-15 connection in Plan-18.
 
 ### Plan-17 Submission API and review-ready records
 
-- **Phase:** S2 W2 | **Due:** 2026-11-28 | **Points:** 8
+- **Phase:** S2 W2 | **Due:** 2026-11-24 | **Points:** 8
 - **Branch:** `/plan-17` | **Depends on:** Plan-16, Plan-05
 
 **Acceptance criteria**
@@ -330,11 +389,13 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       states; pending data is not searchable as catalog food.
 - [ ] Submitter can see status and correct requested fields; basic upload failure/retry and
       duplicate-submission behavior are tested.
+- [ ] Menu exposes My submissions with compact status/correction rows, readable text status
+      and persistent retry. Supply isolated synthetic status fixtures for no-login testing.
 
 ### Plan-18 Catalog review and reusable publication
 
-- **Phase:** S2 W2 | **Due:** 2026-11-28 | **Points:** 8
-- **Branch:** `/plan-18` | **Depends on:** Plan-17
+- **Phase:** S2 W2 | **Due:** 2026-11-26 | **Points:** 8
+- **Branch:** `/plan-18` | **Depends on:** Plan-15, Plan-16, Plan-17
 
 **Acceptance criteria**
 
@@ -344,10 +405,13 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       defined outcomes and provenance.
 - [ ] A second synthetic account scans the approved product and logs it; past diary nutrition
       remains unchanged and uploader measurements/identity are not catalog fields.
+- [ ] Use a compact review queue, stacked image/nutrition detail and explicit review actions
+      above the bottom safe area. Only permitted real actors access review; synthetic demo
+      reviewer selection grants no backend privileges. Verify scan -> submit -> review -> reuse.
 
 ### Plan-19 Goal menu and estimate acceptance
 
-- **Phase:** S2 W2 | **Due:** 2026-11-28 | **Points:** 13
+- **Phase:** S2 W1 | **Due:** 2026-11-21 | **Points:** 13
 - **Branch:** `/plan-19` | **Depends on:** Plan-13, Plan-11, Plan-05
 
 **Acceptance criteria**
@@ -360,10 +424,14 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       professional medical advice or diagnosis.
 - [ ] Known reviewed examples, conversions, boundaries, unsupported cases, data states, and
       successful persistence are tested.
+- [ ] Goals opens from Menu and Preferences using compact fields and an explicit estimate
+      review. Units, assumptions, notice and effective date remain visible on phones. Diary
+      summaries show only actual saved targets, without invented allowances or exercise-calorie
+      arithmetic. Demo cases reuse the approved calculation utilities.
 
 ### Plan-20 Accepted connections and selected sharing
 
-- **Phase:** S2 W2 | **Due:** 2026-11-28 | **Points:** 13
+- **Phase:** S2 W2 | **Due:** 2026-11-25 | **Points:** 13
 - **Branch:** `/plan-20` | **Depends on:** Plan-05, Plan-19
 
 **Acceptance criteria**
@@ -374,6 +442,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       selected goal progress can be shared and revoked.
 - [ ] Biological sex, age, body measurements, and detailed diaries remain private; removal/blocking
       stop normal subsequent comparison access.
+- [ ] Menu opens compact connection/request lists. Sharing review names audience and fields;
+      pending/accepted/removed/unavailable states have readable labels. Revoke, remove, block
+      and report work by touch/keyboard, including report routing and confirmation. Verify
+      these behaviors with isolated synthetic demo actors as well as authenticated accounts.
 
 ## Sprint 3 Week 1: Calendars and complete integration (November 29-December 5)
 
@@ -381,7 +453,7 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 ### Plan-21 Personal goal history and calendar
 
-- **Phase:** S3 W1 | **Due:** 2026-12-05 | **Points:** 8
+- **Phase:** S3 W1 | **Due:** 2026-11-30 | **Points:** 8
 - **Branch:** `/plan-21` | **Depends on:** Plan-19, Plan-12
 
 **Acceptance criteria**
@@ -395,11 +467,15 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Tests cover changed goals, edited logs, leap days, local midnight, and timezone/daylight-
       saving behavior.
 - [ ] The visible mathematical-estimate/not-medical-advice notice is reviewed as initial product
-      copy. Formal legal applicability review.
+      copy. Formal legal applicability review remains in post-Sprint-3 Plan-28.
+- [ ] Stats opens recorded nutrition and personal calendar/history; Menu's Calendar reaches
+      the same view. Preserve the diary's selected local date, use compact month/day controls
+      and stacked day details, and retain View daily summary on the diary. Synthetic fixtures
+      make every calendar state testable without login.
 
 ### Plan-22 Friend progress comparison calendar
 
-- **Phase:** S3 W1 | **Due:** 2026-12-05 | **Points:** 8
+- **Phase:** S3 W1 | **Due:** 2026-12-02 | **Points:** 8
 - **Branch:** `/plan-22` | **Depends on:** Plan-21, Plan-20
 
 **Acceptance criteria**
@@ -410,11 +486,15 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       alignment and readable labels.
 - [ ] No-data, incomplete, no-goal, not-shared, unavailable, and met/unmet states stay distinct; no
       ranking, shame, or measurement/diary disclosure.
+- [ ] Comparison opens from Stats or an accepted connection. Stack labeled person/day details
+      on phones; month/date controls, text legend, day-list alternative and bottom tabs work
+      at narrow widths and 200% zoom. Test sharing/revocation and differing timezones in the
+      isolated demo too.
 
 ### Plan-23 Full initial-feature integration and freeze
 
 - **Phase:** S3 W1 | **Due:** 2026-12-05 | **Points:** 8
-- **Branch:** `/plan-23` | **Depends on:** Plan-11, Plan-12, Plan-18, Plan-22
+- **Branch:** `/plan-23` | **Depends on:** Plan-11, Plan-12, Plan-18, Plan-19, Plan-20, Plan-21, Plan-22
 
 **Acceptance criteria**
 
@@ -426,6 +506,12 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       lint/test/format pass with development smoke journeys.
 - [ ] Human reviews the feature milestone by December 5; remaining defects have reproduction steps
       and owners. Freeze new feature work.
+- [ ] Toolbar, Menu, Dashboard/Stats/Track/Designs/Preferences and contextual return links reach
+      all delivered initial features. Remove preview labels only after integration; keep
+      out-of-scope and post-Sprint-3 operations honestly labeled.
+- [ ] The development-only demo reaches every initial non-authentication journey with synthetic
+      actors/data and sample images. Account flows remain separately testable with the local
+      API; production ignores the demo switch. Verify both modes before the December 5 freeze.
 
 ## Sprint 3 Week 2: Final bug fixes and quality checks (December 6-12)
 
@@ -445,6 +531,8 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Failed requests, repeated saves, incomplete days, validation, camera denial, and navigation
       recovery are checked; relevant package checks pass.
 - [ ] No SECURE.md or LEGAL.md implementation or new feature is scheduled in this week.
+- [ ] Regress both demo and authenticated journeys, including date/meal preservation, browser
+      back/refresh, bottom-tab transitions and retries.
 
 ### Plan-25 Final visual, accessibility, and quality checks
 
@@ -461,6 +549,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       are explicitly marked deferred rather than passed.
 - [ ] Record the internal Sprint 3 handoff, known defects, test evidence, and the separate post-
       Sprint-3 backlog; do not label it public-release approval.
+- [ ] Check the implemented reference layout across scan, submission/review, goals, connections
+      and calendars: 44px targets, active tabs, safe areas, sticky controls, mobile keyboard,
+      long content and 200% zoom. Record defects; initial layout/navigation implementation
+      must already have finished by December 5.
 
 ## After Sprint 3: Security, legal implementation, and public release
 
@@ -485,6 +577,8 @@ their combined result before release.
       tombstones, withdrawal, session revocation, and relevant UI.
 - [ ] Test failures/retry, identity verification, all data categories, and restoration/deletion
       behavior; align notices with actual operations.
+- [ ] Rights/request screens use Preferences and the compact mobile shell; identity checks,
+      confirmations, progress and retry remain above sticky navigation.
 
 ### Plan-27 SECURE.md implementation and verification
 
@@ -512,8 +606,8 @@ their combined result before release.
       adversarial permission/cache/race testing.
 - [ ] Sharing/revocation and normal data-failure/retry flows work on phone, desktop, and keyboard;
       production attack/race testing.
-
-      
+- [ ] Hardened session/recovery/reviewer UI retains accessible mobile navigation and input
+      recovery; production rejects the no-login demo switch and simulated demo roles.
 
 ### Plan-28 LEGAL.md implementation and readiness review
 
@@ -533,6 +627,8 @@ their combined result before release.
       optional tracking merely to satisfy a checklist.
 - [ ] Qualified review and tests verify published promises against implemented behavior; unresolved
       applicability and compliance blockers remain explicit.
+- [ ] Planned policy/consent locations become reviewed, readable mobile pages through Preferences
+      and contextual links; tabs never obscure required choices and notices.
 
 ### Plan-29 Post-Sprint-3 public-release gate
 
@@ -549,6 +645,8 @@ their combined result before release.
       blocking security, legal, functional, or quality defects remain.
 - [ ] Human developer reviews implementation/evidence, limitations, owners, and residual risks and
       explicitly approves public deployment and real-user onboarding.
+- [ ] Repeat toolbar/menu/tab, keyboard/safe-area and screen-reader journeys after Plan-26/27/28
+      changes; internal demo success is not production release evidence.
 
 ## Handoff checklist
 

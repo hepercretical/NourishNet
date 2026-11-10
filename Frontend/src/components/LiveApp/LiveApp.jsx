@@ -5,6 +5,7 @@ import AccountTracker from '../AccountTracker/AccountTracker.jsx';
 import Button from '../Button/Button.jsx';
 import { ErrorState, LoadingState } from '../DataState/DataState.jsx';
 import './LiveApp.css';
+import TrackerNavigation from '../TrackerNavigation/TrackerNavigation.jsx';
 
 const titles = {
   signup: 'Create a fictional account',
@@ -87,7 +88,7 @@ export default function LiveApp({ route }) {
   return (
     <div className="live-app">
       <a
-        className="design-action"
+        className="live-app__skip"
         href="#live-content"
         onClick={(event) => {
           event.preventDefault();
@@ -96,19 +97,14 @@ export default function LiveApp({ route }) {
       >
         Skip to main content
       </a>
-      <header className="live-app__header">
-        <a href="#/app/dashboard">NourishNet</a>
-        <nav aria-label="Development app navigation">
-          <a href="#/app/dashboard">Diary</a>
-          <a href="#/app/search">Search foods</a>
-          <a href="#/design">Screen designs</a>
-          {session.account && (
-            <Button pending={loggingOut} onClick={logout}>
-              Sign out
-            </Button>
-          )}
-        </nav>
-      </header>
+      <TrackerNavigation route={route}>
+        <a href="?demo=1#/app/dashboard">Try without login</a>
+        {session.account && (
+          <Button pending={loggingOut} onClick={logout}>
+            Sign out
+          </Button>
+        )}
+      </TrackerNavigation>
       <p className="live-app__notice">
         Internal development · Adults 18+ · Fictional accounts and test-only passwords. Account data
         is saved locally. No external email is sent.

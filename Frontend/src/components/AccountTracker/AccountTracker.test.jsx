@@ -36,6 +36,20 @@ const savedEntry = {
   nutrients: food.nutrients,
   contribution: { calories: 225, protein: 7.5, fat: 4.5, carbohydrates: 40.5, sodium: null },
 };
+it('moves through local diary dates using previous and next controls and preserves the selected day', async () => {
+  const user = userEvent.setup();
+  accountRequest.mockImplementation((path) => Promise.resolve(day(path.split('=')[1])));
+  render(<AccountTracker account={account} route="/app/dashboard" onNotice={vi.fn()} />);
+  await screen.findByText('0 kcal');
+  await user.click(screen.getByRole('button', { name: 'Previous diary day' }));
+  expect(screen.getByLabelText('Diary date')).toHaveValue('2026-11-08');
+  await screen.findByText('0 kcal');
+  expect(accountRequest.mock.calls.at(-1)[0]).toBe('/diary?date=2026-11-08');
+  await user.click(screen.getByRole('button', { name: 'Next diary day' }));
+  await screen.findByText('0 kcal');
+  expect(screen.getByLabelText('Diary date')).toHaveValue('2026-11-09');
+  expect(sessionStorage.getItem('nourishnet:diary-date:avery')).toBe('2026-11-09');
+});
 beforeEach(() => {
   accountRequest.mockReset();
   sessionStorage.clear();

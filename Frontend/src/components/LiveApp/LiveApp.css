@@ -1,7 +1,7 @@
 .live-app {
   width: min(100%, var(--content-max-width));
   margin-inline: auto;
-  padding: var(--space-4);
+  padding: 0 0 calc(var(--space-7) + var(--space-7) + env(safe-area-inset-bottom));
   overflow-wrap: anywhere;
 }
 
@@ -16,9 +16,9 @@
 }
 
 .live-app__notice {
-  padding: var(--space-4);
+  padding: var(--space-2) var(--space-3);
   background: var(--color-surface-muted);
-  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
 }
 
 .live-app a {
@@ -33,6 +33,50 @@
 
 @media (min-width: 40rem) {
   .live-app {
-    padding: var(--space-6);
+    padding-inline: var(--space-4);
   }
+}
+
+.live-app main,
+.live-app footer {
+  padding-inline: var(--space-3);
+}
+.live-app__skip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateY(-100%);
+  background: var(--color-surface);
+  z-index: 3;
+}
+.live-app__skip:focus {
+  transform: none;
+}
+.diary-datebar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background: var(--color-text);
+  color: var(--color-on-primary);
+}
+.diary-datebar__selection {
+  text-align: center;
+}
+.diary-datebar__hint {
+  grid-column: 1 / -1;
+  font-size: var(--text-xs);
+  margin: 0;
+}
+.diary-datebar .shared-field__error {
+  grid-column: 1 / -1;
+  background: var(--color-surface);
+  padding: var(--space-2);
+}
+.diary-datebar__selection input {
+  max-width: 100%;
+}
+.live-app :focus-visible {
+  scroll-margin-block: var(--space-7) calc(var(--space-7) + var(--space-7));
 }

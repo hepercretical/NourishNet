@@ -1,5 +1,26 @@
 # NourishNet
 
+## Try the local app without login
+
+From `Frontend/`, run `npm ci` and `npm run dev`, then open
+<http://127.0.0.1:5173/?demo=1#/app/dashboard>. No backend or database is needed
+for this development-only demo. Search for `sample` or `oats`, choose a food,
+review a decimal serving and meal, then save. Edit or remove the entry from its
+meal, change the diary day with the arrows/date picker, and refresh to verify
+browser persistence. Synthetic entries stay separate from account diaries.
+Use fictional data only. Clearing this site's browser storage clears the demo.
+
+The mobile diary follows the supplied reference: green toolbar, date strip,
+compact nutrition totals, meal headers with plus controls, and five bottom tabs.
+Menu opens later-sprint screen previews. Exercise, weigh-in, water and recipes
+are outside Sprint 1; the UI does not claim to implement them.
+
+For actual signup, login, verification, recovery, sessions and database-backed
+diaries, start the local backend/database as described below and open
+<http://127.0.0.1:5173/?demo=0#/app/login>. Account testing uses the existing
+synthetic-account API; the demo does not bypass backend authentication.
+Production builds ignore `demo=1`.
+
 NourishNet is a mobile-first calorie and macronutrient tracker for adults 18+.
 This repository includes **Plan-01: Foundation and development setup**,
 **Plan-02: development schema and API contracts**, **Plan-03: screen-design
@@ -280,13 +301,15 @@ measurements, or files. Refresh and browser back/forward retain the selected has
 route. Goal estimates are not calculated before formula approval.
 
 For layout review, compare a narrow phone viewport (390 px) and a wide viewport
-(1440 px), then check 200% zoom and keyboard access. Navigation wraps above the
-screen on phones and sits beside it on wide screens. A skip link moves focus to
+(1440 px), then check 200% zoom and keyboard access. All routes now share the green
+toolbar, expandable menu, compact flat sections and five fixed bottom tabs. Wide
+screens keep the same organization inside a centered container. A skip link moves focus to
 the main content; route changes focus the main landmark. Calendar previews offer
 native month buttons and an announced day-detail list. All established design-token
-values remain unchanged. The human developer reviewed and approved the mobile/wide
-layouts, navigation, state patterns, and existing tokens on 2026-11-09. All three
-Plan-03 acceptance criteria are complete.
+values remain unchanged. Earlier Plan-03 layout approval remains recorded in the
+plan. The latest cross-page styling is covered by route and keyboard regression
+tests; fresh phone/desktop, zoom, mobile-keyboard and screen-reader review remains
+pending because browser automation is unavailable in this session.
 
 The reconstructed local review summary and manual checklist are in the ignored
 `Frontend/contracts/plan-03.md`. The original API check remains at
