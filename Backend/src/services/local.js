@@ -2,6 +2,7 @@ import { createDatabase } from '../db/client.js';
 import { requireSyntheticDevelopment } from '../db/config.js';
 import { accountRepository } from '../db/accounts.js';
 import { foodRepository } from '../db/foods.js';
+import { diaryRepository } from '../db/diary.js';
 import { createAuthService } from '../auth/service.js';
 import { deliverLocalMessage } from '../auth/outbox.js';
 
@@ -19,6 +20,7 @@ export function localServices(env = process.env) {
       deliver: deliverLocalMessage,
     }),
     foods: foodRepository(database),
+    diary: diaryRepository(database),
     close: () => database.end(),
   };
 }
