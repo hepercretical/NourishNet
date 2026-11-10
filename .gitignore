@@ -337,3 +337,31 @@ pg_service.conf
 pg_service.conf.*
 *.pgpass
 *.pgpass.*
+
+# Additional plaintext credential exports and local authentication/key stores.
+credentials.txt
+credentials.txt.*
+credentials.properties
+credentials.properties.*
+secrets.txt
+secrets.txt.*
+secrets.ini
+secrets.ini.*
+secrets.properties
+secrets.properties.*
+secrets.xml
+secrets.xml.*
+auth.json
+auth.json.*
+oauth-token*.json
+oauth-token*.json.*
+*.agekey
+*.agekey.*
+.password-store/
+.htpasswds/
+# Local Redis persistence and authenticated database-client workspaces.
+dump.rdb
+appendonly.aof
+appendonlydir/
+.pgadmin/
+.dbeaver/

@@ -495,3 +495,33 @@ Copyright (c) 2026 Talmage Trebilcock. All rights reserved.
 This software and associated documentation files are proprietary. Distribution,
 modification, commercial use, or sublicensing is strictly prohibited without
 the explicit written permission of the copyright holder.
+
+## Plan-12: Edit and remove diary entries
+
+In `#/app/dashboard`, choose a diary date, then **Edit [food name]**. Change the
+positive serving amount (up to four decimal places) and meal, review the scaled
+nutrition, and choose **Save changes**. **Cancel** keeps the original entry.
+**Remove [food name]** identifies the entry and requires **Confirm removal**.
+Meal lists and totals reload from the backend after a successful change.
+A failed change keeps choices for retry. A stale or unavailable entry requires
+cancelling and **Reload diary**, followed by a new review. A failed totals reload
+after a confirmed change retries the read without repeating the mutation.
+
+The human-approved contract adds PATCH/DELETE `/api/diary/entries/:id`. PATCH JSON:
+`{date, quantity, meal, revision, requestKey}`; DELETE JSON:
+`{date, revision, requestKey}`. Reads include entry revision. Both return 200 JSON,
+require the authenticated owner, matching local date and configured Origin, and
+preserve nutrition snapshots. Stale revision/key reuse conflicts return 409;
+missing and other-owner entries return 404. Retried identical requests replay one
+transaction. Existing schema is used; no migration or dependency was added.
+
+## Plan-13: Goal specification
+
+The local review specification is `contracts/plan-13.md` (intentionally ignored).
+It defines the versioned adult EER formula, units, activity selection, unsupported
+cases, all four objectives, explicit target/range/limit comparisons, completion,
+historical versions and timezone/data-state rules. This is specification work;
+the goal menu/calculator remains Plan-19. The developer explicitly delegated the
+technical review to the AI and deferred independent professional review for this
+internal phase; completion does not claim clinical validation or public-release
+approval. No paid service was used. Keep this local contract for later implementation.

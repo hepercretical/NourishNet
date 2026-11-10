@@ -3,11 +3,19 @@ import FoodCard from '../FoodCard/FoodCard.jsx';
 import { LoadingState, ErrorState } from '../DataState/DataState.jsx';
 import './Dashboard.css';
 import { displayNutrition } from '../../utils/nutrition.js';
+import DiaryEntryActions from '../DiaryEntryActions/DiaryEntryActions.jsx';
 
-export default function Dashboard({ account, diary, loading = false, error, onRetry }) {
+export default function Dashboard({
+  account,
+  diary,
+  loading = false,
+  error,
+  onRetry,
+  onEntryChange,
+}) {
   return (
     <>
-      <h1>Your daily diary</h1>
+      <h1 tabIndex={-1}>Your daily diary</h1>
       <p>{account.displayName} · Your diary is private. Sharing is off.</p>
       {loading ? (
         <LoadingState message="Loading your diary. Previous account data stays hidden." />
@@ -49,6 +57,12 @@ export default function Dashboard({ account, diary, loading = false, error, onRe
                             }
                             nutrients={displayNutrition(entry.contribution || entry.nutrients)}
                           />
+                          {onEntryChange && (
+                            <DiaryEntryActions
+                              entry={{ ...entry, meal: meal.name.toLowerCase() }}
+                              onChange={onEntryChange}
+                            />
+                          )}
                         </li>
                       ))}
                     </ul>

@@ -25,9 +25,9 @@ const server = createApp({ services: { auth, diary, foods: foodRepository(databa
 const suffix = randomBytes(6).toString('hex');
 let checks = 0;
 let client;
-async function request(path, { body, cookie, status = 200 } = {}) {
+async function request(path, { body, cookie, status = 200, method } = {}) {
   const response = await fetch(`http://127.0.0.1:${server.address().port}/api${path}`, {
-    method: body ? 'POST' : 'GET',
+    method: method ?? (body ? 'POST' : 'GET'),
     headers: {
       Origin: 'http://127.0.0.1:5173',
       'Content-Type': 'application/json',
@@ -148,12 +148,113 @@ try {
   client.release();
   client = null;
   checks += 1;
+  // Plan-12: all mutations target only the synthetic fixtures created above.
+  const original = saved[0].body.entry;
+  const path = `/diary/entries/${original.id}`;
+  const edit = {
+    date: draft.date,
+    revision: original.revision,
+    quantity: 0.125,
+    meal: 'dinner',
+    requestKey: randomUUID(),
+  };
+  await request(path, { body: edit, method: 'PATCH', status: 401 });
+  await request(path, { ...users[1], body: edit, method: 'PATCH', status: 404 });
+  await request(path, {
+    ...users[0],
+    body: { ...edit, date: '2026-11-02' },
+    method: 'PATCH',
+    status: 404,
+  });
+  await request(path, {
+    ...users[0],
+    body: { ...edit, quantity: 0 },
+    method: 'PATCH',
+    status: 400,
+  });
+  await request(path, {
+    ...users[0],
+    body: { ...edit, accountId: users[1].account.id },
+    method: 'PATCH',
+    status: 400,
+  });
+  const updates = await Promise.all(
+    [1, 2].map(() => request(path, { ...users[0], body: edit, method: 'PATCH' })),
+  );
+  assert.deepEqual(updates[0].body, updates[1].body);
+  const updated = updates[0].body.entry;
+  assert.equal(updated.revision, original.revision + 1);
+  for (const field of [
+    'foodName',
+    'servingBasis',
+    'servingId',
+    'catalogVersion',
+    'grams',
+    'nutrients',
+  ])
+    assert.deepEqual(updated[field], original[field]);
+  await request(path, {
+    ...users[0],
+    body: { ...edit, quantity: 2 },
+    method: 'PATCH',
+    status: 409,
+  });
+  await request(path, {
+    ...users[0],
+    body: { ...edit, requestKey: randomUUID() },
+    method: 'PATCH',
+    status: 409,
+  });
+  const edited = (await request(`/diary?date=${draft.date}`, users[0])).body;
+  assert.equal(edited.meals[0].entries.length, 0);
+  assert.equal(edited.meals[2].entries[0].quantity, 0.125);
+  assert.equal(
+    edited.totals.calories,
+    unknown.nutrients.calories * 0.125 + zero.nutrients.calories * 0.25,
+  );
+  assert.equal(edited.totals.sodium, null);
+  const removal = { date: draft.date, revision: updated.revision, requestKey: randomUUID() };
+  await request(path, { ...users[1], body: removal, method: 'DELETE', status: 404 });
+  await request(path, {
+    ...users[0],
+    body: { ...removal, revision: 1 },
+    method: 'DELETE',
+    status: 409,
+  });
+  const removed = await Promise.all(
+    [1, 2].map(() => request(path, { ...users[0], body: removal, method: 'DELETE' })),
+  );
+  assert.deepEqual(removed[0].body, removed[1].body);
+  await request(path, {
+    ...users[0],
+    body: { ...removal, requestKey: randomUUID() },
+    method: 'DELETE',
+    status: 404,
+  });
+  const remaining = (await request(`/diary?date=${draft.date}`, users[0])).body;
+  assert.equal(remaining.meals[2].entries.length, 0);
+  assert.equal(remaining.totals.sodium, 0);
+  assert.equal(remaining.totals.calories, zero.nutrients.calories * 0.25);
+  const last = remaining.meals[1].entries[0];
+  await request(`/diary/entries/${last.id}`, {
+    ...users[0],
+    method: 'DELETE',
+    body: {
+      date: draft.date,
+      revision: last.revision,
+      requestKey: randomUUID(),
+    },
+  });
+  const empty = (await request(`/diary?date=${draft.date}`, users[0])).body;
+  assert(empty.meals.every((meal) => meal.entries.length === 0));
+  assert.equal(empty.totals.calories, 0);
+  assert.equal(empty.totals.sodium, 0);
   console.info(
-    `Plan-10 local verification passed: ${checks} checks. Two synthetic accounts and diary fixtures retained; catalog corrections rolled back. No credentials printed.`,
+    `Plan-10/12 local verification passed: ${checks} request/check groups. Synthetic diary mutations verified; catalog corrections rolled back. No credentials printed.`,
   );
 } catch {
   console.error(
-    `Plan-10 local verification failed after ${checks} checks. No private diagnostics printed.`,
+    `Plan-10/12 local verification failed after ${checks} checks. No private diagnostics printed.`,
   );
   process.exitCode = 1;
 } finally {

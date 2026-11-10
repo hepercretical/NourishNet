@@ -1,10 +1,10 @@
 const base = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '');
 
-export async function accountRequest(path, { body, signal } = {}) {
+export async function accountRequest(path, { body, signal, method } = {}) {
   let response;
   try {
     response = await fetch(`${base}${path}`, {
-      method: body === undefined ? 'GET' : 'POST',
+      method: method ?? (body === undefined ? 'GET' : 'POST'),
       credentials: 'same-origin',
       signal,
       ...(body === undefined
