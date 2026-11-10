@@ -243,9 +243,9 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 **Acceptance criteria**
 
-- [ ] Refresh reloads saved entries for the selected day and account.
-- [ ] Meals list serving/nutrition contributions and update totals after add without a full reload.
-- [ ] Loading, empty, failed-load/retry, and successful-save flows pass component/integration
+- [x] Refresh reloads saved entries for the selected day and account.
+- [x] Meals list serving/nutrition contributions and update totals after add without a full reload.
+- [x] Loading, empty, failed-load/retry, and successful-save flows pass component/integration
       checks.
 
 ### Plan-12 Edit and remove diary entries

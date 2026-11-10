@@ -17,35 +17,19 @@ it('loads only the matching owner diary and supports a failed-load retry', async
     .mockRejectedValueOnce(new Error('private diagnostics'))
     .mockResolvedValueOnce(diary);
   const user = userEvent.setup();
-  render(<AccountDiary account={account} />);
+  render(<AccountDiary account={account} date={diary.date} />);
   expect(await screen.findByRole('alert')).toHaveTextContent('could not be loaded');
   expect(screen.queryByText(/private diagnostics/)).not.toBeInTheDocument();
   await user.click(screen.getByRole('button', { name: 'Try again' }));
   expect(await screen.findByText('0 kcal')).toBeVisible();
 });
-it('refuses diary data belonging to another account', async () => {
-  accountRequest.mockResolvedValueOnce({ ...diary, accountId: 'morgan' });
-  render(<AccountDiary account={account} />);
+it('refuses a response for a different diary date', async () => {
+  accountRequest.mockResolvedValueOnce({ ...diary, date: '2026-11-08' });
+  render(<AccountDiary account={account} date={diary.date} />);
   expect(await screen.findByRole('alert')).toBeVisible();
   expect(screen.queryByText('0 kcal')).not.toBeInTheDocument();
 });
 
-it('shows session entries only on their diary date', async () => {
-  accountRequest.mockResolvedValueOnce({ ...diary, meals: [{ name: 'Lunch', entries: [] }] });
-  const entry = {
-    id: 'entry',
-    date: diary.date,
-    name: 'Session oats',
-    meal: 'Lunch',
-    amount: 1.5,
-    servingBasis: '40 g',
-    nutrients: { calories: 225 },
-  };
-  const { rerender } = render(<AccountDiary account={account} entries={[entry]} />);
-  expect(await screen.findByRole('article', { name: 'Session oats' })).toBeVisible();
-  rerender(<AccountDiary account={account} entries={[{ ...entry, date: '2026-11-08' }]} />);
-  expect(screen.queryByRole('article', { name: 'Session oats' })).not.toBeInTheDocument();
-});
 it('cancels an old account request and ignores its late response after switching owners', async () => {
   let resolve;
   accountRequest
@@ -56,9 +40,15 @@ it('cancels an old account request and ignores its late response after switching
         }),
     )
     .mockResolvedValueOnce({ ...diary, accountId: 'morgan', totals: { calories: 25 } });
-  const { rerender } = render(<AccountDiary key="avery" account={account} />);
+  const { rerender } = render(<AccountDiary key="avery" account={account} date={diary.date} />);
   const signal = accountRequest.mock.calls.at(-1)[1].signal;
-  rerender(<AccountDiary key="morgan" account={{ id: 'morgan', displayName: 'Morgan Fiction' }} />);
+  rerender(
+    <AccountDiary
+      key="morgan"
+      account={{ id: 'morgan', displayName: 'Morgan Fiction' }}
+      date={diary.date}
+    />,
+  );
   expect(signal.aborted).toBe(true);
   expect(await screen.findByText('25 kcal')).toBeVisible();
   await act(async () => resolve(diary));

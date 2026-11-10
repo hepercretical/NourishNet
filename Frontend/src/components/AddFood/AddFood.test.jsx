@@ -96,3 +96,20 @@ it('supports keyboard return to search and rejects quantities that overflow nutr
   await user.keyboard('{Enter}');
   expect(back).toHaveBeenCalledOnce();
 });
+
+it('explains the existing diary storage precision and range before saving', async () => {
+  const user = userEvent.setup(),
+    save = vi.fn();
+  render(<Flow onSave={save} />);
+  await user.selectOptions(screen.getByRole('combobox', { name: 'Meal' }), 'Lunch');
+  for (const value of ['0.00001', '100000000']) {
+    await user.clear(screen.getByRole('textbox', { name: 'Serving amount' }));
+    await user.type(screen.getByRole('textbox', { name: 'Serving amount' }), value);
+    await user.click(screen.getByRole('button', { name: 'Review entry' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('at most four decimal places');
+    expect(screen.queryByRole('button', { name: 'Save entry' })).not.toBeInTheDocument();
+  }
+  expect(save).not.toHaveBeenCalled();
+  await review(user);
+  expect(screen.getByRole('button', { name: 'Save entry' })).toBeVisible();
+});

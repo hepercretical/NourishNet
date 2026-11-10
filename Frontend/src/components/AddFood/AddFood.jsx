@@ -19,6 +19,12 @@ export default function AddFood({ food, draft, onDraftChange, onBack, onSave }) 
 
   function review({ amount, meal }) {
     try {
+      if (amount >= 100000000 || !/^\d+(?:\.\d{1,4})?$/.test(String(amount))) {
+        setInvalid(
+          'Enter a smaller serving amount below 100,000,000 with at most four decimal places.',
+        );
+        return;
+      }
       const nutrients = scaleNutrition(food.nutrients, amount);
       setEntry({
         id: crypto.randomUUID(),
@@ -32,7 +38,9 @@ export default function AddFood({ food, draft, onDraftChange, onBack, onSave }) 
       });
       setInvalid(false);
     } catch {
-      setInvalid(true);
+      setInvalid(
+        'This amount cannot be calculated. Enter a smaller serving amount and review again.',
+      );
     }
   }
 
@@ -51,10 +59,7 @@ export default function AddFood({ food, draft, onDraftChange, onBack, onSave }) 
       </h1>
       <h2>{food.name}</h2>
       <p>One serving: {food.servingBasis}</p>
-      <p>
-        Entries stay in this app session only. Refreshing or signing out clears them. Database
-        saving and daily totals arrive in a later update.
-      </p>
+      <p>Save entry records this serving amount in your private diary for the selected date.</p>
       {entry ? (
         <>
           <p>
@@ -88,9 +93,7 @@ export default function AddFood({ food, draft, onDraftChange, onBack, onSave }) 
             onSubmit={review}
             submitLabel="Review entry"
           />
-          {invalid && (
-            <ErrorState message="This amount cannot be calculated. Enter a smaller serving amount and review again." />
-          )}
+          {invalid && <ErrorState message={invalid} />}
           <div className="add-food__actions">
             <Button variant="secondary" onClick={onBack}>
               Back to search

@@ -6,6 +6,8 @@ import { accountRequest } from '../../services/accounts.js';
 vi.mock('../../services/accounts.js', () => ({ accountRequest: vi.fn() }));
 beforeEach(() => {
   accountRequest.mockReset();
+  sessionStorage.clear();
+  sessionStorage.setItem('nourishnet:diary-date:avery', '2026-11-09');
   window.location.hash = '/app/login';
 });
 const account = { id: 'avery', displayName: 'Avery Fiction', timeZone: 'America/Denver' };
@@ -28,7 +30,9 @@ it('shows sign-in after an expired session and retains the adult synthetic-data 
 });
 it('loads the signed-in account diary then removes all private content on logout', async () => {
   accountRequest.mockImplementation((path) =>
-    Promise.resolve(path === '/auth/session' ? { account } : path === '/dashboard' ? diary : null),
+    Promise.resolve(
+      path === '/auth/session' ? { account } : path.startsWith('/diary?') ? diary : null,
+    ),
   );
   const user = userEvent.setup();
   render(<LiveApp route="/app/dashboard" />);
@@ -108,7 +112,7 @@ it('requires a session before showing live search', async () => {
 });
 
 it.each(['logout', 'expiry'])(
-  'adds one visible decimal entry, returns to the tracker, and clears it on %s',
+  'adds one visible decimal entry, returns to the tracker, and hides it until signing back in after %s',
   async (exit) => {
     const food = {
       id: 'food',
@@ -127,15 +131,28 @@ it.each(['logout', 'expiry'])(
       }).format(new Date()),
       meals: ['Breakfast', 'Lunch', 'Dinner', 'Snack'].map((name) => ({ name, entries: [] })),
     };
-    accountRequest.mockImplementation((path) =>
-      Promise.resolve(
+    sessionStorage.setItem('nourishnet:diary-date:avery', currentDiary.date);
+    accountRequest.mockImplementation((path, options) => {
+      if (path === '/diary') {
+        currentDiary.meals[1].entries = [
+          {
+            id: 'persisted',
+            foodName: food.name,
+            quantity: options.body.quantity,
+            servingBasis: food.servingBasis,
+            contribution: { calories: 225 },
+          },
+        ];
+        currentDiary.totals = { calories: 225 };
+      }
+      return Promise.resolve(
         path === '/auth/session' || path === '/auth/login'
           ? { account }
           : path.startsWith('/foods?')
             ? { foods: [food] }
             : currentDiary,
-      ),
-    );
+      );
+    });
     const user = userEvent.setup();
     const { rerender } = render(<LiveApp route="/app/search/Lunch" />);
     await user.type(await screen.findByRole('searchbox'), 'sample{Enter}');
@@ -166,6 +183,6 @@ it.each(['logout', 'expiry'])(
     await user.click(screen.getByRole('button', { name: 'Sign in' }));
     rerender(<LiveApp route="/app/dashboard" />);
     await screen.findByRole('region', { name: 'Lunch' });
-    expect(screen.queryByRole('article', { name: 'Sample oats' })).not.toBeInTheDocument();
+    expect(screen.getByRole('article', { name: 'Sample oats' })).toBeVisible();
   },
 );

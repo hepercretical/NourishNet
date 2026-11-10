@@ -2,15 +2,14 @@ import { useEffect, useState } from 'react';
 import { accountRequest } from '../../services/accounts.js';
 import Dashboard from '../Dashboard/Dashboard.jsx';
 
-export default function AccountDiary({ account, entries = [] }) {
+export default function AccountDiary({ account, date }) {
   const [state, setState] = useState({ loading: true });
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     const controller = new AbortController();
-    accountRequest('/dashboard', { signal: controller.signal })
+    accountRequest(`/diary?date=${encodeURIComponent(date)}`, { signal: controller.signal })
       .then((diary) => {
-        if (!controller.signal.aborted && diary.accountId === account.id)
-          setState({ diary, loading: false });
+        if (!controller.signal.aborted && diary.date === date) setState({ diary, loading: false });
         else if (!controller.signal.aborted) setState({ error: true, loading: false });
       })
       .catch((error) => {
@@ -18,12 +17,11 @@ export default function AccountDiary({ account, entries = [] }) {
           setState({ error: true, loading: false });
       });
     return () => controller.abort();
-  }, [account.id, attempt]);
+  }, [account.id, date, attempt]);
   return (
     <Dashboard
       account={account}
       {...state}
-      sessionEntries={entries.filter((entry) => entry.date === state.diary?.date)}
       onRetry={() => {
         setState({ loading: true });
         setAttempt((current) => current + 1);

@@ -330,3 +330,10 @@ http-client.private.env.json.*
 *.sqlite3-wal.*
 *.sqlite3-shm.*
 *.sqlite3-journal.*
+
+# Renamed database copies and PostgreSQL client configuration on Windows.
+*.db.*
+pg_service.conf
+pg_service.conf.*
+*.pgpass
+*.pgpass.*
