@@ -6,17 +6,16 @@ This repository includes **Plan-01: Foundation and development setup**,
 preview and app shell**, and **Plan-04: shared food, form, and state components**. **Plans 05-07** add
 local synthetic accounts, backend food queries, and an account-owned dashboard.
 **Plan-08** adds live food search through a focused API client and cancellable hook.
-**Plan-09** adds serving/meal selection, scaled confirmation, and session-only meal entries.
+**Plan-09** adds serving/meal selection and scaled confirmation.
 **Plan-10** adds the authenticated diary API, persistent snapshots, and meal/day totals.
-The browser tracker still uses Plan-09 session entries; connecting it to persistence
-and reloading saved entries is Plan-11.
+**Plan-11** connects the tracker to saved diaries, selected dates, and authoritative totals.
 The shell uses fictional examples to review the initial
 screens. Account, tracking, scanning, upload, goal, and sharing operations are not
 available in the preview. Database foundation commands run separately from the app.
 
 ## Current checkout verification (November 9, 2026)
 
-Frontend/backend lint and formatting, the frontend production build, 143 frontend
+Frontend/backend lint and formatting, the frontend production build, 149 frontend
 tests and 126 backend tests pass. The 31 explicit Plan-10 local integration checks
 also pass. Both development services respond locally,
 including the health endpoint through the frontend proxy. Open
@@ -31,6 +30,35 @@ Plan-04 preview was opened in the default browser. No hosted services were used.
 
 Original ignored contracts were unavailable and have been reconstructed from
 source, with missing historical review evidence clearly identified.
+
+## Tracker integration (Plan-11)
+
+Open <http://127.0.0.1:5173/#/app/dashboard> and sign in with a fictional account.
+Choose **Diary date**, then **Add food to lunch**. Search for `sample`, choose a
+food, enter `1.5` servings, review, and save. The tracker returns to the same day,
+showing the saved serving amount, its scaled nutrition, and updated daily totals.
+For example, 150 kcal per serving contributes 225 kcal at 1.5 servings.
+Unknown nutrients remain **Not provided**; display values use at most two decimals.
+
+Refresh to reload saved entries. The selected date is remembered per account in
+this tab's session storage; entries and nutrition are fetched from the API, not
+stored in browser storage. If browser storage is blocked, selection still works
+but refresh starts on the account's current local date. Choose a different date
+to check empty-day guidance. Food saves always use the selected date, even when
+it differs from today. Serving amounts follow the existing API range and precision.
+
+Stop the backend before opening the diary to check the failed-load message and
+**Try again**. Restart it and retry. A failed save keeps the confirmation and the
+same request key for retry; repeated taps stay one operation. Signing out or
+session expiry hides private data and cancels pending work. Reopening the diary
+loads its server totals without a full page reload.
+
+Mocked component/integration tests cover refresh/remount, account and date changes,
+late responses, loading, empty days, failures/retry, successful saves, duplicates,
+and snapshot contributions. Local API/proxy health and 31 real local PostgreSQL
+integration checks pass. Browser automation's native connection was unavailable;
+phone/wide layout, keyboard date-picker behavior, 200% zoom, and screen-reader
+review remain manual checks. No new packages, API rules, or migrations were needed.
 
 ## Persistent diary API (Plan-10)
 
@@ -87,10 +115,9 @@ All four Plan-10 criteria are verified: owner/day create/read, scaled meal/day
 totals with unknown values, durable catalog snapshots, and coverage for decimal
 servings, multiple meals, empty days, and local-day boundaries. For browser testing,
 sign in at `/#/app`, then open `/api/diary?date=2026-11-01` on the same local host.
-Use `npm run verify:diary` to exercise saves and retries until Plan-11 connects
-the tracker to this API.
+Use `npm run verify:diary` to exercise storage and retries independently of the tracker.
 
-The repository ignore audit checked 630 representative private paths and 18
+The Plan-11 repository ignore audit checked 655 representative private paths and 20
 required source/example paths, with no tracked ignored files or exposed local
 database password found in allowed files or the frontend build. Credential-pattern
 matches were reviewed as placeholders, generated-value code, or synthetic tests.
@@ -114,8 +141,7 @@ Manual testing:
    new code if needed.
 3. Review your private daily nutrition summary and Breakfast, Lunch, Dinner and
    Snack sections. New diaries show zero recorded totals, no goal and useful empty
-   states. Sharing is off. Add-food links open live search; entry persistence
-   belongs to Plan-10; Plan-09 entries stay in the current app session.
+   states. Sharing is off. Add-food links open live search and save to the selected diary date.
 4. Sign out, create and verify a second fictional account, then sign in. Check its
    name/timezone and confirm the previous account content is cleared. Sessions
    expire after eight hours; expired sessions ask you to sign in again.
@@ -189,10 +215,9 @@ nutrition would overflow receive a recovery message. Choose **Save entry** to re
 to the diary with success feedback and one entry in the selected meal. Repeated
 taps stay one operation; deliberately starting a new entry allows another serving.
 
-Entries exist only in memory for the current signed-in app session and local diary
-date. Refresh, sign-out, expiry, or leaving the live app clears them. Daily summary
-totals do not include these entries yet; database persistence and aggregation belong
-to Plan-10. No API rules, packages, migrations, or database schema were changed.
+Plan-11 now saves these entries through the approved Plan-10 API. The tracker reloads
+the selected day and its totals after saving and on refresh. Signing out hides the
+private diary; signing back in reloads saved entries.
 
 Mocked component and integration tests cover keyboard selection/submission, decimal
 scaling, validation, editing, retained search/drafts, failed/pending saves, retry

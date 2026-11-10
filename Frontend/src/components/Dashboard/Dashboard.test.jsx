@@ -90,3 +90,44 @@ it('allows meal and long-content reflow on phones and adds columns only when spa
   expect(responsiveStyles).toContain('overflow-wrap: anywhere');
   expect(responsiveStyles).not.toMatch(/(?:min-)?width:\s*\d{3,}px/);
 });
+
+it('shows persisted lowercase meals, scaled snapshot contributions and consistently rounded server totals', () => {
+  render(
+    <Dashboard
+      account={account}
+      diary={{
+        ...diary,
+        totals: { calories: 225.12345, sodium: null },
+        meals: [
+          {
+            name: 'lunch',
+            entries: [
+              {
+                id: 'saved',
+                foodName: 'Saved oats',
+                quantity: 1.5,
+                servingBasis: '40 g',
+                nutrients: { calories: 150 },
+                contribution: { calories: 225.12345, protein: 7.5, sodium: null },
+              },
+            ],
+          },
+        ],
+      }}
+    />,
+  );
+  const lunch = screen.getByRole('region', { name: 'Lunch' });
+  expect(within(lunch).getByRole('article', { name: 'Saved oats' })).toBeVisible();
+  expect(within(lunch).getByText('Logged amount: 1.5 servings \u00d7 40 g')).toBeVisible();
+  expect(within(lunch).getByText('225.12 kcal')).toBeVisible();
+  expect(within(lunch).queryByText('150 kcal')).not.toBeInTheDocument();
+  expect(
+    within(screen.getByRole('region', { name: 'Recorded daily nutrition' })).getByText(
+      '225.12 kcal',
+    ),
+  ).toBeVisible();
+  expect(within(lunch).getByRole('link', { name: 'Add food to lunch' })).toHaveAttribute(
+    'href',
+    '#/app/search/Lunch',
+  );
+});
