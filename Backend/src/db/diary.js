@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { AccountError } from '../auth/service.js';
 import { localDate, nutritionAmount } from './validation.js';
+import { diaryMutations } from './diaryMutations.js';
 
 const meals = ['breakfast', 'lunch', 'dinner', 'snack'];
 const columns = {
@@ -35,6 +36,7 @@ function totals(rows) {
 function entry(row) {
   return {
     id: row.id,
+    revision: row.revision ?? 1,
     servingId: row.source_serving_id,
     catalogVersion: row.catalog_version,
     meal: row.meal,
@@ -84,6 +86,7 @@ export function diaryDraft(body) {
 
 export function diaryRepository(database) {
   return {
+    ...diaryMutations(database, entry),
     async get(account, date) {
       try {
         localDate(date);

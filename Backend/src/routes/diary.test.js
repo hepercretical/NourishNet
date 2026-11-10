@@ -115,3 +115,65 @@ it('returns retry conflicts and safe service errors', async () => {
   expect(response.status).toBe(503);
   expect(await response.text()).not.toContain('private');
 });
+
+const entryId = '20000000-0000-4000-8000-000000000001';
+it.each(['PATCH', 'DELETE'])(
+  'routes owner-scoped %s entry changes and requires session/origin',
+  async (method) => {
+    const { base, headers, diary, account, body } = await setup();
+    const service = method === 'PATCH' ? 'update' : 'remove';
+    diary[service] = vi.fn().mockResolvedValue({ date: body.date });
+    const input = {
+      date: body.date,
+      revision: 1,
+      requestKey: body.requestKey,
+      ...(method === 'PATCH' ? { meal: 'lunch', quantity: 0.5 } : {}),
+    };
+    const url = `${base}/entries/${entryId}`;
+    for (const [extra, status] of [
+      [{ Cookie: '' }, 401],
+      [{ Origin: 'https://other.invalid' }, 403],
+    ]) {
+      expect(
+        (
+          await fetch(url, {
+            method,
+            headers: { ...headers, ...extra },
+            body: JSON.stringify(input),
+          })
+        ).status,
+      ).toBe(status);
+    }
+    expect(diary[service]).not.toHaveBeenCalled();
+    const response = await fetch(url, { method, headers, body: JSON.stringify(input) });
+    expect(response.status).toBe(200);
+    expect(response.headers.get('cache-control')).toBe('no-store');
+    expect(diary[service]).toHaveBeenCalledWith(account, entryId, input);
+    diary[service].mockRejectedValueOnce(new AccountError('Entry unavailable.', 404));
+    expect((await fetch(url, { method, headers, body: JSON.stringify(input) })).status).toBe(404);
+    diary[service].mockRejectedValueOnce(new AccountError('Entry changed.', 409));
+    expect((await fetch(url, { method, headers, body: JSON.stringify(input) })).status).toBe(409);
+  },
+);
+it('rejects entry method/query/body violations before mutation', async () => {
+  const { base, headers, diary } = await setup();
+  diary.update = vi.fn();
+  diary.remove = vi.fn();
+  const url = `${base}/entries/${entryId}`;
+  const unsupported = await fetch(url, { method: 'POST', headers, body: '{}' });
+  expect(unsupported.status).toBe(405);
+  expect(unsupported.headers.get('allow')).toBe('PATCH, DELETE');
+  for (const [path, options, status] of [
+    [url + '?accountId=other', { method: 'PATCH', headers, body: '{}' }, 400],
+    [url, { method: 'PATCH', headers, body: '{bad' }, 400],
+    [
+      url,
+      { method: 'DELETE', headers: { ...headers, 'Content-Type': 'text/plain' }, body: '{}' },
+      415,
+    ],
+    [url, { method: 'PATCH', headers, body: 'x'.repeat(8193) }, 413],
+  ])
+    expect((await fetch(path, options)).status).toBe(status);
+  expect(diary.update).not.toHaveBeenCalled();
+  expect(diary.remove).not.toHaveBeenCalled();
+});

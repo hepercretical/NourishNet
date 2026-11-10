@@ -51,25 +51,45 @@ export function accountRoutes({ getServices, origin = 'http://127.0.0.1:5173' })
       : null;
     const isAuth = action && Object.hasOwn(methods, action);
     const isDiary = url.pathname === '/api/diary';
-    if (!isAuth && !['/api/foods', '/api/dashboard', '/api/diary'].includes(url.pathname))
+    const diaryEntry = url.pathname.match(/^\/api\/diary\/entries\/([^/]+)$/);
+    if (
+      !isAuth &&
+      !diaryEntry &&
+      !['/api/foods', '/api/dashboard', '/api/diary'].includes(url.pathname)
+    )
       return false;
     try {
-      const method = isAuth
-        ? methods[action]
-        : isDiary && request.method === 'POST'
-          ? 'POST'
-          : 'GET';
+      const method = diaryEntry
+        ? ['PATCH', 'DELETE'].includes(request.method)
+          ? request.method
+          : 'PATCH'
+        : isAuth
+          ? methods[action]
+          : isDiary && request.method === 'POST'
+            ? 'POST'
+            : 'GET';
       if (request.method !== method) {
-        response.setHeader('Allow', isDiary ? 'GET, POST' : method);
+        response.setHeader('Allow', diaryEntry ? 'PATCH, DELETE' : isDiary ? 'GET, POST' : method);
         throw new AccountError('Method not allowed', 405);
       }
-      if (method === 'POST' && request.headers.origin !== origin)
+      if (method !== 'GET' && request.headers.origin !== origin)
         throw new AccountError('This action must come from the local app.', 403);
       const services = getServices();
       const sessionToken = readCookie(request);
       if (!isAuth) {
         const account = await services.auth.session(sessionToken);
-        if (isDiary) {
+        if (diaryEntry) {
+          if (url.search) throw new AccountError('Send entry changes in the JSON body.');
+          send(
+            response,
+            200,
+            await services.diary[method === 'PATCH' ? 'update' : 'remove'](
+              account,
+              diaryEntry[1],
+              await readBody(request),
+            ),
+          );
+        } else if (isDiary) {
           if (method === 'POST') {
             send(response, 201, await services.diary.create(account, await readBody(request)));
           } else {

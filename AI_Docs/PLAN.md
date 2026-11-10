@@ -255,9 +255,9 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 **Acceptance criteria**
 
-- [ ] User edits serving and meal or confirms removal of an entry from their own diary.
-- [ ] Meal lists and totals update correctly after edits/removal.
-- [ ] Invalid input, cancel, recoverable errors, and repeated actions have tested behavior.
+- [x] User edits serving and meal or confirms removal of an entry from their own diary.
+- [x] Meal lists and totals update correctly after edits/removal.
+- [x] Invalid input, cancel, recoverable errors, and repeated actions have tested behavior.
 
 ### Plan-13 Goal formula and outcome specification
 
@@ -266,12 +266,12 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 **Acceptance criteria**
 
-- [ ] Human approval and qualified formula review required by AGENTS.md record source/version,
+- [x] Human approval and qualified formula review required by AGENTS.md record source/version,
       biological-sex semantics, age/height/weight units, activity assumptions, supported cases, and
       calculation limits before Plan-19.
-- [ ] Gain/lose/maintain and muscle-gain objectives, target/range/limit semantics, tolerances,
+- [x] Gain/lose/maintain and muscle-gain objectives, target/range/limit semantics, tolerances,
       effective dates, day completion, and historical edits are specified.
-- [ ] Unknown/incomplete/no-goal/future-day states and timezone alignment rules are defined; do not
+- [x] Unknown/incomplete/no-goal/future-day states and timezone alignment rules are defined; do not
       invent clinical thresholds.
 
 ## Sprint 2: Barcode, submissions, goals, and connections (November 15-28)
