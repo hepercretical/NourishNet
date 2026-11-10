@@ -216,10 +216,10 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 **Acceptance criteria**
 
-- [ ] User selects a meal and positive serving amount; invalid quantities receive clear field
+- [x] User selects a meal and positive serving amount; invalid quantities receive clear field
       feedback.
-- [ ] Confirmation shows the food, serving, meal, and scaled nutrition.
-- [ ] Save feedback returns to the tracker; repeated taps do not produce duplicate visible entries.
+- [x] Confirmation shows the food, serving, meal, and scaled nutrition.
+- [x] Save feedback returns to the tracker; repeated taps do not produce duplicate visible entries.
 
 ### Plan-10 Diary persistence and daily totals
 

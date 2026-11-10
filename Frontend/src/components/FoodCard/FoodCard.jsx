@@ -6,6 +6,7 @@ import PendingStatus from '../PendingStatus/PendingStatus.jsx';
 export default function FoodCard({
   name,
   servingBasis,
+  servingLabel = 'Per serving',
   nutrients,
   pendingReview = false,
   onSelect,
@@ -14,7 +15,9 @@ export default function FoodCard({
   return (
     <article className="shared-card" aria-label={name}>
       <h3 className="shared-card__title">{name}</h3>
-      <p>Per serving: {servingBasis}</p>
+      <p>
+        {servingLabel}: {servingBasis}
+      </p>
       <NutritionFacts values={nutrients} />
       {pendingReview && <PendingStatus />}
       {onSelect && (

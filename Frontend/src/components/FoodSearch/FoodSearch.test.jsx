@@ -91,3 +91,19 @@ it('explains overlong input without sending a request', async () => {
   expect(await screen.findByRole('alert')).toHaveTextContent('100 search characters');
   expect(searchFoods).not.toHaveBeenCalled();
 });
+
+it('chooses a food with the meal shortcut and preserves search and serving input on return', async () => {
+  searchFoods.mockResolvedValue([food]);
+  const user = userEvent.setup();
+  render(<FoodSearch initialMeal="Dinner" onSave={vi.fn()} />);
+  await user.type(screen.getByRole('searchbox'), 'oats{Enter}');
+  await user.click(await screen.findByRole('button', { name: `Choose ${food.name}` }));
+  expect(screen.getByRole('combobox', { name: 'Meal' })).toHaveValue('Dinner');
+  await user.clear(screen.getByRole('textbox', { name: 'Serving amount' }));
+  await user.type(screen.getByRole('textbox', { name: 'Serving amount' }), '2.5');
+  await user.click(screen.getByRole('button', { name: 'Back to search' }));
+  expect(screen.getByRole('searchbox')).toHaveValue('oats');
+  await user.click(screen.getByRole('button', { name: `Choose ${food.name}` }));
+  expect(screen.getByRole('textbox', { name: 'Serving amount' })).toHaveValue('2.5');
+  expect(searchFoods).toHaveBeenCalledOnce();
+});
