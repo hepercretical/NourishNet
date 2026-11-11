@@ -31,6 +31,10 @@
   --radius-lg: 1rem;
   --shadow-card: 0 0.25rem 1rem rgb(25 48 39 / 8%);
   --content-max-width: 72rem;
+  --touch-target: 2.75rem;
+  --toolbar-height: 3.5rem;
+  --tab-height: 4.25rem;
+  --row-height: 2.75rem;
 
   font-family: var(--font-body);
   font-size: var(--text-md);

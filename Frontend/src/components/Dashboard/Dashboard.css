@@ -1,7 +1,15 @@
+.dashboard__title {
+  margin: 0;
+  padding: var(--space-3) var(--space-2) var(--space-2);
+  color: var(--color-text);
+  background: transparent;
+  font-size: var(--text-lg);
+}
+
 .dashboard-summary,
 .dashboard-meal {
   min-width: 0;
-  padding: var(--space-3);
+  padding: var(--space-2);
   margin-block: var(--space-2);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -22,7 +30,8 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding-inline: var(--space-3);
+  min-height: var(--row-height);
+  padding-inline: var(--space-2);
   background: var(--color-surface-muted);
   border-bottom: 1px solid var(--color-border);
 }
@@ -53,13 +62,20 @@
 .dashboard-summary .shared-nutrition > div:first-child {
   grid-column: 1 / -1;
 }
+.dashboard-summary .shared-nutrition > div {
+  padding-block: var(--space-1);
+  border-right: 1px solid var(--color-border);
+}
+.dashboard-summary .shared-nutrition > div:last-child {
+  border-right: 0;
+}
 .dashboard-summary p,
 .dashboard-extras p {
   font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
 .dashboard-extras {
-  padding: var(--space-3);
+  padding: var(--space-2);
   border-bottom: 1px solid var(--color-border);
 }
 .dashboard-summary-link {

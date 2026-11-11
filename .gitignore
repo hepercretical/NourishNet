@@ -461,3 +461,58 @@ quarantine/
 # Store arbitrary private images, exports and archives in the ignored
 # private-artifacts/ or private-fixtures/ directories; filenames cannot classify
 # personal data. Public source assets and synthetic fixtures must remain visible.
+
+# Temporary work, partial downloads, and editor recovery files (at any depth).
+tmp/
+temp/
+.tmp/
+.temp/
+*.tmp
+*.tmp.*
+*.temp
+*.temp.*
+*.part
+*.partial
+*.crdownload
+*.download
+*.swn
+*.sublime-workspace
+.DS_Store?
+._*
+$RECYCLE.BIN/
+
+# Local-only settings and tool caches; shared configuration stays versioned.
+*.local
+*.local.*
+.parcel-cache/
+.turbo/
+.nyc_output/
+.stylelintcache
+.prettiercache
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Private signing/authentication artifacts and local security-tool output.
+*.private-key
+*.private-key.*
+*.pkcs12
+*.pkcs12.*
+*.mobileprovision
+*.gpg
+*.asc.key
+.sentryclirc
+.sentryclirc.*
+.gitconfig.local
+.gitconfig.local.*
+.security-reports/
+security-reports/
+private-reviews/
+
+# Keep security source, policies, secret-free examples and public assets tracked.
+# Do not ignore SECURITY.md, AI_Docs/SECURE.md, auth modules, or whole image/JSON
+# categories. Store private screenshots/exports in private-artifacts/ instead.

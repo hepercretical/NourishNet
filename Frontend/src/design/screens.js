@@ -446,6 +446,9 @@ export const screens = {
       ['Diary timezone', 'America/Denver (synthetic example)'],
     ],
     links: [
+      ['/account', 'My profile (preview)'],
+      ['/goals', 'Daily goals (preview)'],
+      ['/account/recovery', 'Change password (preview)'],
       ['/settings/rights', 'Export or delete account location'],
       ['/privacy', 'Privacy policy location'],
       ['/terms', 'Terms location'],

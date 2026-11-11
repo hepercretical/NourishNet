@@ -12,6 +12,22 @@ beforeEach(() => openRoute('/dashboard'));
 afterEach(() => vi.unstubAllGlobals());
 
 describe('initial screen designs', () => {
+  it('offers profile, goals and password recovery from Preferences', async () => {
+    const user = userEvent.setup();
+    openRoute('/settings');
+    render(<App />);
+    const links = screen.getByRole('navigation', { name: 'Flow preview links' });
+    expect(within(links).getByRole('link', { name: 'My profile (preview)' })).toHaveAttribute(
+      'href',
+      '#/account',
+    );
+    expect(within(links).getByRole('link', { name: 'Change password (preview)' })).toHaveAttribute(
+      'href',
+      '#/account/recovery',
+    );
+    await user.click(within(links).getByRole('link', { name: 'Daily goals (preview)' }));
+    expect(await screen.findByRole('heading', { level: 1, name: 'Choose a goal' })).toBeVisible();
+  });
   it.each(Object.entries(screens))(
     'opens %s with one heading and valid next destinations',
     (path, design) => {

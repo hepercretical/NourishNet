@@ -15,7 +15,9 @@ export default function Dashboard({
 }) {
   return (
     <>
-      <h1 tabIndex={-1}>Your daily diary</h1>
+      <h1 className="dashboard__title" tabIndex={-1}>
+        Your daily diary
+      </h1>
       <p>{account.displayName} · Your diary is private. Sharing is off.</p>
       {loading ? (
         <LoadingState message="Loading your diary. Previous account data stays hidden." />

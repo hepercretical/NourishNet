@@ -70,6 +70,10 @@ the human developer before changing established token values.
   --radius-lg: 1rem;
   --shadow-card: 0 0.25rem 1rem rgb(25 48 39 / 8%);
   --content-max-width: 72rem;
+  --touch-target: 2.75rem;
+  --toolbar-height: 3.5rem;
+  --tab-height: 4.25rem;
+  --row-height: 2.75rem;
 }
 ```
 
@@ -164,6 +168,38 @@ actors/data and sample images. Demo actor selection never grants real API access
 production ignores demo mode. Test account flows and backend ownership separately.
 Policies, data-rights operations and production security UI adopt the same shell
 in their post-Sprint-3 modules; keep planned labels until then.
+
+## Reference shell contract
+
+The supplied mobile screenshots are the visual reference for the internal tracker
+shell. They establish structure and density, not a replacement color palette:
+
+- Keep one primary green toolbar at the top. It contains a menu button, the
+  `Search foods to log` shortcut, and compact barcode and diary shortcuts.
+- Use a dark, fixed five-item bottom navigation with Dashboard, Stats, Track,
+  Designs, and Preferences. Track is the raised primary action. The active item
+  must have `aria-current`, a visible text treatment, and an icon; color alone is
+  never the state indicator.
+- Use flat list rows and thin borders for diary sections and settings-style lists.
+  Reserve rounded surfaces for grouped forms and notices, not every row.
+- Keep the diary sequence stable: date navigation, recorded nutrition, Breakfast,
+  Lunch, Dinner, Snack, then clearly labeled out-of-scope Exercise, Weigh-in, and
+  Water locations. Meal rows use a compact heading, a reachable add-food control,
+  and an honest empty or recorded state.
+- Use the shared inline icon set for navigation and tracking actions. Icons are
+  supporting labels, not substitutes for accessible text. Do not use emoji or
+  fallback glyphs that can render as mojibake.
+- The reference shell reserves safe-area space beneath the fixed tabs. Toolbar,
+  meal rows, settings rows, and action controls remain at least 44px tall even
+  when the surrounding layout is compact.
+
+Preferences uses a single column of full-width navigation rows: profile, daily
+goals, password recovery, account rights, and policy locations. Mark preview and
+planned destinations explicitly. Search uses the existing catalog form; the
+reference's freeform speech, restaurant, grocery, history, and recipe features
+do not become working tabs through a visual update. Stats retains its Sprint 1
+summary shortcut until calendar implementation. Do not copy weight charts or
+red/green missed-day counts into previews as real user outcomes.
 
 ## Typography and content
 

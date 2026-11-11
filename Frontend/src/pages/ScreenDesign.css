@@ -67,6 +67,22 @@
   background: var(--color-surface-muted);
 }
 
+.design-preferences {
+  display: grid;
+  margin-block: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.design-preferences .design-action {
+  margin: 0;
+  min-height: var(--row-height);
+  padding: var(--space-3);
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  background: var(--color-surface);
+}
+
 .design-summary {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));

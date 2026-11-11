@@ -109,7 +109,10 @@ export default function ScreenDesign({ screen, route }) {
           )}
         </>
       )}
-      <nav className="design-actions" aria-label="Flow preview links">
+      <nav
+        className={route === '/settings' ? 'design-preferences' : 'design-actions'}
+        aria-label="Flow preview links"
+      >
         {screen.links.map(([path, label]) => (
           <a className="design-action" key={`${path}-${label}`} href={`#${path}`}>
             {label}

@@ -2,6 +2,25 @@ import { useRef, useState } from 'react';
 import { primaryRoutes } from '../../design/screens.js';
 import './TrackerNavigation.css';
 
+function Icon({ name }) {
+  const paths = {
+    menu: 'M3 6h18M3 12h18M3 18h18',
+    barcode: 'M4 5v14M7 5v14M10 5v14M14 5v14M17 5v14M20 5v14',
+    diary: 'M4 5h16v14H4zM8 3v4M16 3v4M4 10h16',
+    home: 'M3 11.5 12 4l9 7.5M5.5 10v10h13V10M9 20v-6h6v6',
+    stats: 'M4 19V9M10 19V5M16 19v-8M22 19V3M2 21h21',
+    plus: 'M12 5v14M5 12h14',
+    designs: 'M5 4h14v16H5zM8 8h8M8 12h8M8 16h5',
+    settings:
+      'M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z',
+  };
+  return (
+    <svg className="tracker-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d={paths[name]} />
+    </svg>
+  );
+}
+
 export default function TrackerNavigation({ route, children, preview = false }) {
   const [open, setOpen] = useState(false);
   const menuButton = useRef(null);
@@ -43,16 +62,24 @@ export default function TrackerNavigation({ route, children, preview = false }) 
           ref={menuButton}
           onClick={() => setOpen(!open)}
         >
-          ☰
+          <Icon name="menu" />
         </button>
         <a className="tracker-toolbar__search" href={`#${searchPath}`}>
           Search foods to log
         </a>
-        <a href="#/scan" aria-label="Barcode scanner design preview">
-          ▥
+        <a
+          className="tracker-toolbar__icon-link"
+          href="#/scan"
+          aria-label="Barcode scanner design preview"
+        >
+          <Icon name="barcode" />
         </a>
-        <a href={`#${diaryPath}`} aria-label="Your daily diary">
-          ▤
+        <a
+          className="tracker-toolbar__icon-link"
+          href={`#${diaryPath}`}
+          aria-label="Your daily diary"
+        >
+          <Icon name="diary" />
         </a>
       </header>
       {children && <div className="live-app__links">{children}</div>}
@@ -89,7 +116,8 @@ export default function TrackerNavigation({ route, children, preview = false }) 
           href={`#${diaryPath}`}
           aria-current={route === diaryPath || route === '/app' ? 'page' : undefined}
         >
-          <span aria-hidden="true">⌂</span>Dashboard
+          <Icon name="home" />
+          <span>Dashboard</span>
         </a>
         <a
           href={`#${diaryPath}`}
@@ -103,14 +131,16 @@ export default function TrackerNavigation({ route, children, preview = false }) 
             }
           }}
         >
-          <span aria-hidden="true">▥</span>Stats
+          <Icon name="stats" />
+          <span>Stats</span>
         </a>
         <a
           className="tracker-tabs__track"
           href={`#${searchPath}`}
           aria-current={trackActive ? 'page' : undefined}
         >
-          <span aria-hidden="true">＋</span>Track
+          <Icon name="plus" />
+          <span>Track</span>
         </a>
         <a
           href="#/design"
@@ -118,10 +148,12 @@ export default function TrackerNavigation({ route, children, preview = false }) 
             route.startsWith('/design') || route === '/development' ? 'page' : undefined
           }
         >
-          <span aria-hidden="true">☷</span>Designs
+          <Icon name="designs" />
+          <span>Designs</span>
         </a>
         <a href="#/settings" aria-current={preferencesActive ? 'page' : undefined}>
-          <span aria-hidden="true">⚙</span>Preferences
+          <Icon name="settings" />
+          <span>Preferences</span>
         </a>
       </nav>
     </>

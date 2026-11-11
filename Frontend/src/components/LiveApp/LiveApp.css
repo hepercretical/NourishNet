@@ -52,7 +52,7 @@
 .live-app__skip:focus {
   transform: none;
 }
-.diary-datebar {
+.shared-field.diary-datebar {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
