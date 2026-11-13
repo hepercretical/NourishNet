@@ -12,6 +12,22 @@ beforeEach(() => openRoute('/dashboard'));
 afterEach(() => vi.unstubAllGlobals());
 
 describe('initial screen designs', () => {
+  it('offers profile, goals and password recovery from Preferences', async () => {
+    const user = userEvent.setup();
+    openRoute('/settings');
+    render(<App />);
+    const links = screen.getByRole('navigation', { name: 'Flow preview links' });
+    expect(within(links).getByRole('link', { name: 'My profile (preview)' })).toHaveAttribute(
+      'href',
+      '#/account',
+    );
+    expect(within(links).getByRole('link', { name: 'Change password (preview)' })).toHaveAttribute(
+      'href',
+      '#/account/recovery',
+    );
+    await user.click(within(links).getByRole('link', { name: 'Daily goals (preview)' }));
+    expect(await screen.findByRole('heading', { level: 1, name: 'Choose a goal' })).toBeVisible();
+  });
   it.each(Object.entries(screens))(
     'opens %s with one heading and valid next destinations',
     (path, design) => {
@@ -23,6 +39,29 @@ describe('initial screen designs', () => {
       expect(screen.getByRole('banner')).toBeVisible();
       expect(screen.getByRole('main')).toHaveFocus();
       expect(screen.getByRole('contentinfo')).toBeVisible();
+      expect(screen.getByRole('button', { name: 'Menu' })).toHaveAttribute(
+        'aria-expanded',
+        'false',
+      );
+      expect(screen.getByRole('link', { name: 'Search foods to log' })).toHaveAttribute(
+        'href',
+        '#/search',
+      );
+      const tabs = screen.getByRole('navigation', { name: 'Main navigation' });
+      expect(
+        within(tabs)
+          .getAllByRole('link')
+          .map((link) => link.textContent),
+      ).toEqual(
+        expect.arrayContaining([
+          expect.stringContaining('Dashboard'),
+          expect.stringContaining('Stats'),
+          expect.stringContaining('Track'),
+          expect.stringContaining('Designs'),
+          expect.stringContaining('Preferences'),
+        ]),
+      );
+      expect(within(tabs).getAllByRole('link')).toHaveLength(5);
       for (const [target] of design.links) expect(screens[target]).toBeDefined();
     },
   );
@@ -30,12 +69,15 @@ describe('initial screen designs', () => {
   it('navigates using links and responds to history changes', async () => {
     const user = userEvent.setup();
     render(<App />);
+    await user.click(screen.getByRole('button', { name: 'Menu' }));
     await user.click(
-      within(screen.getByRole('navigation', { name: 'Main navigation' })).getByRole('link', {
+      within(screen.getByRole('navigation', { name: 'Tracker menu' })).getByRole('link', {
         name: 'Goals',
       }),
     );
     expect(await screen.findByRole('heading', { level: 1, name: 'Choose a goal' })).toBeVisible();
+    expect(screen.getByRole('link', { name: 'Preferences', current: 'page' })).toBeVisible();
+    await user.click(screen.getByRole('button', { name: 'Menu' }));
     expect(screen.getByRole('link', { name: 'Goals', current: 'page' })).toBeVisible();
     await act(async () => {
       openRoute('/dashboard');
@@ -52,6 +94,36 @@ describe('initial screen designs', () => {
     expect(screen.getByRole('main')).toHaveFocus();
     expect(window.location.hash).toBe('#/dashboard');
   });
+
+  it('moves Stats focus to the preview daily summary without leaving the diary', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(
+      within(screen.getByRole('navigation', { name: 'Main navigation' })).getByRole('link', {
+        name: 'Stats',
+      }),
+    );
+    expect(screen.getByRole('heading', { name: /November 9, 2026/ })).toHaveFocus();
+    expect(window.location.hash).toBe('#/dashboard');
+  });
+
+  it.each(['/design', '/design/components', '/development', '/unknown'])(
+    'keeps the same toolbar, tabs and focusable main on utility route %s',
+    (path) => {
+      openRoute(path);
+      render(<App />);
+      expect(screen.getByRole('button', { name: 'Menu' })).toBeVisible();
+      expect(screen.getByRole('link', { name: 'Search foods to log' })).toHaveAttribute(
+        'href',
+        '#/search',
+      );
+      expect(
+        within(screen.getByRole('navigation', { name: 'Main navigation' })).getAllByRole('link'),
+      ).toHaveLength(5);
+      expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+      expect(screen.getByRole('main')).toHaveFocus();
+    },
+  );
 
   it('shows loading, persistent error with retry, empty, validation and success patterns', async () => {
     const user = userEvent.setup();

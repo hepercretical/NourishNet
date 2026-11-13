@@ -9,9 +9,16 @@ const labels = {
   verify: 'Verify account',
   recover: 'Request recovery code',
   reset: 'Reset password',
+  profile: 'Complete account setup',
 };
 
-export default function AccountForm({ mode, initialEmail = '', onSubmit, onResend }) {
+export default function AccountForm({
+  mode,
+  initialEmail = '',
+  onSubmit,
+  onResend,
+  hosted = false,
+}) {
   const [draft, setDraft] = useState({
     email: initialEmail,
     password: '',
@@ -48,16 +55,28 @@ export default function AccountForm({ mode, initialEmail = '', onSubmit, onResen
   function submit(event) {
     event.preventDefault();
     const next = {};
-    if (!/^[^\s@]+@[^\s@]+\.(test|invalid)$/.test(draft.email.trim().toLowerCase()))
-      next.email = 'Use a fictional email ending in .test or .invalid.';
+    if (
+      mode !== 'profile' &&
+      !(hosted ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/ : /^[^\s@]+@[^\s@]+\.(test|invalid)$/).test(
+        draft.email.trim().toLowerCase(),
+      )
+    )
+      next.email = hosted
+        ? 'Enter your approved test email address.'
+        : 'Use a fictional email ending in .test or .invalid.';
     if (
       ['login', 'signup', 'reset'].includes(mode) &&
       (draft.password.length < 15 || draft.password.length > 128)
     )
       next.password = 'Use 15 to 128 characters.';
-    if (['verify', 'reset'].includes(mode) && !/^[A-Za-z0-9_-]{43}$/.test(draft.code.trim()))
-      next.code = 'Copy the complete code from the local outbox message.';
-    if (mode === 'signup') {
+    if (
+      ['verify', 'reset'].includes(mode) &&
+      !(hosted ? /^\d{6}$/ : /^[A-Za-z0-9_-]{43}$/).test(draft.code.trim())
+    )
+      next.code = hosted
+        ? 'Enter the six-digit code from your test mailbox.'
+        : 'Copy the complete code from the local outbox message.';
+    if (['signup', 'profile'].includes(mode)) {
       if (!draft.displayName.trim() || draft.displayName.trim().length > 80)
         next.displayName = 'Enter a fictional display name with 1 to 80 characters.';
       if (!draft.adult) next.adult = 'NourishNet is for adults aged 18 and over.';
@@ -101,13 +120,16 @@ export default function AccountForm({ mode, initialEmail = '', onSubmit, onResen
   );
   return (
     <form ref={form} onSubmit={submit} noValidate aria-label={labels[mode]} aria-busy={pending}>
-      {field(
-        'email',
-        'Fictional email',
-        'email',
-        'Use an address such as avery@example.test. No email is sent externally.',
-      )}
-      {mode === 'signup' && (
+      {mode !== 'profile' &&
+        field(
+          'email',
+          hosted ? 'Test email' : 'Fictional email',
+          'email',
+          hosted
+            ? 'Use only an approved tester mailbox. Neon sends authentication emails.'
+            : 'Use an address such as avery@example.test. No email is sent externally.',
+        )}
+      {['signup', 'profile'].includes(mode) && (
         <>
           {field('displayName', 'Fictional display name')}
           {field('timeZone', 'Timezone', 'text', 'For example, America/Denver.')}
@@ -130,7 +152,9 @@ export default function AccountForm({ mode, initialEmail = '', onSubmit, onResen
           'code',
           'One-time code',
           'text',
-          'Open the matching message in Backend/outbox. Codes expire after 30 minutes.',
+          hosted
+            ? 'Enter the six-digit code Neon sent to your test mailbox.'
+            : 'Open the matching message in Backend/outbox. Codes expire after 30 minutes.',
         )}
       {['signup', 'login', 'reset'].includes(mode) &&
         field(

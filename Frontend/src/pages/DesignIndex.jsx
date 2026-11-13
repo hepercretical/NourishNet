@@ -15,8 +15,8 @@ export default function DesignIndex() {
       </p>
       <p>
         Review at 390 px and 1440 px, at 200% zoom, and with keyboard navigation. Existing
-        design-token values are preserved. Mobile navigation wraps above content; wide navigation
-        sits beside it. Nothing is fixed over focus or fields.
+        design-token values are preserved. The green toolbar, expandable menu, compact sections and
+        five bottom tabs match the diary. Reserved space keeps navigation clear of focus and fields.
       </p>
       <ol className="design-index">
         {Object.entries(screens).map(([path, screen]) => (

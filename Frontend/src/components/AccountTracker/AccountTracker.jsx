@@ -50,6 +50,12 @@ export default function AccountTracker({ account, route, onNotice }) {
     setDate(value);
     onNotice('');
   }
+  function moveDay(offset) {
+    const next = new Date(`${date}T12:00:00Z`);
+    next.setUTCDate(next.getUTCDate() + offset);
+    const value = next.toISOString().slice(0, 10);
+    if (validDate(value)) selectDate({ target: { value } });
+  }
   async function save(entry) {
     const controller = new AbortController();
     saveController.current = controller;
@@ -73,23 +79,43 @@ export default function AccountTracker({ account, route, onNotice }) {
   return (
     <>
       {!searching && (
-        <div className="shared-field">
-          <label className="shared-field__label" htmlFor="diary-date">
-            Diary date
-          </label>
-          <input
-            className="shared-field__control"
-            id="diary-date"
-            type="date"
-            min="0001-01-01"
-            max="9999-12-31"
-            required
-            value={date}
-            onChange={selectDate}
-            aria-invalid={dateError || undefined}
-            aria-describedby={dateError ? 'diary-date-hint diary-date-error' : 'diary-date-hint'}
-          />
-          <p id="diary-date-hint">Dates use your account time zone: {account.timeZone}.</p>
+        <div className="shared-field diary-datebar">
+          <button
+            type="button"
+            aria-label="Previous diary day"
+            disabled={date === '0001-01-01'}
+            onClick={() => moveDay(-1)}
+          >
+            ‹
+          </button>
+          <div className="diary-datebar__selection">
+            <label className="shared-field__label" htmlFor="diary-date">
+              Diary date
+            </label>
+            <input
+              className="shared-field__control"
+              id="diary-date"
+              type="date"
+              min="0001-01-01"
+              max="9999-12-31"
+              required
+              value={date}
+              onChange={selectDate}
+              aria-invalid={dateError || undefined}
+              aria-describedby={dateError ? 'diary-date-hint diary-date-error' : 'diary-date-hint'}
+            />
+          </div>
+          <button
+            type="button"
+            aria-label="Next diary day"
+            disabled={date === '9999-12-31'}
+            onClick={() => moveDay(1)}
+          >
+            ›
+          </button>
+          <p id="diary-date-hint" className="diary-datebar__hint">
+            Dates use your account time zone: {account.timeZone}.
+          </p>
           {dateError && (
             <p className="shared-field__error" id="diary-date-error" role="alert">
               Choose a real diary date. The previous date is still selected.

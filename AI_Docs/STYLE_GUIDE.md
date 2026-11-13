@@ -70,6 +70,10 @@ the human developer before changing established token values.
   --radius-lg: 1rem;
   --shadow-card: 0 0.25rem 1rem rgb(25 48 39 / 8%);
   --content-max-width: 72rem;
+  --touch-target: 2.75rem;
+  --toolbar-height: 3.5rem;
+  --tab-height: 4.25rem;
+  --row-height: 2.75rem;
 }
 ```
 
@@ -84,6 +88,118 @@ token as part of a planned design change. Do not scatter unexplained literals.
 - Align nutrition numbers so users can compare them quickly.
 - Use a max-width container and comfortable line length on larger screens.
 - Prefer CSS Grid for summaries and Flexbox for related controls.
+
+## Mobile diary reference (requested 2026-11-09)
+
+Use the supplied food-diary screenshot as the organizational reference. Retain
+the established token values above: the reference approves the layout direction,
+not replacement colors or a new token palette. Keep the interface compact and
+flat on phones, with fine borders and muted section headers rather than a stack
+of spacious, rounded cards. Maintain readable text and 44px tap targets even
+where the reference uses smaller controls.
+
+- Top toolbar: primary green background, an expandable Menu button, a prominent
+  "Search foods to log" link, barcode preview shortcut, and diary shortcut.
+  The search shortcut opens the labeled, functional search form. Menu exposes
+  diary, screen designs, goal/connection/calendar previews, and account testing.
+- Day strip: previous/next day buttons around a labeled date picker. Preserve
+  the selected local day on refresh and show its account timezone. Date changes
+  reload that day's entries without showing the previous day's food while loading.
+- Nutrition: put recorded calories first, then protein, fat, carbohydrates and
+  sodium in a compact grid. Show units and unknown values honestly. Without a
+  saved goal, show "No goal"; do not copy the reference's 1,200 allowance, burned
+  calories, progress bar, or remaining-calorie arithmetic as invented user data.
+- Meals: show Breakfast, Lunch, Dinner, Snack in that order, with a muted heading
+  row, an accessible plus link beside the meal name, and recorded meal calories
+  when available. Food details, serving basis, edit/remove actions, persistent
+  errors, and useful empty instructions remain readable beneath the row.
+- Below meals: retain a clearly labeled location for Exercise, Weigh-in and
+  Water, followed by View daily summary. These three tracking types are outside
+  Sprint 1 and must say so; do not offer active add controls or fabricated logs.
+  The summary action moves keyboard focus to the recorded daily nutrition.
+- Bottom navigation: five reachable items, Dashboard, Stats, Track, Designs and
+  Preferences. Track uses the primary green surface and plus symbol; mark the
+  current route with text decoration and `aria-current`, not color alone. Stats
+  reaches the diary summary; Designs replaces the reference's Recipes slot
+  because recipes are outside the approved scope. Preferences opens its labeled
+  design preview. Barcode, goals and social destinations stay honest previews
+  until their scheduled implementation.
+- Reserve bottom space for navigation and device safe areas. Inputs, errors,
+  confirmation controls, and keyboard focus must scroll above it. At 40rem,
+  meals may use two columns; at 64rem, center the shell within the existing
+  content width. Never require horizontal scrolling for long food names.
+
+### Local testing without login
+
+On the Vite development server, `?demo=1#/app/dashboard` opens an isolated local
+demo with synthetic foods and browser-persisted diary entries. It reuses the
+Sprint 1 search, confirmation, date, totals, edit and removal UI. Label it visibly
+as local synthetic data; no API or database is needed. `?demo=0#/app/login`
+retains the actual account/session flows for API testing. Production builds must
+ignore the demo switch and continue requiring authenticated API ownership.
+The design map remains available without login for all later-sprint screens;
+a preview is not completed feature functionality.
+
+### Later-module navigation and layout
+
+Implement these adaptations within the owning modules in PLAN.md before the
+December 5 freeze. The final quality week verifies and repairs existing layouts.
+Keep five bottom items; do not add a tab for every feature. Track includes
+search/scan and reuses serving/meal confirmation. Preserve the selected local
+diary date and meal through these flows.
+
+Plan-15 replaces the barcode preview with working scan/manual entry. Menu adds
+My submissions (Plan-17), permitted catalog review (Plan-18), Goals (Plan-19),
+Connections (Plan-20), and Calendar (Plan-21). Goals also opens from Preferences.
+At Plan-21, Stats expands from a summary shortcut to recorded nutrition with
+personal calendar/history; keep View daily summary on the diary. Plan-22 adds
+comparison from Stats or an accepted connection. Designs remains an internal
+screen map; Recipes is outside the approved scope.
+
+Use compact status/request/review lists, stacked package/label previews, visible
+estimate-review sections and stacked calendar/person day details on phones.
+Reuse shared controls and tokens, text status/legends, headings, persistent retry
+and deliberate confirmations. Preserve input and focus across recoverable steps;
+tabs and keyboards must not cover fields, errors or save/review controls. Review
+phone/wide layouts when each module lands, before its acceptance is completed.
+
+Extend the isolated development demo alongside each feature using synthetic
+actors/data and sample images. Demo actor selection never grants real API access;
+production ignores demo mode. Test account flows and backend ownership separately.
+Policies, data-rights operations and production security UI adopt the same shell
+in their post-Sprint-3 modules; keep planned labels until then.
+
+## Reference shell contract
+
+The supplied mobile screenshots are the visual reference for the internal tracker
+shell. They establish structure and density, not a replacement color palette:
+
+- Keep one primary green toolbar at the top. It contains a menu button, the
+  `Search foods to log` shortcut, and compact barcode and diary shortcuts.
+- Use a dark, fixed five-item bottom navigation with Dashboard, Stats, Track,
+  Designs, and Preferences. Track is the raised primary action. The active item
+  must have `aria-current`, a visible text treatment, and an icon; color alone is
+  never the state indicator.
+- Use flat list rows and thin borders for diary sections and settings-style lists.
+  Reserve rounded surfaces for grouped forms and notices, not every row.
+- Keep the diary sequence stable: date navigation, recorded nutrition, Breakfast,
+  Lunch, Dinner, Snack, then clearly labeled out-of-scope Exercise, Weigh-in, and
+  Water locations. Meal rows use a compact heading, a reachable add-food control,
+  and an honest empty or recorded state.
+- Use the shared inline icon set for navigation and tracking actions. Icons are
+  supporting labels, not substitutes for accessible text. Do not use emoji or
+  fallback glyphs that can render as mojibake.
+- The reference shell reserves safe-area space beneath the fixed tabs. Toolbar,
+  meal rows, settings rows, and action controls remain at least 44px tall even
+  when the surrounding layout is compact.
+
+Preferences uses a single column of full-width navigation rows: profile, daily
+goals, password recovery, account rights, and policy locations. Mark preview and
+planned destinations explicitly. Search uses the existing catalog form; the
+reference's freeform speech, restaurant, grocery, history, and recipe features
+do not become working tabs through a visual update. Stats retains its Sprint 1
+summary shortcut until calendar implementation. Do not copy weight charts or
+red/green missed-day counts into previews as real user outcomes.
 
 ## Typography and content
 

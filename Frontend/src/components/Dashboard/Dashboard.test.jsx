@@ -11,6 +11,16 @@ const diary = {
   totals: { calories: 0, protein: 0, fat: 0, carbohydrates: 0, sodium: 0 },
   meals: ['Breakfast', 'Lunch', 'Dinner', 'Snack'].map((name) => ({ name, entries: [] })),
 };
+it('moves summary focus on request and labels additional tracking as outside Sprint 1', async () => {
+  const user = userEvent.setup();
+  render(<Dashboard account={account} diary={diary} />);
+  await user.click(screen.getByRole('button', { name: 'View daily summary' }));
+  expect(screen.getByRole('region', { name: 'Recorded daily nutrition' })).toHaveFocus();
+  expect(screen.getByRole('region', { name: 'Additional tracking options' })).toHaveTextContent(
+    'Not included in Sprint 1',
+  );
+  expect(screen.getByRole('link', { name: 'Add food to breakfast' })).toHaveTextContent('＋');
+});
 it('shows five nutrient totals, private status, all four meals and useful empty recovery links', () => {
   render(<Dashboard account={account} diary={diary} />);
   expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Your daily diary');

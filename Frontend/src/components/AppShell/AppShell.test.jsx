@@ -21,4 +21,9 @@ it('marks the active destination and lets keyboard users skip to page content', 
   await user.keyboard('{Enter}');
   expect(screen.getByRole('main')).toHaveFocus();
   expect(screen.getByText(/Fictional data only/)).toBeVisible();
+  expect(within(navigation).getAllByRole('link')).toHaveLength(5);
+  expect(screen.getByRole('link', { name: 'Try local diary without login' })).toHaveAttribute(
+    'href',
+    '?demo=1#/app/dashboard',
+  );
 });

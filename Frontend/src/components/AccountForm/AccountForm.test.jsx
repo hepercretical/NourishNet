@@ -3,6 +3,42 @@ import userEvent from '@testing-library/user-event';
 import { expect, it, vi } from 'vitest';
 import AccountForm from './AccountForm.jsx';
 
+it('accepts a six-digit hosted verification code and explains mailbox delivery', async () => {
+  const user = userEvent.setup();
+  const submit = vi.fn().mockResolvedValue({});
+  render(
+    <AccountForm
+      mode="verify"
+      hosted
+      initialEmail="tester@example.test"
+      onSubmit={submit}
+      onResend={vi.fn()}
+    />,
+  );
+  await user.type(screen.getByRole('textbox', { name: 'One-time code' }), '123456');
+  await user.click(screen.getByRole('button', { name: 'Verify account' }));
+  expect(submit).toHaveBeenCalledWith(expect.objectContaining({ code: '123456' }));
+  expect(screen.getByRole('textbox', { name: 'Test email' })).toHaveAccessibleDescription(
+    /Neon sends/,
+  );
+});
+
+it('requires adult confirmation for hosted profile onboarding without collecting another password', async () => {
+  const user = userEvent.setup();
+  const submit = vi.fn().mockResolvedValue({});
+  render(<AccountForm mode="profile" hosted onSubmit={submit} />);
+  expect(screen.queryByLabelText('Password')).not.toBeInTheDocument();
+  expect(screen.queryByRole('textbox', { name: 'Test email' })).not.toBeInTheDocument();
+  await user.type(screen.getByRole('textbox', { name: 'Fictional display name' }), 'Fiction');
+  await user.click(screen.getByRole('button', { name: 'Complete account setup' }));
+  expect(submit).not.toHaveBeenCalled();
+  await user.click(screen.getByRole('checkbox', { name: 'I am 18 or older' }));
+  await user.click(screen.getByRole('button', { name: 'Complete account setup' }));
+  expect(submit).toHaveBeenCalledWith(
+    expect.objectContaining({ adult: true, displayName: 'Fiction' }),
+  );
+});
+
 it('labels signup fields, requires adulthood and keeps invalid input beside its error', async () => {
   const user = userEvent.setup(),
     submit = vi.fn();

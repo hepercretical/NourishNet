@@ -7,6 +7,8 @@ import DevelopmentSetup from './pages/DevelopmentSetup.jsx';
 import ScreenDesign from './pages/ScreenDesign.jsx';
 import SharedComponents from './pages/SharedComponents.jsx';
 import LiveApp from './components/LiveApp/LiveApp.jsx';
+import LocalDemo from './components/LocalDemo/LocalDemo.jsx';
+import { isLocalDemo } from './services/localDemo.js';
 
 const liveTitles = {
   signup: 'Create fictional account',
@@ -47,16 +49,17 @@ export default function App() {
 
   if (route === '/development') {
     return (
-      <>
+      <AppShell route={route}>
         <a className="design-action" href="#/design">
           Return to screen designs
         </a>
-        <DevelopmentSetup />
-      </>
+        <DevelopmentSetup mainRef={mainRef} />
+      </AppShell>
     );
   }
 
-  if (route === '/app' || route.startsWith('/app/')) return <LiveApp route={route} />;
+  if (route === '/app' || route.startsWith('/app/'))
+    return isLocalDemo() ? <LocalDemo route={route} /> : <LiveApp route={route} />;
 
   return (
     <AppShell route={route}>

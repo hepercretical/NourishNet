@@ -1,21 +1,85 @@
+.dashboard__title {
+  margin: 0;
+  padding: var(--space-3) var(--space-2) var(--space-2);
+  color: var(--color-text);
+  background: transparent;
+  font-size: var(--text-lg);
+}
+
 .dashboard-summary,
 .dashboard-meal {
   min-width: 0;
-  padding: var(--space-5);
-  margin-block: var(--space-4);
+  padding: var(--space-2);
+  margin-block: var(--space-2);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
   overflow-wrap: anywhere;
 }
 
 .dashboard-meals {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-2);
 }
 
 .dashboard-meal {
   margin: 0;
+  padding: 0;
+}
+
+.dashboard-meal__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--row-height);
+  padding-inline: var(--space-2);
+  background: var(--color-surface-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+.dashboard-meal__header h2 {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+.dashboard-meal__add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  font-size: var(--text-lg);
+  text-decoration: none;
+}
+.dashboard-meal__total {
+  margin-left: auto;
+  font-size: var(--text-sm);
+}
+.dashboard-meal > p,
+.dashboard-entries {
+  padding: var(--space-3);
+}
+.dashboard-summary .shared-nutrition {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.dashboard-summary .shared-nutrition > div:first-child {
+  grid-column: 1 / -1;
+}
+.dashboard-summary .shared-nutrition > div {
+  padding-block: var(--space-1);
+  border-right: 1px solid var(--color-border);
+}
+.dashboard-summary .shared-nutrition > div:last-child {
+  border-right: 0;
+}
+.dashboard-summary p,
+.dashboard-extras p {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+.dashboard-extras {
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+.dashboard-summary-link {
+  margin-block: var(--space-3);
 }
 
 .dashboard-entries {

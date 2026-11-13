@@ -11,6 +11,14 @@ beforeEach(() => {
   window.location.hash = '/app/login';
 });
 const account = { id: 'avery', displayName: 'Avery Fiction', timeZone: 'America/Denver' };
+it('asks a verified new account to complete a profile before loading its diary', async () => {
+  accountRequest.mockResolvedValueOnce({ account: null, needsProfile: true });
+  render(<LiveApp route="/app/dashboard" />);
+  expect(await screen.findByRole('heading', { name: 'Complete your account setup' })).toBeVisible();
+  expect(screen.getByRole('checkbox', { name: 'I am 18 or older' })).not.toBeChecked();
+  expect(screen.queryByLabelText('Password')).not.toBeInTheDocument();
+  expect(accountRequest).toHaveBeenCalledTimes(1);
+});
 const diary = {
   accountId: 'avery',
   date: '2026-11-09',
@@ -18,11 +26,33 @@ const diary = {
   totals: { calories: 10 },
   meals: [],
 };
+it.each(['login', 'signup', 'verify', 'recover', 'reset'])(
+  'keeps toolbar and five tabs on the %s account screen with a working skip link',
+  async (mode) => {
+    accountRequest.mockRejectedValueOnce(Object.assign(new Error(), { status: 401 }));
+    const user = userEvent.setup();
+    render(<LiveApp route={`/app/${mode}`} />);
+    await screen.findByRole('form');
+    expect(screen.getByRole('button', { name: 'Menu' })).toBeVisible();
+    expect(
+      within(screen.getByRole('navigation', { name: 'Main navigation' })).getAllByRole('link'),
+    ).toHaveLength(5);
+    const skip = screen.getByRole('link', { name: 'Skip to main content' });
+    skip.focus();
+    await user.keyboard('{Enter}');
+    expect(screen.getByRole('main')).toHaveFocus();
+  },
+);
 it('shows sign-in after an expired session and retains the adult synthetic-data notice', async () => {
   accountRequest.mockRejectedValueOnce(Object.assign(new Error(), { status: 401 }));
   render(<LiveApp route="/app/login" />);
   expect(await screen.findByRole('heading', { name: 'Sign in to NourishNet' })).toBeVisible();
   expect(screen.getByText(/Adults 18\+/)).toBeVisible();
+  expect(screen.getByRole('link', { name: 'Try without login' })).toHaveAttribute(
+    'href',
+    '?demo=1#/app/dashboard',
+  );
+  expect(screen.getByRole('button', { name: 'Menu' })).toHaveAttribute('aria-expanded', 'false');
   expect(screen.getByRole('link', { name: 'Forgot password' })).toHaveAttribute(
     'href',
     '#/app/recover',

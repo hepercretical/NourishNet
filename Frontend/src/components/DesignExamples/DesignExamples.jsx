@@ -22,7 +22,9 @@ export function DiaryExample() {
   return (
     <>
       <section className="design-panel" aria-labelledby="daily-summary">
-        <h2 id="daily-summary">November 9, 2026 · America/Denver</h2>
+        <h2 id="daily-summary" tabIndex={-1}>
+          November 9, 2026 · America/Denver
+        </h2>
         <p>Recorded example totals · Day incomplete · No goal</p>
         <dl className="design-summary">
           {[
@@ -42,7 +44,12 @@ export function DiaryExample() {
       <div className="design-meals">
         {['Breakfast', 'Lunch', 'Dinner', 'Snack'].map((meal) => (
           <section className="design-panel" key={meal}>
-            <h2>{meal}</h2>
+            <div className="design-meal-header">
+              <h2>{meal}</h2>
+              <a href="#/search" aria-label={`Add food to ${meal.toLowerCase()}`}>
+                <span aria-hidden="true">＋</span>
+              </a>
+            </div>
             {meal === 'Breakfast' ? (
               <>
                 <p>Sample rolled oats with a deliberately long package description · 1.5 × 40 g</p>
@@ -54,9 +61,6 @@ export function DiaryExample() {
             ) : (
               <p>No food recorded. Add a food when you are ready to log {meal.toLowerCase()}.</p>
             )}
-            <a className="design-action" href="#/search">
-              Add food to {meal.toLowerCase()}
-            </a>
           </section>
         ))}
       </div>
