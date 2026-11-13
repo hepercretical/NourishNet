@@ -538,6 +538,119 @@ preserve nutrition snapshots. Stale revision/key reuse conflicts return 409;
 missing and other-owner entries return 404. Retried identical requests replay one
 transaction. Existing schema is used; no migration or dependency was added.
 
+## Netlify release preparation
+
+The root `netlify.toml` uses repository root as its base, installs `Frontend/` and
+`Backend/` from their lockfiles, runs `npm run build:hosted`, and publishes
+`Frontend/dist` plus `netlify/functions` using Node 24. The modern API function
+handles `/api/*` on the site's own origin. Hash routes need no SPA catch-all.
+Git-triggered builds are skipped by default; keep the dashboard's builds stopped.
+
+The GitHub Actions **Prepare sprint release** workflow is manually started from
+the Actions tab once these files have been committed and pushed. It runs both
+packages' checks, builds hosted mode, and saves a frontend review artifact labeled
+with the commit SHA for one day. Its manual form includes the public Auth URL,
+defaulting to the linked synthetic Neon target; review it before starting. No
+GitHub credential or environment-variable setup is needed. It never deploys, applies SQL,
+or reads database/Netlify credentials. The static review artifact alone does not
+contain Functions: publish the reviewed full source/build through Netlify CLI
+with function packaging, not a drag-and-drop of only the frontend artifact.
+
+The human linked `thenourishnet.netlify.app` to GitHub and reported stopped builds,
+a successful initial deploy, and 285 Free credits remaining on November 11. Confirm
+the existing site ID in Project configuration; do not create a duplicate. Link it
+with `netlify link --id <confirmed-site-id>` once CLI authentication works. Keep
+account credentials and local `.netlify` configuration out of Git.
+
+Connection status checked November 12: both CLIs are authenticated and the existing
+site is linked locally (ID `a91beb07-fd40-4ea5-a7f4-7e8c0fd92464`). The approved
+Neon migrations 001, 002 and 007 and the existing synthetic seed have been applied.
+Migration checksums and counts were verified: two foods, two serving records,
+two fictional non-login identities, and no hosted profiles. The hosted backend
+successfully reads both sample foods through Neon's pooled connection.
+The frontend and `/api/*` Function were published together on November 12 at
+`https://thenourishnet.netlify.app` (deploy `6af64fe5b2a0af4e489c21a1`). The first
+local build failed because Vite locked a native dependency; stopping the local
+server allowed the second attempt to succeed. External HTTP checks encounter
+Netlify's login protection, so open the site in a browser signed into the allowed
+Netlify account to test it. Hosted authenticated diary journeys remain unverified
+while tester emails are deferred.
+Netlify Free uses all environment scopes; the developer approved that adjustment
+on November 12. The database URL is available to controlled builds and server
+runtime, but is never a `VITE_` variable or browser asset. No upgrade is needed.
+The human confirmed Auth is enabled with required email verification codes and
+the Netlify domain is trusted. Existing local synthetic-account mode still works;
+hosted mode uses Neon Auth and an approved tester allowlist. Auth service accounts
+alone do not grant diary access. Profile onboarding requires adult confirmation.
+Netlify CLI 27.16.0 works; 27.17.0 could not resolve `@babel/types@^7.29.14`
+from npm. Use the working version for this release. No duplicate site was created.
+The tester-email allowlist was
+deferred at the developer's request: signed-in diary access stays denied until
+`NEON_TEST_EMAILS` is configured. Local synthetic testing remains available.
+
+### Environment configuration
+
+Configure these directly in Netlify; do not send private values in chat or commit
+them. The table identifies consumers; Free stores them across all scopes in the
+production context, rather than enforcing the consumer scopes separately:
+
+| Name                      | Where used         | Value/purpose                                                             |
+| ------------------------- | ------------------ | ------------------------------------------------------------------------- |
+| `VITE_NEON_AUTH_URL`      | Build, public      | Exact branch Auth URL ending in `/neondb/auth`                            |
+| `APP_ORIGIN`              | Functions          | `https://thenourishnet.netlify.app`                                       |
+| `NEON_AUTH_BASE_URL`      | Functions          | Same Auth URL; used for JWKS and issuer/audience checks                   |
+| `NEON_TEST_EMAILS`        | Functions, private | Comma-separated explicitly approved tester mailboxes; empty denies access |
+| `DATABASE_URL`            | Functions, secret  | Pooled connection string for the approved synthetic Neon target           |
+| `DATABASE_EXPECTED_HOST`  | Functions          | Exact hostname from that connection string                                |
+| `DATABASE_EXPECTED_NAME`  | Functions          | Exact database name from that connection string                           |
+| `DATABASE_ENV`            | Functions          | `development` for the current synthetic internal build                    |
+| `DATABASE_SYNTHETIC_ONLY` | Functions          | `true`                                                                    |
+
+Use the production deploy context only for this site's approved internal target.
+Do not grant untrusted PRs/preview builds access to these secrets. The hosted build
+forces `VITE_AUTH_MODE=neon` and fails if the public Auth URL is absent. Never put
+`DATABASE_URL`, tokens, or service credentials in any `VITE_` variable. `.env.example`
+files document local setup; backend development commands load `Backend/.env`.
+For local hosted-Auth testing, add the exact local app origin to Neon's allowlist
+(`127.0.0.1` is different from `localhost`) and use a separate synthetic target.
+
+### Database and sprint release sequence
+
+1. Read actual provider plans/usage and the approval/budget rules in AGENTS.md.
+   Copy `scripts/release-budget.example.json` into ignored `private-artifacts/`,
+   fill current numbers and estimates, then run
+   `npm run release:plan -- private-artifacts/<budget-file>.json` from root.
+   Unknown values deliberately fail; the calculator never deploys or loads secrets.
+2. Inspect the target's existing tables and migration history using authenticated
+   tools. Initial hosted dependencies are migrations 001, 002 and the new 007;
+   ask for approval of the exact pending SQL/checksums. Do not blindly apply every
+   migration or overwrite an existing schema. Migration 006's local password
+   tables are not required by hosted Auth. Migrations 001, 002 and 007 were applied
+   with explicit approval during initial setup; do not seed this target again.
+   `npm run release:database-plan -- 001_identity_catalog.sql 002_diary.sql 007_hosted_profiles.sql`
+   prints the local filenames/checksums for that review without opening a database.
+3. After that specific approval, use
+   `node Backend/scripts/neon-database.js <ignored-env-file> <approved-direct-host> migrate <filename>`
+   for each approved pending migration against the confirmed synthetic target, then
+   validate the schema. Seed reviewed synthetic foods only once with approval;
+   never seed/reset an existing live catalog as part of a deploy.
+4. Run `npm run release:check` from root, then build hosted mode with the public
+   Auth URL supplied privately in the process environment: `npm run build:hosted`.
+   The manual GitHub workflow provides the same review checks after source is pushed.
+5. Review commit/artifact, migration results, access scope and current budget with
+   the human. After approval of that one publish, run a compatible Netlify CLI's
+   `netlify deploy --build --prod --site <confirmed-site-id>` from root. Keep hosted
+   automatic builds stopped. Do not upload the repository or `.env` as static files.
+6. Verify `/api/health`, sign-up/code/sign-in/profile setup, search/add/edit/remove,
+   refresh, logout, and isolation between two approved test accounts. Record credit
+   usage and failures. Mocked test success is not a hosted end-to-end pass.
+
+The Neon recovery-code adapter uses the installed SDK's email-OTP methods; remote
+mail delivery/recovery and browser cookie compatibility still need verification.
+Realtime is enabled in Neon but is not subscribed to by the diary. Do not expose
+private diary subscriptions until account-scoped authorization is implemented and
+tested. No database migration or service-policy deploy happens in the build pipeline.
+
 ## Plan-13: Goal specification
 
 The local review specification is `contracts/plan-13.md` (intentionally ignored).

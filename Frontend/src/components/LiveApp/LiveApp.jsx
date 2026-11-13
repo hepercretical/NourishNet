@@ -6,6 +6,7 @@ import Button from '../Button/Button.jsx';
 import { ErrorState, LoadingState } from '../DataState/DataState.jsx';
 import './LiveApp.css';
 import TrackerNavigation from '../TrackerNavigation/TrackerNavigation.jsx';
+import { usesNeonAuth } from '../../services/hostedConfig.js';
 
 const titles = {
   signup: 'Create a fictional account',
@@ -13,6 +14,7 @@ const titles = {
   verify: 'Verify your fictional email',
   recover: 'Recover your account',
   reset: 'Choose a new password',
+  profile: 'Complete your account setup',
 };
 export default function LiveApp({ route }) {
   const [session, setSession] = useState({ status: 'loading', account: null });
@@ -24,14 +26,22 @@ export default function LiveApp({ route }) {
   const generation = useRef(0);
   const logoutLock = useRef(false);
   const requested = route.split('/')[2] || 'dashboard';
-  const mode = Object.hasOwn(titles, requested) ? requested : 'login';
+  const mode = session.needsProfile
+    ? 'profile'
+    : Object.hasOwn(titles, requested)
+      ? requested
+      : 'login';
   useEffect(() => {
     const controller = new AbortController();
     const version = generation.current;
     accountRequest('/auth/session', { signal: controller.signal })
       .then((result) => {
         if (!controller.signal.aborted && version === generation.current)
-          setSession({ status: 'ready', account: result.account });
+          setSession({
+            status: 'ready',
+            account: result.account,
+            needsProfile: result.needsProfile,
+          });
       })
       .catch((error) => {
         if (!controller.signal.aborted && version === generation.current)
@@ -53,11 +63,15 @@ export default function LiveApp({ route }) {
     main.current?.focus();
   }, [route, session.account?.id]);
   async function submit(body) {
-    const result = await accountRequest(`/auth/${mode}`, { body });
+    const payload =
+      mode === 'profile'
+        ? { adult: body.adult, displayName: body.displayName, timeZone: body.timeZone }
+        : body;
+    const result = await accountRequest(`/auth/${mode}`, { body: payload });
     setEmail(body.email);
-    if (mode === 'login') {
+    if (mode === 'login' || mode === 'profile') {
       generation.current += 1;
-      setSession({ status: 'ready', account: result.account });
+      setSession({ status: 'ready', account: result.account, needsProfile: result.needsProfile });
       setNotice('');
       window.location.hash = '/app/dashboard';
     } else {
@@ -99,16 +113,23 @@ export default function LiveApp({ route }) {
       </a>
       <TrackerNavigation route={route}>
         <a href="?demo=1#/app/dashboard">Try without login</a>
-        {session.account && (
+        {(session.account || session.needsProfile) && (
           <Button pending={loggingOut} onClick={logout}>
             Sign out
           </Button>
         )}
       </TrackerNavigation>
-      <p className="live-app__notice">
-        Internal development · Adults 18+ · Fictional accounts and test-only passwords. Account data
-        is saved locally. No external email is sent.
-      </p>
+      {usesNeonAuth ? (
+        <p className="live-app__notice">
+          Internal hosted testing · Adults 18+ · Approved tester accounts only. Use fictional diary
+          data. Neon delivers authentication emails.
+        </p>
+      ) : (
+        <p className="live-app__notice">
+          Internal development · Adults 18+ · Fictional accounts and test-only passwords. Account
+          data is saved locally. No external email is sent.
+        </p>
+      )}
       <main ref={main} id="live-content" tabIndex={-1}>
         {notice && <p role="status">{notice}</p>}
         {session.status === 'loading' ? (
@@ -118,9 +139,13 @@ export default function LiveApp({ route }) {
           </>
         ) : session.status === 'error' ? (
           <>
-            <h1>Local API unavailable</h1>
+            <h1>{usesNeonAuth ? 'Hosted API unavailable' : 'Local API unavailable'}</h1>
             <ErrorState
-              message="Start the local API and database, then try again."
+              message={
+                usesNeonAuth
+                  ? 'The hosted service could not be reached. Try again.'
+                  : 'Start the local API and database, then try again.'
+              }
               onRetry={() => {
                 setSession({ status: 'loading', account: null });
                 setAttempt((value) => value + 1);
@@ -137,13 +162,21 @@ export default function LiveApp({ route }) {
         ) : (
           <>
             <h1>{titles[mode]}</h1>
-            <p>
-              Verification and recovery codes are in the ignored Backend/outbox folder. Use
-              fictional input only.
-            </p>
+            {usesNeonAuth ? (
+              <p>
+                Use an approved tester mailbox and fictional profile details. Complete account setup
+                after verifying your email.
+              </p>
+            ) : (
+              <p>
+                Verification and recovery codes are in the ignored Backend/outbox folder. Use
+                fictional input only.
+              </p>
+            )}
             <AccountForm
               key={`${mode}-${email}`}
               mode={mode}
+              hosted={usesNeonAuth}
               initialEmail={email}
               onSubmit={submit}
               onResend={(body) => accountRequest('/auth/resend', { body })}

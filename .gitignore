@@ -29,6 +29,29 @@ dist/
 build/
 .vite/
 .netlify/
+# Project-local agent/MCP settings may later contain private credentials.
+**/.codex/config.toml
+**/.codex/config.toml.*
+# Project-local MCP configuration can embed API tokens or credential headers.
+.mcp.json
+.mcp.json.*
+**/.cursor/mcp.json
+**/.cursor/mcp.json.*
+# Agent transcripts and local state can retain pasted credentials and private data.
+**/.codex/sessions/
+**/.codex/archived_sessions/
+**/.codex/log/
+**/.codex/history.jsonl
+**/.codex/history.jsonl.*
+**/.codex/state_*.sqlite*
+# Local CLI credential-store copies; shared application configuration stays visible.
+**/.config/configstore/
+**/.config/netlify/
+**/.config/neon/
+**/AppData/Roaming/netlify/
+**/AppData/Roaming/neon/
+.neon
+.neon.*
 coverage/
 
 *.db
@@ -512,6 +535,8 @@ venv/
 .security-reports/
 security-reports/
 private-reviews/
+release-approval*.json
+release-approval*.json.*
 
 # Keep security source, policies, secret-free examples and public assets tracked.
 # Do not ignore SECURITY.md, AI_Docs/SECURE.md, auth modules, or whole image/JSON

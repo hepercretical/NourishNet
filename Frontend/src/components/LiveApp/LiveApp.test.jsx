@@ -11,6 +11,14 @@ beforeEach(() => {
   window.location.hash = '/app/login';
 });
 const account = { id: 'avery', displayName: 'Avery Fiction', timeZone: 'America/Denver' };
+it('asks a verified new account to complete a profile before loading its diary', async () => {
+  accountRequest.mockResolvedValueOnce({ account: null, needsProfile: true });
+  render(<LiveApp route="/app/dashboard" />);
+  expect(await screen.findByRole('heading', { name: 'Complete your account setup' })).toBeVisible();
+  expect(screen.getByRole('checkbox', { name: 'I am 18 or older' })).not.toBeChecked();
+  expect(screen.queryByLabelText('Password')).not.toBeInTheDocument();
+  expect(accountRequest).toHaveBeenCalledTimes(1);
+});
 const diary = {
   accountId: 'avery',
   date: '2026-11-09',

@@ -1,0 +1,16 @@
+# Manual releases only. Builds package the frontend and same-origin API together.
+[build]
+  base = "."
+  command = "npm ci --prefix Frontend && npm ci --prefix Backend && npm run build:hosted"
+  publish = "Frontend/dist"
+  functions = "netlify/functions"
+  # Exit 0 tells Netlify to skip Git-triggered builds. Releases are manual.
+  ignore = "exit 0"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+[functions]
+  node_bundler = "esbuild"
+
+# api.mjs declares /api/* using the modern Functions API; hash routes need no fallback.

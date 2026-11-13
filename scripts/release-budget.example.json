@@ -1,0 +1,15 @@
+{
+  "usedCredits": null,
+  "deploys": 1,
+  "futureDeploys": null,
+  "runtimeForecast": null,
+  "otherReservedCredits": 0,
+  "productionDeploysUsed": null,
+  "runtimeCreditsUsed": null,
+  "neonComputeUsed": null,
+  "neonComputeEstimate": null,
+  "neonStorageUsedGb": null,
+  "neonStorageEstimateGb": null,
+  "neonTransferUsedGb": null,
+  "neonTransferEstimateGb": null
+}

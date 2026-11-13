@@ -205,6 +205,275 @@ pages, and database services should remain easy to find.
 - Database schema changes require human developer approval before they are
   applied. Record approved migrations in the backend migration folder.
 
+### Neon setup and operating status (2026-11-11)
+
+The human developer requested this section and approved free-services-only Neon
+setup. This is not approval to incur charges or publish the app to real users.
+
+- Target organization: `org-floral-bread-69229530`; project:
+  `mute-hall-50914206`; initially linked branch: `production`.
+- The developer confirmed this was a newly created project with no changes or
+  expected real data and authorized synthetic setup/testing there. The branch
+  name does not mean NourishNet is approved for public production use. Recheck
+  the target before migrations or writes; the initial confirmation does not
+  authorize experimentation after real data is introduced. Keep development,
+  preview, and eventual production data separate.
+- Neon CLI 9.3.2 was installed. Root `neon.ts` declares Auth and beta Realtime
+  (`preview.realtime`); Postgres belongs to the linked branch. Root dependencies
+  include `@neon/config` and `@neon/env`; retain their lockfile.
+- Local project link/config exist. The human's console screenshots and report
+  confirm Auth provisioned, trusted domain `https://thenourishnet.netlify.app`,
+  email signup/sign-in, required verification codes, and Realtime enabled.
+  CLI authentication and remote application schema have not been verified.
+  Local hosted API/Auth code is prepared; no hosted end-to-end pass is recorded.
+  Inspect current state before resuming; configuration is not integration proof.
+- Frontend build commands run in `Frontend/`; backend commands run in `Backend/`.
+  Root `npm run build` delegates to the frontend; `npm run build:hosted` requires
+  the public Auth URL and forces Neon mode. Local backend services keep their
+  loopback restriction; Netlify's separate hosted service requires an exact Neon
+  hostname/database match, synthetic-development flags and approved tester list.
+
+### Neon CLI and application integration
+
+- Use `neon` (`neon.cmd` in PowerShell where needed). If installation fails, use
+  `npx neon@latest` instead. Check `--help` for the installed version before
+  assuming a flag exists. Preserve existing files when repeating initialization.
+- For browser authentication, tell the human to finish sign-in there. If login
+  fails or expires, ask the human to run `neon login`, then retry. Never request
+  credentials in chat or print local CLI credential files.
+- `neon init` links the working directory and creates configuration. Use
+  `--no-agent-setup` when preserving existing coding-agent configuration; automatic
+  setup must not overwrite AGENTS.md or protected guidance. Consult installed
+  Neon skills when available; read the relevant instructions before using them.
+- Before an authorized deployment, inspect `neon config plan`, confirm the
+  organization/project/branch, and verify the actual account plan and usage.
+  `neon deploy` applies `neon.ts` and normally pulls service environment variables.
+  Do not use automatic override/protected-branch bypass flags to silence conflicts.
+  A service deployment does not automatically migrate application tables, wire
+  React/backend code, or host the existing Node server and frontend.
+- Keep `.neon` local context and all real `.env`/`.env.local` files ignored.
+  Review CLI output for secrets before reporting it. Root environment files are
+  not automatically loaded by the backend's existing `Backend/.env` start command;
+  explicitly configure server-side loading and test it without exposing values.
+- Keep `DATABASE_URL` and service/admin secrets backend-only. The existing Node
+  backend uses `pg.Pool`; retain it unless a reviewed runtime/driver change is
+  needed. Use parameterized queries, bounded connection pools, verified TLS for
+  remote Postgres, and migration files. Do not connect React directly with a
+  database password or copy pulled secrets into `VITE_` variables.
+- Auth must resolve a verified identity to private application ownership.
+  Realtime subscriptions must enforce that same access boundary; never expose
+  all diary rows through a shared/public feed. Enabling either service alone
+  does not establish account isolation. Use service-specific official guidance
+  and test two synthetic accounts before reporting integration complete.
+- Automated unit/component tests keep using mocks. Run separately identified,
+  human-authorized end-to-end checks against the confirmed synthetic target for
+  each wired service. Report build output, test results, and failures without
+  revealing connection strings, tokens, recovery codes, or diary contents.
+
+### Free-plan limits and change approval
+
+The developer intends to use the Free plan and has not authorized payment.
+No-payment-information is not proof of the organization's effective plan.
+Verify the current plan in Neon before provisioning or changing capacity. The
+following published allowances were checked on 2026-11-11; they are ceilings,
+not a resource allocation or a guarantee of remaining quota:
+
+| Resource                    | Published Free-plan allowance                                         |
+| --------------------------- | --------------------------------------------------------------------- |
+| Projects and branches       | 100 projects; 10 branches per project; extra branches unavailable     |
+| Postgres compute            | 100 CU-hours per project per month; size up to 2 CU (8 GB RAM)        |
+| Idle compute                | Scales to zero after 5 minutes; allow for wake-up latency             |
+| Postgres storage            | 1 GB per project; 20 GB across the account                            |
+| Public network transfer     | 5 GB per project per month                                            |
+| Managed Auth                | Up to 60,000 monthly active users per project                         |
+| Realtime                    | Free during beta; underlying database and transfer limits still apply |
+| Restore/history             | Up to 6 hours, limited to 1 GB of changes; 1 manual snapshot          |
+| Monitoring and availability | 1-day monitoring retention; no uptime SLA                             |
+
+- Recheck [Neon pricing](https://neon.com/pricing) and
+  [Neon plans](https://neon.com/docs/introduction/plans) before relying on these
+  limits. Record discrepancies; do not silently substitute old remembered quotas.
+  Beta availability and pricing can change.
+- Keep scale-to-zero enabled. Avoid keep-alive queries, unbounded polling,
+  repeated full-table reads, bulk fixtures, load tests, unnecessary branches, and
+  long-running subscriptions that consume quota without serving the task. Check
+  current usage and estimate the proposed work before large imports or tests.
+- If a limit is reached or the plan/remaining allowance cannot be verified, stop
+  the affected remote operation and report the limit and a free alternative.
+  Do not upgrade, enable overages, add billing details, purchase credits, or retry
+  indefinitely. Do not delete data or branches to reclaim space without approval.
+- An AI may request permission for a project/service change that is expected to
+  remain free. Explain the exact change, target, reason, relevant quota/current
+  usage, and verification/recovery approach. Obtain approval before a new schema,
+  API rule, package, branch/service/capacity change, or migration not already
+  covered by the human's specific request. Do not repeatedly ask for the same
+  approved action; read-only inspection and routine in-scope local work may proceed.
+- Existing approval covers the requested Postgres/Auth/Realtime setup and
+  synthetic verification within the Free plan. It does not authorize unrelated
+  services, AI Gateway credits, paid email providers, paid storage, or a hosting
+  plan upgrade. If any proposed action might incur charges, use the existing
+  **THIS MAY COST MONEY** approval rule and wait for explicit spending approval.
+- Neon service setup does not establish the Netlify account's tier, deploy quota,
+  backend hosting, or pricing. Verify those separately before a hosting change;
+  never assume every connected provider is free because Neon is Free.
+
+CLI references: [init](https://neon.com/docs/cli/init),
+[deploy](https://neon.com/docs/cli/deploy). Future changes to this file still
+require explicit human approval.
+
+### Neon database release cadence and budget
+
+The human requested that Neon follow the same human-approved release discipline
+as Netlify. Prepare migrations locally, group substantial schema/catalog/service
+changes into reviewed sprint releases, and obtain approval for the exact target,
+SQL/migration filenames and checksums before applying them. The planned release
+dates are November 14, November 28, and December 12, 2026; dates are not approval.
+Out-of-cycle fixes require their own review. Routine approved users' diary writes
+are application activity, not migrations, and must not be delayed to sprint end.
+
+- Never run `neon deploy`, migration/seed/restore commands, or branch/service
+  changes from app startup, a normal build, an ordinary Git push, or a scheduled
+  job. `neon deploy` applies service policy; it does not apply our SQL migrations.
+  Keep these as separately approved operations in the release checklist.
+- Before a remote release, verify actual plan/cycle usage for all relevant
+  branches, proposed locks/data volume, required dependencies, and a recovery
+  approach. Account for backup/snapshot space and whether the short Free restore
+  window is adequate. Prefer additive/backward-compatible changes, then deploy
+  compatible code, then validate; never reset or reseed an existing database.
+- Internal planning caps retain 20% headroom: projected compute at most 80 of
+  100 CU-hours/project/cycle, storage at most 0.8 of 1 GB/project, and network
+  transfer at most 4 of 5 GB/project/cycle. These are conservative planning
+  limits, not provider-enforced caps. Check account-wide storage, branch and Auth
+  quotas separately. Unknown usage is a blocker for the affected remote release.
+- `npm run release:plan -- <budget-file>` calculates estimates for both providers
+  without connecting to them. Use current dashboard numbers, not invented zeros;
+  the example intentionally has unknown values. Passing the plan is neither
+  human approval nor a guarantee about future traffic. Preserve private release
+  records under `private-artifacts/` and never fabricate approval records.
+- If any projected use exceeds these caps or Free availability is uncertain,
+  reduce/split the change or wait for reset. Ask before touching the reserve,
+  purchasing resources, or changing plans. Existing **THIS MAY COST MONEY** and
+  explicit spending-approval rules continue to apply.
+- Migration 007 adds adult-confirmed hosted profiles and is prepared for review;
+  it has not been applied remotely. Initial hosted dependencies are 001, 002 and
+  007, after checking actual migration history; do not blindly apply 003–006.
+  No migration of local passwords/users into Neon Auth is implied.
+
+## Netlify pipeline and free-service budget (2026-11-11)
+
+The human requested Netlify Free hosting with a planned release at each sprint
+end. Preparing configuration is approved; no Netlify upload, draft/preview,
+production publish, retry, rebuild, or rollback is approved merely by that plan.
+Every push/deploy to Netlify requires specific human approval and a budget check.
+GitHub pushes must not silently trigger Netlify deploys.
+
+### Pipeline and current limitations
+
+- Human-approved Free-plan adjustment (2026-11-12): Netlify Free environment
+  variables use all scopes. Functions-only scoping and paid secret-controller
+  features are not required for this internal setup. Store the pooled database
+  URL in Netlify's environment configuration for the production context; it may
+  be available to the controlled build process and server runtime, but must never
+  enter browser code, a `VITE_` variable, static assets, logs, or Git. Keep builds
+  and previews from untrusted source disabled. Do not upgrade to obtain scoping.
+  Application database access remains server-only. This specific exception
+  replaces earlier Functions-only environment setup instructions.
+
+- Repository: `hepercretical/NourishNet`. Root `netlify.toml` uses repository root
+  as base, installs frontend/backend packages, runs `npm run build:hosted` with
+  Node 24, and publishes only `Frontend/dist` plus `netlify/functions`. It sets
+  `build.ignore = "exit 0"` to skip Git-triggered builds. Keep automatic production,
+  branch, and PR preview deploys disabled in the hosted site's settings as well;
+  the file alone is not proof of the remote settings or a universal deploy gate.
+- `.github/workflows/release-checks.yml` is a manual `workflow_dispatch` check:
+  frontend/backend install, format check, lint, tests, frontend build, and a
+  one-day artifact identified by commit SHA. It has no deployment credentials or
+  upload-to-Netlify step. It runs only after committed/pushed to GitHub and
+  manually started. A green check or artifact is not human deploy approval.
+- The human reports `thenourishnet.netlify.app` is linked to GitHub, builds are
+  stopped, latest deploy succeeded, and Free plan has 285 credits remaining.
+  This is a dated report, not a live budget query. The site ID, CLI connection and
+  hosted API remain unverified. Link that existing site rather than creating duplicates. Creating/importing
+  a site can trigger an initial deploy: obtain approval and budget for it first.
+- For initial setup, prefer a manual-upload site without Git auto-deploy. Link it
+  locally only after its identity is confirmed. Never publish the repository root,
+  `.env`, `Backend/`, `node_modules/`, or private artifacts as static assets.
+  Server-only backend modules may be packaged into the approved API Function.
+  Keep `.netlify/`
+  ignored; deployment tokens belong in approved secret storage, never chat/Git.
+- The Vite dev-server `/api` proxy is local only. A modern Netlify Function now
+  provides the hosted `/api/*` route with bearer-token verification and the same
+  diary repositories. Deployment/environment/database setup and end-to-end
+  verification remain required before claiming the deployed diary works.
+  Neon remains the database provider; do not provision Netlify Database by default.
+- Sprint releases use synthetic data and approved review scope. The existing
+  post-Sprint-3 public-release gate remains in force; a deploy URL must not be
+  treated as permission to onboard real users. Confirm the available access
+  controls before uploading internal work; do not assume free previews are private.
+
+### Published limits and internal allocation
+
+Sources checked 2026-11-11: [Netlify pricing](https://www.netlify.com/pricing/) and
+[credit-plan documentation](https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/credit-based-pricing-plans/).
+Verify the actual team's plan, billing-cycle dates, current usage and current
+rates before every deployment. Legacy Free accounts can have different limits.
+
+| Current credit-based Free meter | Published allowance/rate                                      |
+| ------------------------------- | ------------------------------------------------------------- |
+| Monthly allowance               | 300 credits, shared by the team; hard limit, no auto recharge |
+| Production deploy               | 15 credits each                                               |
+| Bandwidth                       | 20 credits/GB                                                 |
+| Web requests                    | 2 credits/10,000 requests                                     |
+| Server compute                  | 10 credits/GB-hour                                            |
+| Concurrent builds               | 1                                                             |
+
+Free credits reset by billing cycle and do not roll over. At the limit, service
+can pause; free does not mean unlimited availability. No upgrades, credit packs,
+paid domains, paid add-ons, or payment details are authorized.
+
+Use this conservative project planning allocation within the team's remaining
+allowance; these are internal caps, not provider-enforced limits:
+
+- Up to 60 credits per cycle for production deploys (at most four at the current
+  rate, including any chargeable retries/rebuilds/republishing). Normal cadence is
+  one per sprint; unused deployment allocation is not permission for extra deploys.
+- Up to 180 credits for ongoing traffic/requests/compute and other approved usage.
+- Keep at least 60 credits unallocated as a safety reserve. Subtract other sites'
+  usage and commitments first; NourishNet does not own the entire team's allowance.
+- Before approval, record current team usage U, estimated deployment cost D,
+  reserved cost of remaining planned deploys P, and forecast remaining runtime
+  use R. Require `U + D + P + R + 60 <= 300`, and also meet the category caps.
+  If plan, usage, forecast, or remaining budget is unknown, stop the remote action
+  and ask the human to check the dashboard. Record projected versus actual usage
+  after deployment in an ignored private release record.
+- Reaching an internal cap/reserve is a stop-and-review condition. Do not retry
+  failed deploys automatically or spend the reserve without a new approved budget.
+  Traffic varies, so this process reduces risk but cannot guarantee no interruption.
+- Neon quotas are separate and remain as documented above. Also verify GitHub
+  Actions minutes/artifact storage before running hosted checks, especially for a
+  private repository. Manual checks have a 15-minute job timeout and one-day
+  artifact retention; do not assume GitHub compute is unlimited or free.
+
+### Sprint release approval
+
+Planned review dates are November 14, November 28, and December 12, 2026. These
+are human-reviewed release opportunities, not scheduled automatic deployments.
+November's two planned production publishes would consume 30 credits; December's
+one would consume 15, before traffic, compute, other projects, and any retries.
+Use actual billing cycles when reserving credits rather than calendar months.
+
+Before each Netlify upload, present the exact commit/artifact, target site,
+draft or production context, sprint, passing checks, API readiness, access scope,
+current cycle usage, estimated credit cost, remaining planned releases and safety
+reserve. Request human approval for that one action. If there is any possibility
+of monetary charges, include **THIS MAY COST MONEY** and obtain explicit spending
+approval under Boundaries. Being within Free limits never waives deploy approval.
+
+After approval, deploy the reviewed build once, verify the returned URL and relevant
+flows without exposing secrets, record actual usage/outcome, and report failures.
+Further deploys or retries require their own approval. Do not treat approval to
+push source to GitHub as approval to deploy to Netlify.
+
 ## Code style
 
 - Break the website into focused components. For example, the header belongs in

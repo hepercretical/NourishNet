@@ -1,0 +1,65 @@
+name: Prepare sprint release
+
+# Build a reviewable artifact only. This workflow never deploys to Netlify.
+on:
+  workflow_dispatch:
+    inputs:
+      auth_url:
+        description: Public Neon Auth endpoint for the reviewed synthetic target
+        required: true
+        default: https://ep-wild-sky-bd9u7tw1.neonauth.c-8.us-east-2.aws.neon.tech/neondb/auth
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sprint-release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            Frontend/package-lock.json
+            Backend/package-lock.json
+      - name: Install frontend
+        run: npm ci
+        working-directory: Frontend
+      - name: Verify frontend
+        run: |
+          npm run format:check
+          npm run lint
+          npm test -- --maxWorkers 2
+        working-directory: Frontend
+      - name: Install backend
+        run: npm ci
+        working-directory: Backend
+      - name: Verify backend
+        run: |
+          npm run format:check
+          npm run lint
+          npm test -- --maxWorkers 2
+        working-directory: Backend
+      - name: Build hosted frontend
+        run: npm run build:hosted
+        env:
+          # Public endpoint, not a database connection string or secret.
+          VITE_NEON_AUTH_URL: ${{ inputs.auth_url }}
+      - name: Check hosted API packaging
+        run: npm run check:function
+      - name: Save frontend candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: nourishnet-frontend-${{ github.sha }}
+          path: Frontend/dist/
+          if-no-files-found: error
+          retention-days: 1
+          include-hidden-files: false
