@@ -22,6 +22,28 @@ the source of truth for new UI work. If an existing screen conflicts with this
 guide, make the smallest change needed for the requested plan and note follow-up
 work rather than redesigning unrelated features.
 
+## Sprint 2 no-placeholder clarification (requested 2026-11-12)
+
+The updated PLAN.md requires actual food records, working database logging and
+known-product scanning, and removal of all application filler by November 28.
+This supersedes earlier directions here to retain preview links, planned settings/
+legal locations, Designs and the Exercise/Weigh-in/Water placeholder sections.
+Remove those unfinished surfaces and direct preview routes from the testing app;
+keep designs in documentation or a separate developer-only preview outside it.
+Use fewer functional tabs until additional destinations work instead of a fake
+replacement fifth tab. Show Sprint 3 routes only when usable. Photo submission
+intake works in Sprint 2; photo-to-catalog review/reuse is due December 5.
+
+Keep approved tokens, green toolbar, compact layout, safe areas, real controls,
+accessibility and genuine loading/empty/error/permission/pending-review messages.
+Normal app values come from actual source-backed food records and saved account
+data. Do not create synthetic foods, made-up nutrients, fake package photos,
+injected diary entries or invented allowances. Existing mocks are separate test
+tools, never app data. Earlier requests to expand synthetic-food demos yield to
+this clarification. Personal test data remains isolated under AGENTS.md; no real-
+user onboarding is authorized. Defer security/legal implementation and verification
+until after Sprint 3 while preserving AGENTS.md safeguards and the estimate notice.
+
 ## Design principles
 
 - **Clear first:** users should understand what to do next without guessing.

@@ -5,15 +5,17 @@
 The human developer requested this three-sprint feature schedule on 2026-11-09
 and clarified that Sprint 1 began November 1 and Sprint 3 ends December 12.
 This replaces the previous seven-sprint schedule. Dates below are targets, not
-completion claims. No acceptance criterion is completed by this document update.
+completion claims. The November 12 update below reprioritizes Sprints 2 and 3
+against the current implementation and the human's clarified food-data/photo scope.
+No acceptance criterion is completed by this document update.
 
-| Phase           | Dates (2026)  | Required outcome                                                                   |
-| --------------- | ------------- | ---------------------------------------------------------------------------------- |
-| Sprint 1        | Nov 1-14      | Complete initial screen/flow design, foundations, accounts, and core tracking      |
-| Sprint 2        | Nov 15-28     | Build barcode scanning, photo submissions/review, goals, and connection controls   |
-| Sprint 3 Week 1 | Nov 29-Dec 5  | Finish calendars, integrate every initial feature, and freeze features             |
-| Sprint 3 Week 2 | Dec 6-12      | Final bug fixes, regression tests, accessibility/visual/performance quality checks |
-| After Sprint 3  | Dec 13 onward | Implement SECURE.md and LEGAL.md, then approve public release                      |
+| Phase           | Dates (2026)  | Required outcome                                                                     |
+| --------------- | ------------- | ------------------------------------------------------------------------------------ |
+| Sprint 1        | Nov 1-14      | Complete initial screen/flow design, foundations, accounts, and core tracking        |
+| Sprint 2        | Nov 15-28     | Finish actual food data, database logging, known-product scanning and filler removal |
+| Sprint 3 Week 1 | Nov 29-Dec 5  | Finish photo-to-catalog review, goals, connections and calendars; freeze features    |
+| Sprint 3 Week 2 | Dec 6-12      | Final bug fixes, regression tests, accessibility/visual/performance quality checks   |
+| After Sprint 3  | Dec 13 onward | Implement SECURE.md and LEGAL.md, then approve public release                        |
 
 All initial design and functionality must be finished by December 5. December
 6-12 is reserved exclusively for final bug fixes and quality checks; it is not
@@ -34,7 +36,9 @@ than silently using the quality week or moving features into the later phase.
   also applies to security/legal requirements repeated in HUMAN.md and
   STYLE_GUIDE.md. Plan-26, Plan-27, Plan-28, and Plan-29 implement the later phase.
 - Sprints 1-3 deliver an internal development version using synthetic accounts,
-  measurements, diaries, and sample photos. A feature-complete internal version
+  measurements and diaries; food catalog records must be actual source-backed foods.
+  Use non-personal package/label photos, not invented products or nutrition values.
+  A feature-complete internal version
   is not public-release approval. Real-user onboarding and public deployment
   follow the later phase; do not claim unfinished controls are implemented.
 - Existing AGENTS.md requirements remain applicable: protect secrets, keep Neon
@@ -70,80 +74,161 @@ Every applicable initial story includes loading, error, empty, validation, and
 success states; accessible controls; responsive UI; useful copy; and user-focused
 Vitest/React Testing Library coverage using mocked APIs and userEvent. Tests never
 contact real Neon. Runtime development uses the development API/database with
-synthetic data. Run frontend dev/lint/test/build/format and backend dev/lint/test/
+isolated personal test data and actual food records. Run frontend dev/lint/test/
+build/format and backend dev/lint/test/
 format once scaffolded; record results honestly. Documentation-only changes use
 document, reference, dependency, and formatting checks instead.
 
 Finish the layout and interaction design for all initial screens in Sprint 1,
 including space for later legal/settings controls. Final policies and operational
-rights controls are not initial functional deliverables; omit or honestly label
-unfinished actions. Initial quality review covers implemented flows. Repeat the
+rights controls are not initial functional deliverables; omit unfinished actions
+from the application by November 28. Keep planned locations in documentation,
+without placeholder pages or buttons in the application. Initial quality review
+covers implemented flows. Repeat the
 relevant reviews after security/legal features are implemented.
 
-Points are retained as relative story estimates where available; they are not
-staffing or deadline guarantees. Story IDs are numbered in delivery order;
-dependencies and cross-references use those same IDs. The sequencing update below
-moves Plan-19 into Sprint 2 Week 1; sprint boundaries and approval requirements
-remain unchanged.
+Points remain relative estimates, not staffing or deadline guarantees. Keep
+existing story IDs stable when delivery order changes. Plan-14A and Plan-18A
+cover explicit integration/cleanup work, not a rebuild of completed Sprint 1 code.
 
-## Mobile UI and dependency sequencing update (2026-11-09)
+## Current-state review and reprioritization (2026-11-12)
 
-The human developer requested future-module alignment with the mobile reference
-and more space between dependent deliveries. This changes planning only; no
-future acceptance box is completed and no package, API rule, migration, formula
-or paid service is approved by a target date.
+The human developer requires working food data, food logging and barcode scanning
+for private testing by November 28, with all filler removed by that date. The
+clarification requires actual food records without generated synthetic food data;
+known barcode -> database food ID -> deliberate diary save must work in Sprint 2.
+Unknown products prompt package-front and nutrition-label photo submission;
+reviewing/adding the food from those photos is due halfway through Sprint 3,
+December 5. This replaces the November 9 sequencing table.
 
-Every future feature follows the green toolbar, compact lists/section headers,
-existing tokens and five bottom items in
-[STYLE_GUIDE.md](STYLE_GUIDE.md#mobile-diary-reference-requested-2026-11-09).
-Implement and review phone/wide layouts, focus, safe areas, keyboard behavior and
-data states within each module. Exercise, water, standalone weigh-in logging and
-recipes remain outside this schedule; approved goal weight input remains in scope.
-Do not leave initial UI construction for the final quality week.
+Evidence reviewed: frontend/backend source, migrations, synthetic seed, and
+README.md's November 12 setup/release record. No remote service was inspected or
+application check run for this documentation change.
 
-| Completion target (2026) | Module           | Required handoff                                                 |
-| ------------------------ | ---------------- | ---------------------------------------------------------------- |
-| Nov 17                   | Plan-14          | Barcode results/unknown states before scanner integration        |
-| Nov 19                   | Plan-15          | Working toolbar scan/manual flow                                 |
-| Nov 21                   | Plan-16          | Mobile sample-photo form before submission persistence           |
-| Nov 21                   | Plan-19          | Goal acceptance/persistence, independent of barcode work         |
-| Nov 24                   | Plan-17          | Submission status/correction before catalog review               |
-| Nov 25                   | Plan-20          | Connections and selected sharing before comparisons              |
-| Nov 26                   | Plan-18          | Review/publication and second-account barcode reuse              |
-| Nov 27-28                | Sprint 2 handoff | Verify both feature chains and resolve integration defects       |
-| Nov 30                   | Plan-21          | Historical goals and personal calendar before comparison         |
-| Dec 2                    | Plan-22          | Friend calendar complete before final combined verification      |
-| Dec 3-5                  | Plan-23          | Final integration/demo journeys, human review and feature freeze |
-| Dec 6-12                 | Plan-24/25       | Existing-feature fixes, regression and quality checks only       |
+- Plans 01-13 are recorded complete. Existing local/API code covers accounts,
+  search, four meals, serving confirmation, persistence, date navigation, totals,
+  editing and removal. Verify/integrate this work rather than rebuild it.
+- README.md records hosted migrations 001/002/007 and the initial seed applied,
+  backend food reads, and a protected Netlify publish. Use this newer record for
+  planning instead of older setup notes, without treating it as a fresh check.
+  Hosted authenticated diary journeys remain unverified; approved tester-email
+  configuration was deferred. The non-login seed identities are not test logins.
+- The seed has only two fictional food/serving records and no actual product
+  barcode mappings. They do not satisfy the clarified catalog requirement.
+- Barcode lookup/camera, persisted photo submissions/review, goals, connections
+  and calendars remain unfinished. App navigation reaches design previews and
+  disabled examples; the diary contains out-of-scope tracking filler.
+- Plan-13's local specification records internal technical review and deferred
+  independent professional review. Preserve that status; do not claim clinical
+  validation or invent replacement formulas when implementing Plan-19.
 
-These are completion targets, including tests and usable handoffs. Prepare
-contracts, fixtures, layout and approval questions early; connect real services
-only after prerequisites and applicable approvals pass. Independent barcode and
-goal tracks may progress alongside one another; this does not assume additional
-developers. Plan-16 needs barcode results and shared controls, not a completed
-camera: manual/unknown-barcode fixtures allow form work without waiting for camera
-testing. Plan-18 still verifies the whole Plan-15/16/17 journey. Keep the true
-goal -> sharing/history -> comparison dependencies. Integrate each module as it
-lands; December 3-5 is the final combined check, not the first integration attempt.
+### Priorities and completion targets
 
-Resolve barcode/scanner package and API questions before Plan-14/15, sample-image
-storage/submission/reviewer rules before Plan-17/18, and discovery/report rules
-before Plan-20. Carry forward Plan-13's documented review status before Plan-19.
-Flag blocked prerequisites immediately; seek a human scope/timing decision if
-December 5 is threatened. Never use December 6-12 to finish missing features.
+1. Finish the database/API/catalog and authenticated diary testing path first
+   (Plan-14A), with actual product/label records and usable barcode mappings.
+2. Complete known-barcode lookup, real phone camera decoding and manual fallback
+   into serving/meal confirmation and a single persisted save (Plan-14/15).
+3. Give unknown products a working two-photo submission intake and stored pending
+   status in Sprint 2 (Plan-16/17). This is a real submission, not a placeholder
+   button or a claim that the product has already entered the catalog.
+4. Pass the core-functionality and no-filler gate by November 28 (Plan-18A).
+5. Complete photo-to-catalog review/reuse plus goals, connections and calendars
+   in Sprint 3 Week 1; integrate continuously and freeze by December 5.
+6. Use December 6-12 exclusively for fixes and quality checks. Implement/verify
+   SECURE.md and LEGAL.md after Sprint 3, starting December 13.
 
-Extend the development-only no-login demo with each delivered feature, using
-synthetic actors/data and non-personal sample images, the real feature components
-and approved calculation utilities. Separately test authenticated API ownership
-and multiple accounts. Demo actor selection must never grant real API privileges
-or work in production. All initial non-authentication journeys must be reachable
-without login in the isolated demo by Plan-23; previews stay labeled until built.
+| Completion target (2026) | Module              | Required handoff                                                                               |
+| ------------------------ | ------------------- | ---------------------------------------------------------------------------------------------- |
+| Nov 15                   | Plan-14A decisions  | Confirm private target, tester access, actual catalog source/coverage and scanner approach     |
+| Nov 17                   | Plan-14A            | Actual food records and database-backed search/log/edit/remove/refresh verified                |
+| Nov 18                   | Plan-14             | Known barcode resolves to catalog food/serving ID; unknown result never invents a match        |
+| Nov 20                   | Plan-15             | Physical-phone scan and manual entry confirm and save known foods once                         |
+| Nov 23                   | Plan-16             | Unknown barcode opens working package-front/label photo form                                   |
+| Nov 25                   | Plan-17             | Photo intake, pending status, correction and retry persist                                     |
+| Nov 27-28                | Plan-18A            | Database/logging/scanner human testing and complete application filler removal                 |
+| Nov 30                   | Plan-19             | Goal estimate review, acceptance and persistence                                               |
+| Dec 2                    | Plan-18             | Read actual package/label photos, review values, publish catalog food/barcode and verify reuse |
+| Dec 3                    | Plan-20 and Plan-21 | Connections/sharing plus historical goals and personal calendar                                |
+| Dec 4                    | Plan-22             | Shared-progress comparison against each person's historical goal                               |
+| Dec 5                    | Plan-23             | Combined journeys, human review, photo-to-catalog deadline and feature freeze                  |
+| Dec 6-12                 | Plan-24/25          | Existing-feature defects, regression and quality only                                          |
+| Dec 13 onward            | Plan-26/27/28/29    | Security/legal implementation, verification and later public-release gate                      |
 
-| Track                     | Initial delivery responsibility                                                  |
-| ------------------------- | -------------------------------------------------------------------------------- |
-| Database and Data         | Approved schemas, API contracts, diary/goal history, catalog and connection data |
-| Searching, Logging, Logic | Search, totals, scanning, estimates, goal outcomes, calendar comparison          |
-| Design, Lists and Quality | All screen designs, forms/navigation, responsive states, integration and testing |
+Targets include usable mobile states and tests. This is a single-human-developer
+schedule, not assumed parallel staffing. Prepare contracts and approval questions
+early; integrate modules as they land. Plan-16 can use manual unknown-barcode input
+before camera work finishes. Goal acceptance precedes history; sharing/history
+precede comparisons. Begin each downstream integration as soon as inputs exist.
+
+Dates and this planning request do not authorize packages, API rules, applied
+migrations/imports, provider changes, spending or deployments. Resolve source/
+scanner decisions before Plan-14/15, storage/submission decisions before Plan-17,
+reviewer rules before Plan-18 and discovery/report routing before Plan-20. Retain
+AGENTS.md's exact-target, checksum, budget and one-action release approvals. Do not
+wait until a sprint-end publish to discover a blocked testing prerequisite.
+
+Review remaining effort/approvals November 21 and November 28. Sprint 3 Week 1 is
+tight, especially photo review plus goals -> history and connections -> comparison.
+If capacity/dependencies threaten December 5, present remaining effort and seek a
+human scope/timing decision. Do not silently drop features, move new work into
+December 6-12, or call a preview complete. Realtime subscriptions, OCR, decorative
+features and unrelated catalog/search expansion are not prerequisites.
+
+### Actual food data and no-filler deadline
+
+The testing app must use actual foods, serving sizes, label nutrition and product
+barcode mappings with recorded sources. Do not generate synthetic food records,
+made-up nutrients, fake package photos or invented barcode-to-product links. The
+human confirms a bounded representative catalog and source/access method early;
+no arbitrary food-count quota or external provider is selected by this plan.
+Choose the source before relying on it; no external API/package/import is approved
+here. Broader legal-readiness review remains in the post-Sprint-3 phase.
+
+Remove existing fictional catalog records from the normal application through a
+human-approved data cleanup/migration, preserving dependent diary snapshots and
+history. Never reset/reseed the database or delete records without approval. Test
+accounts/measurements/diaries remain isolated under AGENTS.md; this catalog change
+does not authorize real-user onboarding. Existing automated mocks are test tools,
+not application food data; do not create new synthetic catalog/demo filler.
+
+By November 28, audit every visible or directly opened application route, menu,
+tab, button, link, image, field, title and text block. Remove design previews,
+disabled example controls, coming-soon buttons, lorem ipsum, fake profile/contact/
+activity text, injected sample diary entries, invented goal allowances and the
+Exercise/Weigh-in/Water filler sections. A fresh account starts with an empty
+diary and useful real instructions. Keep genuine loading, empty, no-results,
+validation, permission, error/retry and pending-review messages: these describe
+current working behavior, not filler. Do not fake a success message or replace a
+placeholder with another nonfunctional notice page.
+
+Retire Designs and direct design-gallery routes from the testing application;
+preserve designs in documentation or a separate developer-only preview outside
+that app. Remove links/routes for unimplemented Sprint 3 and post-Sprint-3 actions
+until their flows work. The five-item reference navigation yields to this
+no-placeholder deadline: use fewer working tabs rather than a fake replacement.
+Keep tokens, green toolbar, compact layout, focus, safe areas and accessibility.
+See STYLE_GUIDE.md's November 12 clarification. Continue this gate through Sprint 3.
+
+An isolated no-login demo may reuse actual food fixtures and real components,
+but must not generate filler data or grant backend privileges. Demo success never
+proves database persistence or hosted identity integration. Prior requirements to
+expand synthetic-food demos are superseded by this human clarification.
+
+### Private-development security/legal deferral
+
+Do not implement or verify SECURE.md/LEGAL.md deliverables during Sprints 2/3.
+Policies, legal consent/rights operations, production hardening, comprehensive
+attack testing and formal readiness evidence belong wholly after December 12.
+Keep Plan-26 through Plan-29 intact and deferred, never marked passed. Remove
+unfinished legal/settings actions from the app rather than build fake policies.
+
+Existing safeguards and independently stated AGENTS.md rules remain: secrets and
+ignore maintenance, backend-only database access, parameterized SQL, synthetic
+personal test data, account ownership, spending/deployment/schema approvals,
+adult scope, formula approval boundaries and the visible mathematical-estimate
+notice. Sharing choices and catalog review remain functional behavior when those
+features ship. AGENTS.md is unchanged; no controls are removed. Private testing
+does not itself authorize public access, real-user onboarding or provider writes.
 
 ## Sprint 1: Design, foundations, and core tracking (November 1-14)
 
@@ -325,14 +410,37 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [x] Unknown/incomplete/no-goal/future-day states and timezone alignment rules are defined; do not
       invent clinical thresholds.
 
-## Sprint 2: Barcode, submissions, goals, and connections (November 15-28)
+## Sprint 2: Actual food data, logging, scanning and no filler (November 15-28)
 
-**Goal:** Deliver the remaining product workflows before calendar integration.
+**Goal:** Deliver a database-backed application for private testing with actual
+food data, working meal logging, real known-product scans/manual lookup, unknown-
+product photo intake and no temporary filler by November 28.
+
+### Plan-14A Database, actual catalog and diary testing readiness
+
+- **Phase:** S2 W1 | **Due:** 2026-11-17
+- **Branch:** `/plan-14a` | **Depends on:** Plan-05, Plan-06, Plan-12
+
+**Acceptance criteria**
+
+- [ ] Human confirms actual food source and representative catalog/search/scan cases. Records have
+      product name, serving basis, calories, macros, sodium or explicit unknown, source and correct
+      barcode mappings. No generated synthetic foods or invented nutrition/barcodes enter the app.
+- [ ] Inspect target/migration history; prepare only needed approved imports/catalog changes and
+      fictional-food cleanup. Obtain exact approval before application; preserve dependent history.
+- [ ] Configure approved private tester access and exercise two isolated authenticated test
+      accounts through browser -> backend -> Neon. Health checks/mock/demo success are insufficient.
+- [ ] Verify search, decimal servings, all four meals, local dates, add/edit/remove, correct totals
+      and refresh/relogin persistence. Account diaries stay separate; food corrections preserve
+      logged serving/nutrition snapshots.
+- [ ] Check no-results, empty days, unknown nutrients, failed reads/writes, repeated saves, retries
+      and date boundaries. Record environment/outcomes/blockers without secrets; keep mocked tests
+      separate from approved database checks. Hosted acceptance stays open until actually verified.
 
 ### Plan-14 Barcode lookup service
 
-- **Phase:** S2 W1 | **Due:** 2026-11-17 | **Points:** 8
-- **Branch:** `/plan-14` | **Depends on:** Plan-06, Plan-10
+- **Phase:** S2 W1 | **Due:** 2026-11-18 | **Points:** 8
+- **Branch:** `/plan-14` | **Depends on:** Plan-06, Plan-10, Plan-14A
 
 **Acceptance criteria**
 
@@ -343,10 +451,12 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Tests cover known, unknown, malformed, and leading-zero examples.
 - [ ] Result/unknown fixtures support compact scanner confirmation and the local demo;
       a lookup alone never saves a diary entry or creates a catalog record.
+- [ ] Actual supported product barcodes resolve to the correct database food/serving ID.
+      Unknown results prompt package-front and nutrition-label submission without an invented match.
 
 ### Plan-15 Camera scanner and manual fallback
 
-- **Phase:** S2 W1 | **Due:** 2026-11-19 | **Points:** 8
+- **Phase:** S2 W1 | **Due:** 2026-11-20 | **Points:** 8
 - **Branch:** `/plan-15` | **Depends on:** Plan-14
 
 **Acceptance criteria**
@@ -359,48 +469,85 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Toolbar barcode and Track shortcuts reach the same scan/manual flow. Reuse serving/meal
       confirmation, preserve selected local date/meal and return to the diary after save.
       Bottom tabs never obscure camera recovery or confirmation controls.
+- [ ] Verify decoding on a physical phone in the approved private setup with actual product
+      barcodes; record device/browser and supported formats. Manual entry/mocked detections alone
+      cannot pass scanner acceptance. Repeated detections and retries create one persisted entry.
 
 ### Plan-16 Unknown-food photo submission interface
 
-- **Phase:** S2 W1 | **Due:** 2026-11-21 | **Points:** 5
+- **Phase:** S2 W2 | **Due:** 2026-11-23 | **Points:** 5
 - **Branch:** `/plan-16` | **Depends on:** Plan-14, Plan-04
 
 **Acceptance criteria**
 
-- [ ] Form collects barcode, package-front sample image, nutrition-label sample image, and
-      reviewable product/nutrition fields.
+- [ ] Form collects barcode, actual package-front photo and actual nutrition-label photo, with
+      reviewable product fields. Do not require the user to transcribe the label merely to submit
+      photos; a reviewer can enter nutrition from the label in Plan-18. No invented photo values.
 - [ ] Preview/replace/remove, required fields, basic file limits, pending/upload/error/retry, and
       success states work on mobile and keyboard.
 - [ ] Pending data is clearly distinct from approved catalog nutrition.
 - [ ] Stack package/label previews and compact labeled fields on phones; keyboard and tabs
       leave correction/save reachable. Returning to scan/search preserves recoverable input.
-      Build with manual barcode fixtures first; verify the Plan-15 connection in Plan-18.
+      Build with actual manually entered barcodes first; verify the scan-to-intake connection
+      by Plan-18A, then publication/reuse in Plan-18.
 
 ### Plan-17 Submission API and review-ready records
 
-- **Phase:** S2 W2 | **Due:** 2026-11-24 | **Points:** 8
+- **Phase:** S2 W2 | **Due:** 2026-11-25 | **Points:** 8
 - **Branch:** `/plan-17` | **Depends on:** Plan-16, Plan-05
 
 **Acceptance criteria**
 
 - [ ] Human approves development image storage and submission schema/API before adoption or applied
-      migrations; use non-personal sample images.
+      migrations; use actual package/label images containing no personal details.
 - [ ] Backend stores submission metadata/images with pending, needs-review, approved, and rejected
       states; pending data is not searchable as catalog food.
 - [ ] Submitter can see status and correct requested fields; basic upload failure/retry and
-      duplicate-submission behavior are tested.
+      duplicate-submission behavior are tested. Review actions arrive with Plan-18 in Sprint 3;
+      do not expose inactive review controls or fabricate review outcomes in Sprint 2.
 - [ ] Menu exposes My submissions with compact status/correction rows, readable text status
-      and persistent retry. Supply isolated synthetic status fixtures for no-login testing.
+      and persistent retry. Show actual persisted submission status in the testing application.
+
+### Plan-18A Sprint 2 core-functionality and no-filler handoff
+
+- **Phase:** S2 W2 | **Due:** 2026-11-28
+- **Branch:** `/plan-18a` | **Depends on:** Plan-14A, Plan-14, Plan-15, Plan-16, Plan-17
+
+**Acceptance criteria**
+
+- [ ] Human searches an actual food, confirms servings/meal/day, saves, refreshes, edits and
+      removes it; database-backed meal/day calories, macros and sodium agree with serving values.
+- [ ] Physical-phone scanning and manual lookup resolve actual known barcode -> catalog ID ->
+      confirmation -> one saved diary entry. Check unknown, malformed, leading-zero, camera
+      denial, retry, repeated detection/save and date/meal preservation.
+- [ ] Unknown barcode prompts both photos, and submission/status persist with usable retry.
+      Pending photos do not pretend to be catalog food; photo-to-catalog review is due December 5.
+- [ ] Audit every normal/direct route, navigation item, control, image, metadata and copy against
+      the no-filler deadline. No invented food data, fake values, placeholder text/buttons, design
+      previews, unfinished destinations or dead actions remain. Keep genuine current-state copy.
+- [ ] Frontend lint/test/build/format and backend lint/test/format pass; development services and
+      approved database journeys have been exercised. Human checks phone/desktop, keyboard,
+      camera, empty/existing isolated accounts and recoverable failures; record evidence/defects.
+- [ ] Private testing target/access instructions are usable. Hosted journeys remain unpassed
+      until verified. Any remote cleanup/import/upload/deploy needs its own exact approval and
+      budget; local/demo results cannot stand in for database-backed hosted acceptance.
+
+## Sprint 3 Week 1: Photo-to-catalog, goals, connections and calendars (November 29-December 5)
+
+**Goal:** Complete adding actual foods from submitted photos by halfway through
+Sprint 3, finish goals/accountability features and freeze new functionality by
+December 5. Keep the working Sprint 2 core and no-filler gate intact.
 
 ### Plan-18 Catalog review and reusable publication
 
-- **Phase:** S2 W2 | **Due:** 2026-11-26 | **Points:** 8
+- **Phase:** S3 W1 | **Due:** 2026-12-02 | **Points:** 8
 - **Branch:** `/plan-18` | **Depends on:** Plan-15, Plan-16, Plan-17
 
 **Acceptance criteria**
 
-- [ ] Human approves reviewer role and publication rules; reviewer can inspect sample images/values,
-      correct, request changes, approve, or reject.
+- [ ] Human approves reviewer role and publication rules; reviewer can read actual package-front/label
+      photos, enter/check nutrition, correct, request changes, approve, or reject. Manual entry
+      from the photos is the initial implementation; OCR requires separate approval.
 - [ ] Only approved records enter the reusable catalog; competing approvals/duplicate barcodes have
       defined outcomes and provenance.
 - [ ] A second synthetic account scans the approved product and logs it; past diary nutrition
@@ -408,10 +555,12 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 - [ ] Use a compact review queue, stacked image/nutrition detail and explicit review actions
       above the bottom safe area. Only permitted real actors access review; synthetic demo
       reviewer selection grants no backend privileges. Verify scan -> submit -> review -> reuse.
+- [ ] By December 5 at the latest, a submitted actual product is added from its photos to the
+      catalog with serving/nutrition/source and barcode mapping; another account scans and logs it.
 
 ### Plan-19 Goal menu and estimate acceptance
 
-- **Phase:** S2 W1 | **Due:** 2026-11-21 | **Points:** 13
+- **Phase:** S3 W1 | **Due:** 2026-11-30 | **Points:** 13
 - **Branch:** `/plan-19` | **Depends on:** Plan-13, Plan-11, Plan-05
 
 **Acceptance criteria**
@@ -431,7 +580,7 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 ### Plan-20 Accepted connections and selected sharing
 
-- **Phase:** S2 W2 | **Due:** 2026-11-25 | **Points:** 13
+- **Phase:** S3 W1 | **Due:** 2026-12-03 | **Points:** 13
 - **Branch:** `/plan-20` | **Depends on:** Plan-05, Plan-19
 
 **Acceptance criteria**
@@ -447,13 +596,9 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       and report work by touch/keyboard, including report routing and confirmation. Verify
       these behaviors with isolated synthetic demo actors as well as authenticated accounts.
 
-## Sprint 3 Week 1: Calendars and complete integration (November 29-December 5)
-
-**Goal:** Finish all initial design and functionality and freeze features by December 5.
-
 ### Plan-21 Personal goal history and calendar
 
-- **Phase:** S3 W1 | **Due:** 2026-11-30 | **Points:** 8
+- **Phase:** S3 W1 | **Due:** 2026-12-03 | **Points:** 8
 - **Branch:** `/plan-21` | **Depends on:** Plan-19, Plan-12
 
 **Acceptance criteria**
@@ -475,7 +620,7 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 ### Plan-22 Friend progress comparison calendar
 
-- **Phase:** S3 W1 | **Due:** 2026-12-02 | **Points:** 8
+- **Phase:** S3 W1 | **Due:** 2026-12-04 | **Points:** 8
 - **Branch:** `/plan-22` | **Depends on:** Plan-21, Plan-20
 
 **Acceptance criteria**
@@ -494,7 +639,7 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 ### Plan-23 Full initial-feature integration and freeze
 
 - **Phase:** S3 W1 | **Due:** 2026-12-05 | **Points:** 8
-- **Branch:** `/plan-23` | **Depends on:** Plan-11, Plan-12, Plan-18, Plan-19, Plan-20, Plan-21, Plan-22
+- **Branch:** `/plan-23` | **Depends on:** Plan-11, Plan-12, Plan-18A, Plan-18, Plan-19, Plan-20, Plan-21, Plan-22
 
 **Acceptance criteria**
 
@@ -506,11 +651,12 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
       lint/test/format pass with development smoke journeys.
 - [ ] Human reviews the feature milestone by December 5; remaining defects have reproduction steps
       and owners. Freeze new feature work.
-- [ ] Toolbar, Menu, Dashboard/Stats/Track/Designs/Preferences and contextual return links reach
-      all delivered initial features. Remove preview labels only after integration; keep
-      out-of-scope and post-Sprint-3 operations honestly labeled.
+- [ ] Toolbar, Menu, Dashboard/Stats/Track/Preferences and contextual return links reach
+      all delivered features. Maintain the November 28 no-filler gate; expose Sprint 3 routes
+      only once working, and leave later operations absent until implemented.
 - [ ] The development-only demo reaches every initial non-authentication journey with synthetic
-      actors/data and sample images. Account flows remain separately testable with the local
+      actors with actual food records and package/label images, without generated filler. Account
+      flows remain separately testable with the local
       API; production ignores the demo switch. Verify both modes before the December 5 freeze.
 
 ## Sprint 3 Week 2: Final bug fixes and quality checks (December 6-12)
@@ -650,12 +796,17 @@ their combined result before release.
 
 ## Handoff checklist
 
+- [ ] November 28: actual database foods, food logging, real scanner/manual lookup, unknown-product
+      photo intake and Plan-18A no-filler gate pass with private human-testing evidence.
+- [ ] December 5: submitted photos produce a reviewed catalog food/barcode reusable by another
+      account; full automatic OCR is not implied.
 - [ ] December 5: all initial designs and functional stories pass; record feature freeze.
 - [ ] December 6-12: only defect fixes and quality checks; record internal handoff.
 - [ ] December 13 onward: implement and verify all SECURE.md and LEGAL.md requirements.
 - [ ] Later: repeat affected product tests and obtain public-release approval.
 
 For example, package upload, review, and barcode reuse must work in development
-by December 5. Production upload scanning/access hardening and legal content/license
+by December 5; known-product scanning/logging and photo intake must already pass
+by November 28. Production upload scanning/access hardening and legal content/license
 processing are implemented and verified after December 12. Existing AGENTS.md
 rules and the original medical-estimate notice apply throughout.
