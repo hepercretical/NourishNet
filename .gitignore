@@ -561,3 +561,20 @@ release-approval*.json.*
 .user-data/
 .playwright/
 .pgadmin4/
+
+# Private release bundles and provider authentication caches/copies.
+# Keep reviewed SQL, public catalog JSON, source, and lockfiles visible.
+release-artifacts/
+deployment-artifacts/
+.neonctl/
+.netlify-cli/
+**/.config/neonctl/
+**/.config/netlify-cli/
+netlify-token*.json
+netlify-token*.json.*
+netlify-token*.txt
+netlify-token*.txt.*
+neon-api-key*.json
+neon-api-key*.json.*
+neon-api-key*.txt
+neon-api-key*.txt.*

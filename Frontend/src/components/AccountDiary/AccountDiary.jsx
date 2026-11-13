@@ -1,8 +1,9 @@
+import DailySummary from '../DailySummary/DailySummary.jsx';
 import { useEffect, useRef, useState } from 'react';
 import { accountRequest } from '../../services/accounts.js';
 import Dashboard from '../Dashboard/Dashboard.jsx';
 
-export default function AccountDiary({ account, date }) {
+export default function AccountDiary({ account, date, summary = false }) {
   const [state, setState] = useState({ loading: true });
   const [attempt, setAttempt] = useState(0);
   const [notice, setNotice] = useState('');
@@ -70,15 +71,19 @@ export default function AccountDiary({ account, date }) {
           Reload diary
         </button>
       )}
-      <Dashboard
-        account={account}
-        {...state}
-        onEntryChange={change}
-        onRetry={() => {
-          setState({ loading: true });
-          setAttempt((current) => current + 1);
-        }}
-      />
+      {summary && state.diary && !state.loading && !state.error ? (
+        <DailySummary diary={state.diary} />
+      ) : (
+        <Dashboard
+          account={account}
+          {...state}
+          onEntryChange={change}
+          onRetry={() => {
+            setState({ loading: true });
+            setAttempt((current) => current + 1);
+          }}
+        />
+      )}
     </div>
   );
 }

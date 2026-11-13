@@ -6,6 +6,7 @@ const { sdk, create } = vi.hoisted(() => {
     getSession: vi.fn(),
     token: vi.fn(),
     signOut: vi.fn(),
+    changePassword: vi.fn(),
     emailOtp: { verifyEmail: vi.fn(), sendVerificationOtp: vi.fn(), resetPassword: vi.fn() },
   };
   return { sdk, create: vi.fn(() => sdk) };
@@ -23,6 +24,7 @@ beforeEach(() => {
     sdk.getSession,
     sdk.token,
     sdk.signOut,
+    sdk.changePassword,
     ...Object.values(sdk.emailOtp),
   ])
     method.mockReset().mockResolvedValue({ data: {} });
@@ -83,4 +85,24 @@ it('does not request a JWT when the managed session is signed out', async () => 
   const { neonToken } = await import('./neonAuth.js');
   expect(await neonToken()).toBeUndefined();
   expect(sdk.token).not.toHaveBeenCalled();
+});
+
+it('changes the managed password and revokes sessions before returning success', async () => {
+  const { neonAuthRequest } = await import('./neonAuth.js');
+  await expect(
+    neonAuthRequest('/personal/password', {
+      currentPassword: 'current-test-password',
+      newPassword: 'new-test-password',
+    }),
+  ).resolves.toEqual({ saved: true });
+  expect(sdk.changePassword).toHaveBeenCalledWith({
+    currentPassword: 'current-test-password',
+    newPassword: 'new-test-password',
+    revokeOtherSessions: true,
+  });
+  expect(sdk.signOut).toHaveBeenCalledOnce();
+  sdk.changePassword.mockResolvedValue({ error: { message: 'private detail' } });
+  sdk.signOut.mockClear();
+  await expect(neonAuthRequest('/personal/password', {})).rejects.toThrow('Check your entries');
+  expect(sdk.signOut).not.toHaveBeenCalled();
 });

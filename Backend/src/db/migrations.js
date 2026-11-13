@@ -11,6 +11,10 @@ export const migrationNames = [
   '007_hosted_profiles.sql',
   // Prepared Plan-14A design; inclusion is not human approval to apply it.
   '008_actual_food_catalog.sql',
+  // Exact local application approved separately; never run from startup/build.
+  '009_personal_tracking.sql',
+  // Prepared hosted storage; remote application requires exact release approval.
+  '010_hosted_submission_photos.sql',
 ];
 
 export async function loadMigration(name) {

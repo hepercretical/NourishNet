@@ -1,10 +1,13 @@
-export const maxPhotoBytes = 5 * 1024 * 1024;
+import { usesNeonAuth } from '../services/hostedConfig.js';
+
+export const maxPhotoBytes = (usesNeonAuth ? 2 : 5) * 1024 * 1024;
 export const photoTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
 export function photoError(file) {
   if (!file) return 'Choose a photo.';
   if (!photoTypes.includes(file.type)) return 'Use a JPEG, PNG or WebP image.';
-  if (file.size < 1 || file.size > maxPhotoBytes) return 'Use a photo between 1 byte and 5 MB.';
+  if (file.size < 1 || file.size > maxPhotoBytes)
+    return `Use a photo between 1 byte and ${maxPhotoBytes / 1024 / 1024} MB.`;
   return '';
 }
 

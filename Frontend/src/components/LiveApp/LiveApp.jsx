@@ -37,7 +37,18 @@ export default function LiveApp({ route }) {
       search: 'Search foods',
       scan: 'Scan a food barcode',
       submissions: 'Your product submissions',
-      settings: 'Preferences',
+      settings:
+        {
+          goals: 'Daily calorie preferences',
+          profile: 'My profile',
+          notifications: 'Notifications',
+          password: 'Change password',
+          appearance: 'Appearance',
+        }[route.split('/')[3]] || 'Preferences',
+      stats: 'Stats',
+      summary: 'Daily summary',
+      track: 'Track food',
+      connections: 'Connections',
     };
     const title =
       session.status === 'loading'
@@ -54,7 +65,7 @@ export default function LiveApp({ route }) {
         'content',
         'NourishNet food diary: search foods, review servings, scan barcodes and track recorded nutrition.',
       );
-  }, [requested, mode, session.status, session.account]);
+  }, [requested, mode, route, session.status, session.account]);
   useEffect(() => {
     const controller = new AbortController();
     const version = generation.current;
@@ -71,16 +82,19 @@ export default function LiveApp({ route }) {
         if (!controller.signal.aborted && version === generation.current)
           setSession({ status: error.status === 401 ? 'ready' : 'error', account: null });
       });
-    const expire = () => {
+    const expire = (event) => {
       generation.current += 1;
       setSession({ status: 'ready', account: null });
-      setNotice('Your session expired. Sign in again.');
+      setNotice(event.detail?.message || 'Your session expired. Sign in again.');
       window.location.hash = '/app/login';
     };
+    const refreshProfile = () => setAttempt((value) => value + 1);
+    window.addEventListener('nourishnet:profile-changed', refreshProfile);
     window.addEventListener('nourishnet:expired', expire);
     return () => {
       controller.abort();
       window.removeEventListener('nourishnet:expired', expire);
+      window.removeEventListener('nourishnet:profile-changed', refreshProfile);
     };
   }, [attempt]);
   useEffect(() => {

@@ -38,7 +38,7 @@ it('keeps search reachable and marks the current bottom tab', () => {
   );
   const nav = screen.getByRole('navigation', { name: 'Main navigation' });
   expect(within(nav).getByRole('link', { name: 'Track' })).toHaveAttribute('aria-current', 'page');
-  expect(within(nav).getAllByRole('link')).toHaveLength(4);
+  expect(within(nav).getAllByRole('link')).toHaveLength(5);
   expect(within(nav).queryByRole('link', { name: 'Designs' })).not.toBeInTheDocument();
   expect(within(nav).getByRole('link', { name: 'Preferences' })).toHaveAttribute(
     'href',

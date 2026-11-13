@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, expect, it, vi } from 'vitest';
 import AccountTracker from './AccountTracker.jsx';
@@ -72,7 +72,7 @@ it('keeps an unknown-product photo draft on back navigation, then submits to the
     new File(['label'], 'label.png', { type: 'image/png' }),
   );
   await user.click(screen.getByRole('button', { name: 'Submit for review' }));
-  expect(window.location.hash).toBe('#/app/submissions/record');
+  await waitFor(() => expect(window.location.hash).toBe('#/app/submissions/record'));
   expect(accountRequest).toHaveBeenCalledWith(
     '/submissions',
     expect.objectContaining({
@@ -124,7 +124,9 @@ it('moves through local diary dates using previous and next controls and preserv
   await user.click(screen.getByRole('button', { name: 'Previous diary day' }));
   expect(screen.getByLabelText('Diary date')).toHaveValue('2026-11-08');
   await screen.findByText('0 kcal');
-  expect(accountRequest.mock.calls.at(-1)[0]).toBe('/diary?date=2026-11-08');
+  expect(accountRequest.mock.calls.filter(([path]) => path.startsWith('/diary?')).at(-1)[0]).toBe(
+    '/diary?date=2026-11-08',
+  );
   await user.click(screen.getByRole('button', { name: 'Next diary day' }));
   await screen.findByText('0 kcal');
   expect(screen.getByLabelText('Diary date')).toHaveValue('2026-11-09');
@@ -157,7 +159,8 @@ it('reloads a selected day after remount, hides stale results during date change
   fireEvent.change(screen.getByLabelText('Diary date'), { target: { value: '2026-11-08' } });
   expect(screen.queryByRole('article')).not.toBeInTheDocument();
   expect(screen.getByRole('status')).toHaveTextContent('Loading your diary');
-  const signal = accountRequest.mock.calls.at(-1)[1].signal;
+  const signal = accountRequest.mock.calls.find(([path]) => path === '/diary?date=2026-11-08')[1]
+    .signal;
   fireEvent.change(screen.getByLabelText('Diary date'), { target: { value: '2026-11-07' } });
   expect(signal.aborted).toBe(true);
   await screen.findByText('0 kcal');
@@ -168,7 +171,9 @@ it('reloads a selected day after remount, hides stale results during date change
   view = render(<AccountTracker account={account} route="/app/dashboard" onNotice={notice} />);
   expect(screen.getByLabelText('Diary date')).toHaveValue('2026-11-07');
   await screen.findByText('0 kcal');
-  expect(accountRequest.mock.calls.at(-1)[0]).toBe('/diary?date=2026-11-07');
+  expect(accountRequest.mock.calls.filter(([path]) => path.startsWith('/diary?')).at(-1)[0]).toBe(
+    '/diary?date=2026-11-07',
+  );
   view.unmount();
 });
 it('keeps a failed save and its retry key, prevents duplicate taps and reloads authoritative contributions and totals', async () => {
@@ -262,7 +267,9 @@ it('starts another account on its own local day and ignores a malformed stored d
   }).format(new Date());
   expect(screen.getByLabelText('Diary date')).toHaveValue(expected);
   await screen.findByText('0 kcal');
-  expect(accountRequest.mock.calls.at(-1)[0]).toBe(`/diary?date=${expected}`);
+  expect(accountRequest.mock.calls.filter(([path]) => path.startsWith('/diary?')).at(-1)[0]).toBe(
+    `/diary?date=${expected}`,
+  );
 });
 
 it('keeps the previous day and explains an invalid date without requesting an invalid diary', async () => {
@@ -275,5 +282,5 @@ it('keeps the previous day and explains an invalid date without requesting an in
   expect(screen.getByRole('alert')).toHaveTextContent('Choose a real diary date');
   expect(input).toHaveAttribute('aria-invalid', 'true');
   expect(input).toHaveValue('2026-11-09');
-  expect(accountRequest).toHaveBeenCalledOnce();
+  expect(accountRequest.mock.calls.filter(([path]) => path.startsWith('/diary?'))).toHaveLength(1);
 });

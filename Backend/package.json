@@ -23,7 +23,10 @@
     "verify:diary": "node --env-file-if-exists=.env scripts/verify-diary.js",
     "verify:catalog": "node --env-file-if-exists=.env scripts/verify-local-catalog.js",
     "verify:barcodes": "node --env-file-if-exists=.env scripts/verify-local-barcodes.js",
-    "verify:submissions": "node --env-file-if-exists=.env scripts/verify-local-submissions.js"
+    "verify:submissions": "node --env-file-if-exists=.env scripts/verify-local-submissions.js",
+    "verify:personal": "node --env-file-if-exists=.env scripts/verify-local-personal.js",
+    "catalog:import": "node --env-file-if-exists=.env scripts/import-local-food.js",
+    "verify:fairlife": "node --env-file-if-exists=.env scripts/verify-local-fairlife.js"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

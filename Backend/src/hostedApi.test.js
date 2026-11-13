@@ -92,3 +92,34 @@ it('resolves separate verified actors for each request instead of caching a prev
     'other-owner',
   ]);
 });
+
+it('supports barcode lookup without creating a diary entry', async () => {
+  services.foods.lookupBarcode = vi.fn().mockResolvedValue({ known: true });
+  expect((await api(request('/foods/barcode?code=811620022118'))).status).toBe(200);
+  expect(services.foods.lookupBarcode).toHaveBeenCalledWith('811620022118');
+  expect((await api(request('/foods/barcode?code=1&code=2'))).status).toBe(400);
+  expect(services.diary.create).not.toHaveBeenCalled();
+});
+it('binds hosted personal and submission actions to the resolved owner', async () => {
+  services.personal = {
+    getGoal: vi.fn().mockResolvedValue({ goal: null }),
+    saveGoal: vi.fn().mockResolvedValue({ saved: true }),
+  };
+  services.submissions = {
+    list: vi.fn().mockResolvedValue([]),
+    photo: vi.fn().mockResolvedValue({ mime: 'image/png', bytes: Buffer.from('private image') }),
+  };
+  expect((await api(request('/personal/goals?date=2026-11-13'))).status).toBe(200);
+  expect(services.personal.getGoal).toHaveBeenCalledWith(account, '2026-11-13');
+  expect((await api(request('/personal/goals?date=a&date=b'))).status).toBe(400);
+  expect((await api(request('/personal/password', {}))).status).toBe(404);
+  expect((await api(request('/submissions'))).status).toBe(200);
+  expect(services.submissions.list).toHaveBeenCalledWith(account);
+  const response = await api(
+    request('/submissions/11111111-1111-4111-8111-111111111111/photos/front'),
+  );
+  expect(response.headers.get('content-type')).toBe('image/png');
+  expect(response.headers.get('cache-control')).toBe('no-store');
+  expect(response.headers.get('x-content-type-options')).toBe('nosniff');
+  expect(await response.text()).toBe('private image');
+});

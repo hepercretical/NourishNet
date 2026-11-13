@@ -6,6 +6,8 @@ const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const nutrients = ['calories', 'carbohydrates', 'fat', 'protein', 'sodium'];
 const sourceHosts = new Set([
   'digitalassets.pepsico.com',
+  'fairlife.com',
+  'smartlabel.coca-colaproductfacts.com',
   'smartlabel.pepsico.info',
   'www.jif.com',
   'smartlabel.1worldsync.com',

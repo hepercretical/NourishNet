@@ -1,3 +1,9 @@
+import TrackHub from '../TrackHub/TrackHub.jsx';
+import Connections from '../Connections/Connections.jsx';
+import GoalSettings from '../GoalSettings/GoalSettings.jsx';
+import PersonalSettings from '../PersonalSettings/PersonalSettings.jsx';
+import Stats from '../Stats/Stats.jsx';
+import '../../styles/personal.css';
 import { useEffect, useRef, useState } from 'react';
 import { accountRequest } from '../../services/accounts.js';
 import AccountDiary from '../AccountDiary/AccountDiary.jsx';
@@ -33,6 +39,34 @@ function initialDate(account) {
 export default function AccountTracker({ account, route, onNotice }) {
   const [date, setDate] = useState(() => initialDate(account));
   const [dateError, setDateError] = useState(false);
+  useEffect(() => {
+    const controller = new AbortController();
+    const apply = (data) => {
+      if (
+        ['light', 'dark'].includes(data?.mode) &&
+        ['green', 'blue', 'purple', 'red'].includes(data?.accent)
+      ) {
+        document.documentElement.dataset.mode = data.mode;
+        document.documentElement.dataset.accent = data.accent;
+      }
+    };
+    accountRequest('/personal/appearance', { signal: controller.signal })
+      .then((data) => {
+        if (!controller.signal.aborted) apply(data);
+      })
+      .catch(() => {});
+    const changed = (event) => {
+      controller.abort();
+      apply(event.detail);
+    };
+    window.addEventListener('nourishnet:appearance', changed);
+    return () => {
+      controller.abort();
+      window.removeEventListener('nourishnet:appearance', changed);
+      delete document.documentElement.dataset.mode;
+      delete document.documentElement.dataset.accent;
+    };
+  }, [account.id]);
   const saveController = useRef(null);
   const active = useRef(true);
   const [submission, setSubmission] = useState(emptySubmission);
@@ -106,7 +140,25 @@ export default function AccountTracker({ account, route, onNotice }) {
     if (controller.signal.aborted) throw new DOMException('Cancelled', 'AbortError');
     return result;
   }
-  if (route.split('/')[2] === 'settings') return <Preferences account={account} />;
+  const section = route.split('/')[2];
+  if (section === 'settings') {
+    if (meal === 'goals') return <GoalSettings account={account} />;
+    if (meal) return <PersonalSettings key={meal} page={meal} account={account} />;
+    return <Preferences account={account} />;
+  }
+  if (section === 'track') return <TrackHub date={date} />;
+  if (section === 'connections') return <Connections />;
+  if (section === 'stats')
+    return (
+      <Stats
+        account={account}
+        date={date}
+        onSelectDate={(value) => {
+          setDate(value);
+          window.location.assign('#/app/summary');
+        }}
+      />
+    );
   if (submitting) {
     if (meal === 'new')
       return (
@@ -191,7 +243,12 @@ export default function AccountTracker({ account, route, onNotice }) {
           )}
         </>
       ) : (
-        <AccountDiary key={date} account={account} date={date} />
+        <AccountDiary
+          key={`${date}:${section}`}
+          account={account}
+          date={date}
+          summary={section === 'summary'}
+        />
       )}
     </>
   );

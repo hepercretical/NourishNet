@@ -1,5 +1,37 @@
 # HUMAN.md
 
+## Current design clarification requested 2026-11-12
+
+Use [DESIGN.md](DESIGN.md) and [STYLE_GUIDE.md](STYLE_GUIDE.md) for the current
+screens and [PLAN.md](PLAN.md) for delivery. The human approved five tabs with
+Connections replacing Recipes/Designs, calorie progress/remaining, a daily
+nutrition summary and macro chart/goals, calendar colors, private logging/goal
+streak counts, a user-entered weight graph and Light/Dark plus accent themes.
+These supersede earlier scope exclusions for those features, not their quality,
+accessibility, privacy, token-review or formula/goal-rule approval requirements.
+
+Connections alone may temporarily contain **Coming Soon...**. Other placeholder
+controls, fake values and unfinished destinations remain prohibited. Do not
+restore Exercise, Water or the dashboard Weigh-in placeholders. Keep preserved
+designs outside the actual app. Signup has an unchecked required 18+ confirmation;
+the general app must not repeat age-gating banners. Mathematical-estimate notices
+remain beside estimates and before save.
+
+A day with at least one saved food counts as logged; do not require a separate
+completion action. State that comparisons use logged foods, not an assertion of
+complete intake. The exact goal comparisons and six shade bands are in DESIGN.md;
+colors describe recorded target status/distance, not health or personal worth.
+Missing, unknown, unavailable and unshared data remain neutral. Streaks and weight
+history are private descriptive information, not competitive rewards or pressure
+to restrict food. The human-approved internal technical-review exception in DESIGN.md applies to
+this local implementation; later professional review is still required.
+
+Review every approved theme/accent combination across readable text, fields,
+errors, charts, calendars and focus. Provide chart/table equivalents and calendar
+text legends. Verify dated weights and historical goals instead of using fake
+data, fabricated averages, interpolated weigh-ins or today's target for the past.
+This documentation update is not an implementation or human device-review pass.
+
 ## Delivery-phase clarification approved 2026-11-09
 
 Use the revised schedule in `PLAN.md`: initial design and functionality finish
@@ -16,7 +48,8 @@ states, and mobile interactions still belongs in Sprints 1-3. Use fictional
 accounts and synthetic data. Repeat affected reviews after later implementation.
 
 ## Purpose
-The purpose of this HUMAN.md is to specify practices that should be followed in order to ensure the  project and product does not fall into common issues and mistakes commonly encountered when using AI as well as avoiding design practices that have an "AI" vibe to them.
+
+The purpose of this HUMAN.md is to specify practices that should be followed in order to ensure the project and product does not fall into common issues and mistakes commonly encountered when using AI as well as avoiding design practices that have an "AI" vibe to them.
 
 ## Include these practices:
 

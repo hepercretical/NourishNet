@@ -29,7 +29,8 @@ than silently using the quality week or moving features into the later phase.
   calories, macros, sodium, servings, totals, and editing; barcode/manual lookup;
   package/label photo submission and reviewer-approved catalog reuse; estimated
   gain/lose/maintain and muscle-gain goals; historical goals; accepted private
-  connections with selected progress sharing; and personal/friend calendars.
+  connections with selected progress sharing; and personal/friend calendars. The November 12 design update also includes
+  daily macro goals/summary, private weight history and Preferences/themes.
 - Implement and verify requirements from SECURE.md and LEGAL.md only AFTER
   Sprint 3. They do not gate initial design, functionality, or the quality week.
   Their detailed requirements remain preserved in those documents. This timing
@@ -53,10 +54,31 @@ than silently using the quality week or moving features into the later phase.
 - Netlify hosts the frontend; Neon PostgreSQL stores persistent records through a
   backend API. Human approval is still needed for auth/backend/storage choices,
   packages, API rules, applied migrations, token changes, and teammate components.
-- OCR, public profiles/open follows, messaging, leaderboards, payments, advertising,
-  and dark mode remain separately approved future work.
+- OCR, public profiles/open follows, messaging, leaderboards, payments and advertising
+  remain separately approved future work. Light/Dark and accent themes are now
+  approved product scope; exact token palettes still require review.
 - Root AGENTS.md and every applicable AI_Docs/*.md file remain the guidance set.
   This is the only PLAN.md; no root duplicate is maintained.
+
+## Current design and implementation update (2026-11-12)
+
+[DESIGN.md](DESIGN.md) captures the human's latest screenshots, behavior decisions
+and clarified logged-day/shade rules; [STYLE_GUIDE.md](STYLE_GUIDE.md) governs their
+presentation. Both documentation and local app implementation were requested.
+Connections' temporary Coming Soon... page is the sole no-placeholder exception.
+Signup-only age confirmation replaces general age-gating banners. Deficit/surplus/
+maintain comparisons, six calendar shades and any-one-food logged-day behavior
+are specified in DESIGN.md. The human subsequently approved internal technical
+review for this local implementation; later independent review remains deferred.
+
+Add the new design work below in dependency order; do not rebuild passed barcode/
+submission functionality. All added criteria remain unchecked until verified.
+Existing checked evidence describes the earlier build, not acceptance of the new
+screens. Preserve the December 5 feature freeze and December 6-12 quality-only
+week. Added scope/effort needs capacity review; dates are targets, not proof that
+this larger scope fits. Escalate a schedule conflict rather than silently move work.
+No remote provider operation, API rule, migration application, package or exact
+palette/formula approval is implied. Prepare concrete proposals locally first.
 
 ## Local acceptance authorization (2026-11-12)
 
@@ -67,6 +89,31 @@ pushes, migrations, provider testing and deployment stay deferred until a later
 human-approved sprint release. A checked box in this phase is local evidence,
 not a claim of hosted verification or release approval. Record the local checks
 and limitations; do not claim physical-camera or human-review testing not done.
+
+## Latest Sprint 1/2 revalidation (2026-11-13)
+
+The current local revision passes frontend lint, 287 tests, build and format check;
+backend lint, 255 tests and format check; actual-catalog/diary 56, barcode 20,
+submission 25 and personal-tracking 53 explicit local check groups. Existing diary
+snapshots were preserved. November 13 also adds 22 Fairlife-specific local lookup,
+confirmed-save/retry/totals/ownership checks. The requested single-bottle food was
+added as an actual source-backed record, UPC 811620022118; existing catalog and
+diary snapshots remain unchanged. No Neon/Netlify test, migration or deployment was run.
+The per-criterion evidence is in ignored private-artifacts/sprint-1-2-revalidation.json.
+
+Plan-03's human layout/token-review criterion is reopened for the revised five-tab,
+goal/Stats/theme UI. Prior approval is historical evidence, not a fresh device
+review. Plan-15's physical-phone criterion and the three explicitly human/device
+Plan-18A criteria remain open. Automated scanner detections do not prove physical
+camera decoding. All remaining checks are assessed using the current DESIGN.md
+exceptions: actual catalog foods replace active synthetic foods, signup-only age
+confirmation replaces repeated banners, and Connections is the sole approved
+Coming Soon page. Thus not every Sprint 1/2 acceptance criterion is currently met.
+
+The initial synthetic-only verification scripts/seed are historical fixtures;
+they were not run against the current catalog or used to invent new food records.
+Their current actual-food equivalents and mocked failure/unknown-data checks
+provide this revalidation evidence. Keep historical design/schema evidence.
 
 ## Shared initial acceptance criteria
 
@@ -93,7 +140,8 @@ Finish the layout and interaction design for all initial screens in Sprint 1,
 including space for later legal/settings controls. Final policies and operational
 rights controls are not initial functional deliverables; omit unfinished actions
 from the application by November 28. Keep planned locations in documentation,
-without placeholder pages or buttons in the application. Initial quality review
+without placeholder pages or buttons in the application, except the explicitly
+approved temporary Connections page described in DESIGN.md. Initial quality review
 covers implemented flows. Repeat the
 relevant reviews after security/legal features are implemented.
 
@@ -214,8 +262,9 @@ placeholder with another nonfunctional notice page.
 Retire Designs and direct design-gallery routes from the testing application;
 preserve designs in documentation or a separate developer-only preview outside
 that app. Remove links/routes for unimplemented Sprint 3 and post-Sprint-3 actions
-until their flows work. The five-item reference navigation yields to this
-no-placeholder deadline: use fewer working tabs rather than a fake replacement.
+until their flows work. The later November 12 design request restores five tabs: Dashboard, Stats, Track,
+Connections, Preferences. Connections alone may temporarily show **Coming Soon...**;
+this is not completion of functional connections. Other filler remains prohibited.
 Keep tokens, green toolbar, compact layout, focus, safe areas and accessibility.
 See STYLE_GUIDE.md's November 12 clarification. Continue this gate through Sprint 3.
 
@@ -286,7 +335,7 @@ rolled-back transaction. Neon connectivity remains untested and unauthorized.
 
 - [x] All initial routes/flows are designed: accounts, dashboard, search/log/edit, scan/manual
       fallback, photo submission/review, goal setup/history, connections, and comparison calendars.
-- [x] Human reviews mobile/wide layouts, navigation, state patterns, and existing design tokens;
+- [ ] Human reviews mobile/wide layouts, navigation, state patterns, and existing design tokens;
       changes follow approval rules.
 - [x] Semantic landmarks, visible focus, responsive navigation, and locations for later
       legal/account-rights screens are defined.
@@ -637,16 +686,51 @@ December 5. Keep the working Sprint 2 core and no-filler gate intact.
 
 - [ ] Gain/lose/maintain and muscle-gain menu uses approved biological-sex/height/weight/age inputs
       and any explained activity assumptions.
-- [ ] Units, conversions, validation, formula explanation, estimate review/edit/decline, and
+- [x] Units, conversions, validation, formula explanation, estimate review/edit/decline, and
       deliberate save work; no goal is silently accepted or shared.
-- [ ] At the result and before save, suggestions are explicitly mathematical estimates and not
+- [x] At the result and before save, suggestions are explicitly mathematical estimates and not
       professional medical advice or diagnosis.
-- [ ] Known reviewed examples, conversions, boundaries, unsupported cases, data states, and
+- [x] Known reviewed examples, conversions, boundaries, unsupported cases, data states, and
       successful persistence are tested.
-- [ ] Goals opens from Menu and Preferences using compact fields and an explicit estimate
+- [ ] Daily calorie preferences opens from Menu and Preferences using compact fields and an explicit estimate
       review. Units, assumptions, notice and effective date remain visible on phones. Diary
       summaries show only actual saved targets, without invented allowances or exercise-calorie
       arithmetic. Demo cases reuse the approved calculation utilities.
+
+Local design implementation (November 12): the human approved the frozen formula,
+internal technical review, schema/API and palette proposal before implementation.
+The reference calculator, manual target, review/save, notices and persistence pass
+unit/component and local API checks. The separate original four-objective intent
+menu remains outside this narrower three-comparison-mode implementation; the
+first criterion is not claimed complete. Phone/harness review in the last
+criterion remains unverified. No professional review or hosted pass is claimed.
+
+### Plan-19A Daily summary, macro goals and calorie progress
+
+- **Phase:** S3 W1 | **Target:** before December 5 freeze | **Estimate:** needs review
+- **Branch:** `/plan-19a` | **Depends on:** Plan-11, Plan-19
+
+**Acceptance criteria**
+
+- [x] Dashboard uses actual daily intake, saved effective calorie target, bounded
+      progress fill, remaining/over-target text and macro grams per DESIGN.md.
+      Without a target, recorded values remain available and no goal is invented.
+- [x] View daily summary opens the selected day's nutrition-facts-style totals
+      and accessible macro-energy pie chart/table; unknown/zero/partial totals,
+      units, serving details, rounding and return navigation remain correct.
+- [x] Reviewed macro energy/percentage/gram conversion rules and validation are
+      documented before implementation; no recommended splits are invented.
+- [x] Percentage-of-calories or grams-per-day macro goals support review, deliberate
+      save and effective dates without changing historical targets silently.
+- [x] Tests cover source totals, missing nutrients, chart accessibility, goal
+      modes, boundary/rounding behavior, duplicate saves, persistence and ownership.
+
+Local evidence (November 12): Dashboard progress/no-goal/over-target tests, daily
+nutrition/chart/unknown-data tests, goal-unit conversion/review/retry tests and the
+five-tab App journey pass. Shared fixed-point outcome and macro calculations are
+covered on the backend. Explicit local integration verifies future goal versions,
+optional blank macros, replay/conflicts and second-account isolation. Human
+layout/assistive-technology review remains in the shared quality gate.
 
 ### Plan-20 Accepted connections and selected sharing
 
@@ -666,27 +750,64 @@ December 5. Keep the working Sprint 2 core and no-filler gate intact.
       and report work by touch/keyboard, including report routing and confirmation. Verify
       these behaviors with isolated synthetic demo actors as well as authenticated accounts.
 
-### Plan-21 Personal goal history and calendar
+### Plan-21 Personal goal history, calendar and streaks
 
 - **Phase:** S3 W1 | **Due:** 2026-12-03 | **Points:** 8
 - **Branch:** `/plan-21` | **Depends on:** Plan-19, Plan-12
 
 **Acceptance criteria**
 
-- [ ] Goal versions/effective dates preserve past targets; changing today's goal does not rewrite
+- [x] Goal versions/effective dates preserve past targets; changing today's goal does not rewrite
       historical outcomes.
-- [ ] Calendar shows each day's recorded nutrition versus its effective goal, with distinct
-      met/unmet, missing/incomplete, no-goal, and future states.
+- [x] Calendar implements DESIGN.md's logged-day rule (one saved food), historical
+      deficit/surplus/maintain comparisons and exact Light/Regular/Dark bands in
+      red/green after qualified review. Missing/no-goal/unknown/future data stays
+      neutral with readable text; colors do not claim clinical success.
+- [x] Current consecutive logging days and longest consecutive goal-met days use
+      documented local-date boundaries, historical goals and recalculation after
+      edits/removal; missing data interrupts evidence without being labeled failure.
 - [ ] Month/day navigation, readable day-detail/list alternative, text legend, keyboard support,
       zoom, and narrow layout work.
-- [ ] Tests cover changed goals, edited logs, leap days, local midnight, and timezone/daylight-
+- [x] Tests cover changed goals, edited logs, leap days, local midnight, and timezone/daylight-
       saving behavior.
-- [ ] The visible mathematical-estimate/not-medical-advice notice is reviewed as initial product
+- [x] The visible mathematical-estimate/not-medical-advice notice is reviewed as initial product
       copy. Formal legal applicability review remains in post-Sprint-3 Plan-28.
 - [ ] Stats opens recorded nutrition and personal calendar/history; Menu's Calendar reaches
       the same view. Preserve the diary's selected local date, use compact month/day controls
       and stacked day details, and retain View daily summary on the diary. Synthetic fixtures
       make every calendar state testable without login.
+
+Local evidence (November 12): exact comparison/shade boundaries, historical target
+changes, streak gaps, leap/year/local-midnight/DST cases pass shared tests. The
+53-group local integration verifies Stats after adding, editing and removing an
+actual catalog food, restoring original diary snapshots. Calendar keyboard day
+selection/month navigation and selected-day summary pass component/App tests.
+Zoom/device review and the original all-state interactive no-login harness remain
+unchecked. The human-approved local internal-review exception applies; public
+professional/legal review is still deferred.
+
+### Plan-21A Private weight history
+
+- **Phase:** S3 W1 | **Target:** before December 5 freeze | **Estimate:** needs review
+- **Branch:** `/plan-21a` | **Depends on:** Plan-05, Plan-21
+
+**Acceptance criteria**
+
+- [x] Human approves exact schema/API, weight-entry/edit/duplicate-date policy,
+      units and interval boundaries before adoption/application.
+- [x] Stats shows a user-entered dated weight graph below the calendar, with the
+      DESIGN.md interval menu, From/To dates and working entry/edit controls.
+- [x] Real observations, interval start/latest/change values, table alternative,
+      empty/single-point/error/retry states and persistence work without invented
+      weigh-ins, clinical claims or disclosure to connections/metadata.
+- [ ] Tests cover ownership, conversions, invalid dates/values, interval edges,
+      edit/removal, keyboard/zoom and account changes.
+
+Local evidence (November 12): approved migration009 is applied only to loopback;
+weight graph/table, empty/single-point/error states, kg/lb display, edit/removal and
+interval controls pass component tests. Local API verification checks persistence,
+conflicts, ownership and versioned restoration/removal. Ten-year interval bounds
+are documented. The combined keyboard/zoom/device criterion is still unchecked.
 
 ### Plan-22 Friend progress comparison calendar
 
@@ -706,22 +827,51 @@ December 5. Keep the working Sprint 2 core and no-filler gate intact.
       at narrow widths and 200% zoom. Test sharing/revocation and differing timezones in the
       isolated demo too.
 
+### Plan-23A Preferences and appearance
+
+- **Phase:** S3 W1 | **Target:** before December 5 freeze | **Estimate:** needs review
+- **Branch:** `/plan-23a` | **Depends on:** Plan-05, Plan-19, Plan-19A
+
+**Acceptance criteria**
+
+- [x] Compact Preferences rows reach genuine My profile, Daily calorie preferences,
+      Notifications, Change password and Appearance destinations. Define and approve
+      new account/notification/password APIs before adding them; no fake operations.
+- [x] Light/Dark modes and Green/Blue/Purple/Red accents use reviewed semantic token
+      palettes and a reviewed account-safe persistence mechanism. Existing defaults
+      stay until replacement values are approved; no package is implied.
+- [ ] All theme/accent combinations keep readable charts, six semantic calendar
+      shades, focus, error/loading/disabled controls and safe-area navigation.
+- [ ] Changes persist as documented, survive refresh, remain isolated on account
+      changes and work with keyboard/zoom; tests cover failure/retry and controls.
+- [x] Five tabs and the temporary Connections Coming Soon... page follow DESIGN.md.
+      Track offers real search and scanning. No other placeholder is introduced.
+
+Local evidence (November 12): genuine profile/activity/password/appearance controls
+pass component tests; the App test navigates all five tabs, preserves the summary
+date, saves a theme and clears it on leaving the account. Local API checks verify
+saved appearance, conflicts, profile validation and password/session revocation
+with the latter sensitive test changes rolled back. Twenty-nine proposed normal-
+text contrast combinations pass. All-theme visual/zoom/assistive-technology review
+is still pending, so those combined criteria remain unchecked.
+
 ### Plan-23 Full initial-feature integration and freeze
 
 - **Phase:** S3 W1 | **Due:** 2026-12-05 | **Points:** 8
-- **Branch:** `/plan-23` | **Depends on:** Plan-11, Plan-12, Plan-18A, Plan-18, Plan-19, Plan-20, Plan-21, Plan-22
+- **Branch:** `/plan-23` | **Depends on:** Plan-11, Plan-12, Plan-18A, Plan-18, Plan-19, Plan-19A, Plan-20, Plan-21, Plan-21A, Plan-22, Plan-23A
 
 **Acceptance criteria**
 
 - [ ] Accounts, search/log/edit/remove/totals, scan/manual fallback, upload/review, second-account
       barcode reuse, goals/history, connections, and both calendars are integrated.
 - [ ] Every initial route and interaction is implemented with working navigation and data states; no
-      future feature is left for Sprint 3 Week 2.
+      future feature is left for Sprint 3 Week 2. Include Plan-19A daily summary,
+      Plan-21A weight history and Plan-23A Preferences/themes.
 - [ ] Initial designs are fully implemented; frontend lint/test/build/format and backend
       lint/test/format pass with development smoke journeys.
 - [ ] Human reviews the feature milestone by December 5; remaining defects have reproduction steps
       and owners. Freeze new feature work.
-- [ ] Toolbar, Menu, Dashboard/Stats/Track/Preferences and contextual return links reach
+- [ ] Toolbar, Menu, Dashboard/Stats/Track/Connections/Preferences and contextual return links reach
       all delivered features. Maintain the November 28 no-filler gate; expose Sprint 3 routes
       only once working, and leave later operations absent until implemented.
 - [ ] The development-only demo reaches every initial non-authentication journey with synthetic

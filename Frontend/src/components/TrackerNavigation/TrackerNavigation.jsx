@@ -10,6 +10,8 @@ function Icon({ name }) {
     home: 'M3 11.5 12 4l9 7.5M5.5 10v10h13V10M9 20v-6h6v6',
     stats: 'M4 19V9M10 19V5M16 19v-8M22 19V3M2 21h21',
     plus: 'M12 5v14M5 12h14',
+    connections:
+      'M8 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M2 21v-3a6 6 0 0 1 12 0v3M17 4a4 4 0 0 1 0 8M17 15a5 5 0 0 1 5 5',
     designs: 'M5 4h14v16H5zM8 8h8M8 12h8M8 16h5',
     settings:
       'M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z',
@@ -29,7 +31,10 @@ export default function TrackerNavigation({ route, children, preview = false }) 
   const trackActive =
     ['/search', '/food/', '/diary/', '/scan', '/submissions/', '/review'].some((path) =>
       route.startsWith(path),
-    ) || ['/app/search', '/app/scan', '/app/submissions'].some((path) => route.startsWith(path));
+    ) ||
+    ['/app/track', '/app/search', '/app/scan', '/app/submissions'].some((path) =>
+      route.startsWith(path),
+    );
   const preferencesActive = [
     '/settings',
     '/app/settings',
@@ -49,6 +54,9 @@ export default function TrackerNavigation({ route, children, preview = false }) 
     : [
         [diaryPath, 'Daily diary'],
         [searchPath, 'Search foods'],
+        ['/app/stats', 'Stats calendar'],
+        ['/app/settings/goals', 'Daily calorie preferences'],
+        ['/app/connections', 'Connections'],
         ['/app/scan', 'Scan a product'],
         ['/app/submissions', 'My submissions'],
         ['/app/settings', 'Preferences'],
@@ -129,10 +137,12 @@ export default function TrackerNavigation({ route, children, preview = false }) 
           <span>Dashboard</span>
         </a>
         <a
-          href={`#${diaryPath}`}
-          aria-current={route.startsWith('/calendar') ? 'page' : undefined}
+          href={preview ? `#${diaryPath}` : '#/app/stats'}
+          aria-current={
+            route.startsWith('/calendar') || route.startsWith('/app/stats') ? 'page' : undefined
+          }
           onClick={(event) => {
-            const summary = document.getElementById('daily-summary');
+            const summary = preview ? document.getElementById('daily-summary') : null;
             if (summary) {
               event.preventDefault();
               summary.focus();
@@ -145,12 +155,21 @@ export default function TrackerNavigation({ route, children, preview = false }) 
         </a>
         <a
           className="tracker-tabs__track"
-          href={`#${searchPath}`}
+          href={preview ? `#${searchPath}` : '#/app/track'}
           aria-current={trackActive ? 'page' : undefined}
         >
           <Icon name="plus" />
           <span>Track</span>
         </a>
+        {!preview && (
+          <a
+            href="#/app/connections"
+            aria-current={route.startsWith('/app/connections') ? 'page' : undefined}
+          >
+            <Icon name="connections" />
+            <span>Connections</span>
+          </a>
+        )}
         {preview && (
           <a
             href="#/design"
