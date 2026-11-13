@@ -27,7 +27,7 @@ const diary = {
   meals: [],
 };
 it.each(['login', 'signup', 'verify', 'recover', 'reset'])(
-  'keeps toolbar and four working tabs on the %s account screen with a working skip link',
+  'keeps toolbar and five tabs on the %s account screen with a working skip link',
   async (mode) => {
     accountRequest.mockRejectedValueOnce(Object.assign(new Error(), { status: 401 }));
     const user = userEvent.setup();
@@ -42,7 +42,7 @@ it.each(['login', 'signup', 'verify', 'recover', 'reset'])(
     expect(screen.getByRole('button', { name: 'Menu' })).toBeVisible();
     expect(
       within(screen.getByRole('navigation', { name: 'Main navigation' })).getAllByRole('link'),
-    ).toHaveLength(4);
+    ).toHaveLength(5);
     const skip = screen.getByRole('link', { name: 'Skip to main content' });
     skip.focus();
     await user.keyboard('{Enter}');
@@ -126,8 +126,8 @@ it('opens live search for a signed-in account and aborts a pending search on ses
   render(<LiveApp route="/app/search" />);
   await screen.findByRole('searchbox');
   await user.type(screen.getByRole('searchbox'), 'sample{Enter}');
-  expect(accountRequest).toHaveBeenCalledTimes(2);
-  const [path, options] = accountRequest.mock.calls[1];
+  expect(accountRequest).toHaveBeenCalledWith('/personal/appearance', expect.any(Object));
+  const [path, options] = accountRequest.mock.calls.find(([path]) => path === '/foods?q=sample');
   expect(path).toBe('/foods?q=sample');
   expect(options.signal.aborted).toBe(false);
   await act(async () => window.dispatchEvent(new Event('nourishnet:expired')));

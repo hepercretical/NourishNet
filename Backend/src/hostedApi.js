@@ -1,4 +1,5 @@
 import { AccountError } from './auth/service.js';
+import { hostedFeature, runHostedFeature } from './hostedFeatures.js';
 
 function json(body, status = 200, extra = {}) {
   return new Response(JSON.stringify(body), {
@@ -6,7 +7,7 @@ function json(body, status = 200, extra = {}) {
     headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', ...extra },
   });
 }
-async function bodyOf(request) {
+async function bodyOf(request, limit = 8192) {
   if (!request.headers.get('content-type')?.startsWith('application/json'))
     throw new AccountError('Send JSON.', 415);
   const reader = request.body?.getReader();
@@ -18,7 +19,7 @@ async function bodyOf(request) {
       const { value, done } = await reader.read();
       if (done) break;
       length += value.byteLength;
-      if (length > 8192) {
+      if (length > limit) {
         await reader.cancel();
         throw new AccountError('This request is too large.', 413);
       }
@@ -39,9 +40,11 @@ export function createHostedApi({ verify, getServices, origin }) {
   return async (request) => {
     const url = new URL(request.url);
     const path = url.pathname;
+    const feature = hostedFeature(url);
     const entry = path.match(/^\/api\/diary\/entries\/([0-9a-f-]+)$/i);
     const methods =
-      path === '/api/diary'
+      feature?.methods ??
+      (path === '/api/diary'
         ? ['GET', 'POST']
         : path === '/api/auth/profile'
           ? ['POST']
@@ -49,7 +52,7 @@ export function createHostedApi({ verify, getServices, origin }) {
             ? ['PATCH', 'DELETE']
             : ['/api/health', '/api/auth/session', '/api/foods'].includes(path)
               ? ['GET']
-              : null;
+              : null);
     if (!methods) return json({ error: 'Not found' }, 404);
     if (!methods.includes(request.method))
       return json({ error: 'Method not allowed' }, 405, { Allow: methods.join(', ') });
@@ -64,6 +67,8 @@ export function createHostedApi({ verify, getServices, origin }) {
       const account = await services.accounts.find(identity);
       if (path === '/api/auth/session') return json({ account, needsProfile: !account });
       if (!account) throw new AccountError('Complete your account setup.', 403);
+      if (feature)
+        return await runHostedFeature(feature, { request, url, services, account, bodyOf, json });
       if (path === '/api/foods') {
         const query = url.searchParams.get('q') ?? '';
         if (query.length > 100) throw new AccountError('Use at most 100 search characters.');

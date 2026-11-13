@@ -1,3 +1,4 @@
+import { personalRoutes } from './routes/personal.js';
 import { createServer } from 'node:http';
 import { handleHealth } from './routes/health.js';
 import { accountRoutes } from './routes/accounts.js';
@@ -8,6 +9,10 @@ export function createApp({ services, origin = 'http://127.0.0.1:5173' } = {}) {
   let active = services;
   const handleAccounts = accountRoutes({ getServices: () => (active ??= localServices()), origin });
   const handleSubmissions = submissionRoutes({
+    getServices: () => (active ??= localServices()),
+    origin,
+  });
+  const handlePersonal = personalRoutes({
     getServices: () => (active ??= localServices()),
     origin,
   });
@@ -25,6 +30,8 @@ export function createApp({ services, origin = 'http://127.0.0.1:5173' } = {}) {
     if (await handleAccounts(request, response, new URL(request.url, 'http://localhost'))) return;
     if (await handleSubmissions(request, response, new URL(request.url, 'http://localhost')))
       return;
+
+    if (await handlePersonal(request, response, new URL(request.url, 'http://localhost'))) return;
 
     response.writeHead(404);
     response.end(JSON.stringify({ error: 'Not found' }));

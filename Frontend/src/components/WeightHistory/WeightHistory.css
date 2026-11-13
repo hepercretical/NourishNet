@@ -1,0 +1,23 @@
+.weight-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: var(--color-text);
+}
+.weight-chart text {
+  fill: currentColor;
+  font-size: var(--text-xs);
+}
+.weight-chart__axis {
+  stroke: var(--color-border);
+  fill: none;
+}
+.weight-chart__line {
+  stroke: var(--color-primary);
+  stroke-width: 2;
+}
+.weight-chart circle {
+  fill: var(--color-primary);
+  stroke: var(--color-surface);
+  stroke-width: 1;
+}

@@ -11,11 +11,11 @@ const diary = {
   totals: { calories: 0, protein: 0, fat: 0, carbohydrates: 0, sodium: 0 },
   meals: ['Breakfast', 'Lunch', 'Dinner', 'Snack'].map((name) => ({ name, entries: [] })),
 };
-it('moves summary focus on request and omits unfinished tracking filler', async () => {
+it('opens the dedicated summary and omits unfinished tracking filler', async () => {
   const user = userEvent.setup();
   render(<Dashboard account={account} diary={diary} />);
-  await user.click(screen.getByRole('button', { name: 'View daily summary' }));
-  expect(screen.getByRole('region', { name: 'Recorded daily nutrition' })).toHaveFocus();
+  await user.click(screen.getByRole('link', { name: 'View daily summary' }));
+  expect(window.location.hash).toBe('#/app/summary');
   expect(
     screen.queryByRole('region', { name: 'Additional tracking options' }),
   ).not.toBeInTheDocument();

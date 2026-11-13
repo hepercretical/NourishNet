@@ -12,6 +12,23 @@ import {
 const catalog = JSON.parse(
   await readFile(new URL('../../catalog/manufacturer-foods.json', import.meta.url), 'utf8'),
 );
+const fairlife = JSON.parse(
+  await readFile(
+    new URL('../../catalog/fairlife-nutrition-plan-chocolate.json', import.meta.url),
+    'utf8',
+  ),
+);
+
+it('validates the confirmed Fairlife single-bottle barcode and photographed label values without treating mL as grams', () => {
+  expect(validateCatalog(fairlife)).toBe(fairlife);
+  expect(fairlife.foods).toHaveLength(1);
+  expect(fairlife.foods[0]).toMatchObject({
+    gtin14: '00811620022118',
+    servingBasis: '1 bottle (340 mL)',
+    grams: null,
+    nutrients: { calories: 150, protein: 30, carbohydrates: 4, fat: 2.5, sodium: 230 },
+  });
+});
 const local = {
   DATABASE_URL: 'postgresql://test:unused@127.0.0.1:55432/nourishnet_plan02_dev',
   DATABASE_EXPECTED_HOST: '127.0.0.1',
@@ -148,3 +165,33 @@ it('stops apply before connecting when exact approvals are absent', () => {
   expect(command.stderr).toContain('Local catalog command stopped');
   expect(command.stderr).not.toContain(local.DATABASE_URL);
 });
+
+it('previews a manual catalog addition without database configuration or writes', () => {
+  const command = spawnSync(
+    process.execPath,
+    [
+      fileURLToPath(new URL('../../scripts/import-local-food.js', import.meta.url)),
+      'manufacturer-foods.json',
+    ],
+    { encoding: 'utf8', env: {} },
+  );
+  expect(command.status).toBe(0);
+  expect(JSON.parse(command.stdout)).toMatchObject({
+    status: 'proposal only; no connection or writes',
+    foods: catalog.foods,
+  });
+});
+
+it.each([['../.env'], ['manufacturer-foods.json', 'wrong-checksum']])(
+  'refuses unsafe manual import arguments %s before connecting',
+  (...args) => {
+    const command = spawnSync(
+      process.execPath,
+      [fileURLToPath(new URL('../../scripts/import-local-food.js', import.meta.url)), ...args],
+      { encoding: 'utf8', env: {} },
+    );
+    expect(command.status).toBe(1);
+    expect(command.stdout).toBe('');
+    expect(command.stderr).toContain('Local food import stopped');
+  },
+);

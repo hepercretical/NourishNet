@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { photoError } from '../../utils/submissionDraft.js';
+import { photoError, maxPhotoBytes } from '../../utils/submissionDraft.js';
+import PrivatePhoto from '../PrivatePhoto/PrivatePhoto.jsx';
 import Button from '../Button/Button.jsx';
 import './ProductPhoto.css';
 
@@ -48,8 +49,8 @@ export default function ProductPhoto({
         }}
       />
       <p id={`photo-${kind}-hint`}>
-        JPEG, PNG or WebP, up to 5 MB. Include only the product; avoid faces, receipts and personal
-        details.
+        JPEG, PNG or WebP, up to {maxPhotoBytes / 1024 / 1024} MB. Include only the product; avoid
+        faces, receipts and personal details.
       </p>
       {file && (
         <>
@@ -67,7 +68,11 @@ export default function ProductPhoto({
         </>
       )}
       {!file && existingUrl && (
-        <img className="product-photo__preview" src={existingUrl} alt={`${title} current upload`} />
+        <PrivatePhoto
+          className="product-photo__preview"
+          src={existingUrl}
+          alt={`${title} current upload`}
+        />
       )}
       <div id={`photo-${kind}-error`}>{message && <p role="alert">{message}</p>}</div>
     </fieldset>

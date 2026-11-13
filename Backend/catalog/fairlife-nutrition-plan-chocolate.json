@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "checkedOn": "2026-11-13",
+  "foods": [
+    {
+      "id": "93dfe24f-0244-4b9f-9b64-890449ba40df",
+      "servingId": "6d9c677b-c44f-4fa0-82fa-71e2e863d640",
+      "name": "fairlife Nutrition Plan Chocolate Nutrition Shake (11.5 fl oz bottle)",
+      "gtin14": "00811620022118",
+      "servingBasis": "1 bottle (340 mL)",
+      "grams": null,
+      "nutrients": {
+        "calories": 150,
+        "protein": 30,
+        "fat": 2.5,
+        "carbohydrates": 4,
+        "sodium": 230
+      },
+      "sourceUrls": [
+        "https://fairlife.com/nutrition-plan/chocolate/",
+        "https://smartlabel.coca-colaproductfacts.com/products/index.html"
+      ]
+    }
+  ]
+}

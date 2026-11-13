@@ -27,6 +27,16 @@ export async function neonToken() {
 export async function neonAuthRequest(path, body = {}) {
   const api = auth();
   switch (path) {
+    case '/personal/password':
+      await checked(
+        api.changePassword({
+          currentPassword: body.currentPassword,
+          newPassword: body.newPassword,
+          revokeOtherSessions: true,
+        }),
+      );
+      await checked(api.signOut());
+      return { saved: true };
     case '/auth/signup':
       if (body.adult !== true) throw new Error('NourishNet is for adults aged 18 and over.');
       await checked(

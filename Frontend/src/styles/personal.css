@@ -1,0 +1,158 @@
+:root {
+  --tab-surface: #193027;
+  --macro-protein: #287a55;
+  --macro-carbohydrates: #1d5fb1;
+  --macro-fat: #7042a5;
+  --calendar-green-light: #d9efdf;
+  --calendar-green-regular: #a6d8b4;
+  --calendar-green-dark: #34784a;
+  --calendar-red-light: #fde0df;
+  --calendar-red-regular: #f3aaa8;
+  --calendar-red-dark: #b63c38;
+  --calendar-green-text: #153820;
+  --calendar-red-text: #55201e;
+}
+:root[data-mode='dark'] {
+  --color-background: #101b17;
+  --color-surface: #182720;
+  --color-surface-muted: #22362d;
+  --color-text: #edf6f0;
+  --color-text-muted: #b4c7bb;
+  --color-border: #496454;
+  --color-focus: #8ab4ff;
+  --color-success: #8fdaa8;
+  --color-warning: #ffd18a;
+  --color-danger: #ffabab;
+}
+:root[data-accent='blue'] {
+  --color-primary: #1d5fb1;
+  --color-primary-strong: #154680;
+}
+:root[data-accent='purple'] {
+  --color-primary: #7042a5;
+  --color-primary-strong: #53317c;
+}
+:root[data-accent='red'] {
+  --color-primary: #a93339;
+  --color-primary-strong: #7f252b;
+}
+:root[data-mode='dark'] a:not(.tracker-tabs a):not(.tracker-toolbar a):not(.design-action) {
+  color: var(--color-focus);
+}
+.personal-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: var(--space-3);
+  margin-block: var(--space-3);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.personal-panel h2 {
+  font-size: var(--text-lg);
+  margin-block: var(--space-2);
+}
+.personal-panel table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+.personal-panel th,
+.personal-panel td {
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-2) var(--space-1);
+  text-align: start;
+}
+.personal-panel caption {
+  text-align: start;
+  padding-block: var(--space-2);
+  font-weight: bold;
+}
+.personal-panel fieldset {
+  border: 1px solid var(--color-border);
+  padding: var(--space-3);
+  min-width: 0;
+}
+.personal-panel label {
+  display: block;
+  margin-block: var(--space-2);
+}
+.personal-panel input:not([type='checkbox']),
+.personal-panel select {
+  display: block;
+  width: 100%;
+  min-height: var(--touch-target);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  padding: var(--space-2);
+}
+.personal-panel summary {
+  min-height: var(--touch-target);
+  cursor: pointer;
+}
+.personal-panel button,
+.personal-menu a {
+  min-height: var(--touch-target);
+}
+.personal-panel input[type='checkbox'] {
+  min-width: var(--space-4);
+  min-height: var(--space-4);
+}
+.personal-panel label:has(input[type='checkbox']) {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+}
+.personal-menu {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  padding: 0;
+  border-top: 1px solid var(--color-border);
+}
+.personal-menu a {
+  display: flex;
+  align-items: center;
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  text-decoration: none;
+}
+.personal-menu a:hover {
+  background: var(--color-surface-muted);
+  text-decoration: underline;
+}
+.calorie-progress__values {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  font-size: var(--text-sm);
+}
+.calorie-progress progress {
+  display: block;
+  width: 100%;
+  height: var(--space-3);
+  accent-color: var(--color-primary);
+  margin-block: var(--space-2);
+}
+@media (forced-colors: active) {
+  .macro-chart {
+    border: 2px solid CanvasText;
+  }
+  .calendar-day {
+    border: 1px solid ButtonText;
+  }
+}
+
+:root[data-mode='dark'] h1:not(.dashboard__title) {
+  background: var(--tab-surface);
+}
+
+:root[data-mode='dark'] .shared-field.diary-datebar {
+  background: var(--tab-surface);
+}

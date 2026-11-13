@@ -1,3 +1,4 @@
+import { personalRepository } from '../db/personal.js';
 import { createDatabase } from '../db/client.js';
 import { requireSyntheticDevelopment } from '../db/config.js';
 import { accountRepository } from '../db/accounts.js';
@@ -16,13 +17,25 @@ export function localServices(env = process.env) {
   )
     throw new Error('Only the approved loopback synthetic target is supported.');
   const database = createDatabase(env);
+  const personal = personalRepository(database);
+  const diary = diaryRepository(database);
   return {
     auth: createAuthService({
       repository: accountRepository(database),
       deliver: deliverLocalMessage,
     }),
+    personal,
     foods: foodRepository(database),
-    diary: diaryRepository(database),
+    diary: {
+      ...diary,
+      async get(account, date) {
+        const [day, saved] = await Promise.all([
+          diary.get(account, date),
+          personal.getGoal(account, date),
+        ]);
+        return { ...day, goal: saved.goal };
+      },
+    },
     submissions: submissionRepository(database, localPhotoStore()),
     close: () => database.end(),
   };

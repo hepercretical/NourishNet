@@ -6,6 +6,72 @@ import App from './App.jsx';
 
 afterEach(() => vi.unstubAllGlobals());
 
+it('navigates the real five-tab app, preserves the summary day and saves a private appearance choice', async () => {
+  const account = {
+    id: 'design-owner',
+    displayName: 'Private test account',
+    timeZone: 'America/Denver',
+  };
+  const date = '2026-11-12';
+  sessionStorage.setItem('nourishnet:diary-date:design-owner', date);
+  let appearance = { mode: 'light', accent: 'green', revision: 0 };
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (path, options) => {
+      let data;
+      if (path === '/api/auth/session') data = { account };
+      else if (path.startsWith('/api/diary?'))
+        data = {
+          date,
+          timeZone: account.timeZone,
+          totals: { calories: 150, protein: 5, carbohydrates: 27, fat: 3, sodium: 0 },
+          goal: { calories: 2000, mode: 'maintain' },
+          meals: [],
+        };
+      else if (path.startsWith('/api/personal/stats?'))
+        data = { days: [], goals: [], streaks: { current: 0, longest: 0, ending: null } };
+      else if (path.startsWith('/api/personal/weights?')) data = { weights: [], earliest: null };
+      else if (path === '/api/personal/appearance') {
+        if (options.method === 'PUT') {
+          const body = JSON.parse(options.body);
+          appearance = { mode: body.mode, accent: body.accent, revision: 1 };
+        }
+        data = appearance;
+      } else throw new Error('Unexpected mock path');
+      return { ok: true, json: async () => data };
+    }),
+  );
+  window.history.replaceState({}, '', '/#/app/dashboard');
+  const user = userEvent.setup();
+  const view = render(<App />);
+  try {
+    expect(await screen.findByText('1850 kcal remaining to target')).toBeVisible();
+    await user.click(screen.getByRole('link', { name: 'View daily summary' }));
+    expect(await screen.findByRole('heading', { name: 'Daily summary' })).toBeVisible();
+    expect(screen.getByText(/2026-11-12 · America\/Denver/)).toBeVisible();
+    await user.click(screen.getByRole('link', { name: 'Stats', exact: true }));
+    expect(await screen.findByRole('heading', { name: 'Food logging calendar' })).toBeVisible();
+    await user.click(screen.getByRole('link', { name: 'Track', exact: true }));
+    expect(await screen.findByRole('heading', { name: 'Track food' })).toBeVisible();
+    await user.click(screen.getByRole('link', { name: 'Connections', exact: true }));
+    expect(await screen.findByText('Coming Soon...')).toBeVisible();
+    await user.click(screen.getByRole('link', { name: 'Preferences', exact: true }));
+    await user.click(await screen.findByRole('link', { name: 'Appearance' }));
+    await screen.findByLabelText('Theme');
+    expect(document.title).toBe('NourishNet | Appearance');
+    await user.selectOptions(screen.getByLabelText('Theme'), 'dark');
+    await user.selectOptions(screen.getByLabelText('Main color'), 'blue');
+    await user.click(screen.getByRole('button', { name: 'Save appearance' }));
+    expect(await screen.findByText('Appearance saved.')).toBeVisible();
+    expect(document.documentElement.dataset.mode).toBe('dark');
+    expect(document.documentElement.dataset.accent).toBe('blue');
+  } finally {
+    view.unmount();
+    window.history.replaceState({}, '', '/');
+  }
+  expect(document.documentElement.dataset.mode).toBeUndefined();
+});
+
 it('opens the actual account flow at the root and ignores the retired demo query switch', async () => {
   const fetch = vi.fn().mockResolvedValue({ ok: false, status: 401 });
   vi.stubGlobal('fetch', fetch);

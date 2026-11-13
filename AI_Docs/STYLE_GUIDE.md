@@ -30,8 +30,9 @@ This supersedes earlier directions here to retain preview links, planned setting
 legal locations, Designs and the Exercise/Weigh-in/Water placeholder sections.
 Remove those unfinished surfaces and direct preview routes from the testing app;
 keep designs in documentation or a separate developer-only preview outside it.
-Use fewer functional tabs until additional destinations work instead of a fake
-replacement fifth tab. Show Sprint 3 routes only when usable. Photo submission
+The later November 12 design request restores five tabs with Connections as the
+single approved **Coming Soon...** page; see [DESIGN.md](DESIGN.md). Other unfinished
+destinations remain absent. Show other Sprint 3 routes only when usable. Photo submission
 intake works in Sprint 2; photo-to-catalog review/reuse is due December 5.
 
 Keep approved tokens, green toolbar, compact layout, safe areas, real controls,
@@ -43,6 +44,20 @@ tools, never app data. Earlier requests to expand synthetic-food demos yield to
 this clarification. Personal test data remains isolated under AGENTS.md; no real-
 user onboarding is authorized. Defer security/legal implementation and verification
 until after Sprint 3 while preserving AGENTS.md safeguards and the estimate notice.
+
+## Current screen specification (requested 2026-11-12)
+
+[DESIGN.md](DESIGN.md) is the authoritative screen/behavior specification for the
+human's updated screenshots and clarifications. Use it alongside this guide and
+PLAN.md. It defines calorie progress/remaining, daily nutrition and macro goals,
+the Stats calendar's six shades and logging/streak rules, weight history, the
+Track hub, Connections and Preferences/themes. Earlier visual references are
+historical; the current requirements below replace conflicting shell directions.
+The app's 18+ confirmation belongs in signup, not repeated general app banners.
+Formula/goal-rule review and token approval follow the explicit local approvals
+recorded in DESIGN.md; later independent review and local-only delivery remain
+in force. This update changes guidance, not code or
+acceptance completion status.
 
 ## Design principles
 
@@ -111,117 +126,58 @@ token as part of a planned design change. Do not scatter unexplained literals.
 - Use a max-width container and comfortable line length on larger screens.
 - Prefer CSS Grid for summaries and Flexbox for related controls.
 
-## Mobile diary reference (requested 2026-11-09)
+## Current mobile reference and shell contract
 
-Use the supplied food-diary screenshot as the organizational reference. Retain
-the established token values above: the reference approves the layout direction,
-not replacement colors or a new token palette. Keep the interface compact and
-flat on phones, with fine borders and muted section headers rather than a stack
-of spacious, rounded cards. Maintain readable text and 44px tap targets even
-where the reference uses smaller controls.
+Use [DESIGN.md](DESIGN.md) for screen contents, formulas awaiting review, goal
+comparison/shade rules and navigation behavior. The human's screenshots establish
+compact density and hierarchy; they do not supply application data or approve
+unreviewed estimates, palettes, packages or clinical claims.
 
-- Top toolbar: primary green background, an expandable Menu button, a prominent
-  "Search foods to log" link, barcode preview shortcut, and diary shortcut.
-  The search shortcut opens the labeled, functional search form. Menu exposes
-  diary, screen designs, goal/connection/calendar previews, and account testing.
-- Day strip: previous/next day buttons around a labeled date picker. Preserve
-  the selected local day on refresh and show its account timezone. Date changes
-  reload that day's entries without showing the previous day's food while loading.
-- Nutrition: put recorded calories first, then protein, fat, carbohydrates and
-  sodium in a compact grid. Show units and unknown values honestly. Without a
-  saved goal, show "No goal"; do not copy the reference's 1,200 allowance, burned
-  calories, progress bar, or remaining-calorie arithmetic as invented user data.
-- Meals: show Breakfast, Lunch, Dinner, Snack in that order, with a muted heading
-  row, an accessible plus link beside the meal name, and recorded meal calories
-  when available. Food details, serving basis, edit/remove actions, persistent
-  errors, and useful empty instructions remain readable beneath the row.
-- Below meals: retain a clearly labeled location for Exercise, Weigh-in and
-  Water, followed by View daily summary. These three tracking types are outside
-  Sprint 1 and must say so; do not offer active add controls or fabricated logs.
-  The summary action moves keyboard focus to the recorded daily nutrition.
-- Bottom navigation: five reachable items, Dashboard, Stats, Track, Designs and
-  Preferences. Track uses the primary green surface and plus symbol; mark the
-  current route with text decoration and `aria-current`, not color alone. Stats
-  reaches the diary summary; Designs replaces the reference's Recipes slot
-  because recipes are outside the approved scope. Preferences opens its labeled
-  design preview. Barcode, goals and social destinations stay honest previews
-  until their scheduled implementation.
-- Reserve bottom space for navigation and device safe areas. Inputs, errors,
-  confirmation controls, and keyboard focus must scroll above it. At 40rem,
-  meals may use two columns; at 64rem, center the shell within the existing
-  content width. Never require horizontal scrolling for long food names.
+- Keep one compact toolbar using the selected primary-color tokens, green by
+  default, with Menu, Search foods to log and working barcode/diary shortcuts.
+- Use a fixed five-item bottom navigation: Dashboard, Stats, Track, Connections,
+  Preferences. Emphasize Track. Mark the active item using an icon, text treatment
+  and aria-current, never color alone. Recipes and Designs are not app routes.
+- Use flat rows and thin borders, compact muted meal headings and aligned values.
+  Dashboard order is date, calorie progress/remaining, macro grams, Breakfast,
+  Lunch, Dinner, Snack, then View daily summary. Omit Exercise, Water and the old
+  Weigh-in placeholder sections. Actual weight entry belongs in Stats.
+- Target-based progress uses the saved goal effective that day. Until it exists,
+  show recorded totals and No goal set; never fabricate a target or allowance.
+- View daily summary opens that day's nutrition-facts-style totals, macro pie
+  chart/text alternative and macro goals. Stats opens its monthly calendar,
+  private streak counts and user-entered weight graph; these are distinct views.
+- Track offers search and scan/manual entry, preserving date and meal. Known
+  products use deliberate serving confirmation; unknown products use pending
+  two-photo review. Existing camera, retry and duplicate protections remain.
+- Connections alone may temporarily show Coming Soon... within the real shell.
+  Replace it with working selected-sharing features when Plans 20/22 pass. Keep
+  every other unimplemented action out of normal app navigation.
+- Preferences uses compact full-width rows for the profile, daily calorie
+  preferences, notifications, password change and appearance as each works.
+  Later legal/account-rights operations remain absent until implemented.
+- Themes support Light/Dark and Green/Blue/Purple/Red accents through reviewed
+  semantic tokens. Theme accents never redefine semantic calendar/error colors.
+  Preserve existing default tokens until exact alternate palettes are approved.
+- Reserve safe-area and bottom-tab space. Inputs, errors, confirmation controls
+  and focus must remain visible above the mobile keyboard. At 40rem related
+  content may share columns; at 64rem center within the existing content width.
+  Never require horizontal scrolling for long names or nutrition rows.
 
-### Local testing without login
+### Development designs and module delivery
 
-On the Vite development server, `?demo=1#/app/dashboard` opens an isolated local
-demo with synthetic foods and browser-persisted diary entries. It reuses the
-Sprint 1 search, confirmation, date, totals, edit and removal UI. Label it visibly
-as local synthetic data; no API or database is needed. `?demo=0#/app/login`
-retains the actual account/session flows for API testing. Production builds must
-ignore the demo switch and continue requiring authenticated API ownership.
-The design map remains available without login for all later-sprint screens;
-a preview is not completed feature functionality.
+Preserve initial designs and their tests in documentation or the isolated
+DesignPreviewApp harness outside the normal app entry. Query flags must not
+activate synthetic catalog/demo data or bypass real account ownership. Existing
+mocks remain isolated test tools; use actual source-backed foods and package photos
+for application integration checks. A harness pass does not establish database
+persistence, camera decoding, hosted identity or human/device review.
 
-### Later-module navigation and layout
-
-Implement these adaptations within the owning modules in PLAN.md before the
-December 5 freeze. The final quality week verifies and repairs existing layouts.
-Keep five bottom items; do not add a tab for every feature. Track includes
-search/scan and reuses serving/meal confirmation. Preserve the selected local
-diary date and meal through these flows.
-
-Plan-15 replaces the barcode preview with working scan/manual entry. Menu adds
-My submissions (Plan-17), permitted catalog review (Plan-18), Goals (Plan-19),
-Connections (Plan-20), and Calendar (Plan-21). Goals also opens from Preferences.
-At Plan-21, Stats expands from a summary shortcut to recorded nutrition with
-personal calendar/history; keep View daily summary on the diary. Plan-22 adds
-comparison from Stats or an accepted connection. Designs remains an internal
-screen map; Recipes is outside the approved scope.
-
-Use compact status/request/review lists, stacked package/label previews, visible
-estimate-review sections and stacked calendar/person day details on phones.
-Reuse shared controls and tokens, text status/legends, headings, persistent retry
-and deliberate confirmations. Preserve input and focus across recoverable steps;
-tabs and keyboards must not cover fields, errors or save/review controls. Review
-phone/wide layouts when each module lands, before its acceptance is completed.
-
-Extend the isolated development demo alongside each feature using synthetic
-actors/data and sample images. Demo actor selection never grants real API access;
-production ignores demo mode. Test account flows and backend ownership separately.
-Policies, data-rights operations and production security UI adopt the same shell
-in their post-Sprint-3 modules; keep planned labels until then.
-
-## Reference shell contract
-
-The supplied mobile screenshots are the visual reference for the internal tracker
-shell. They establish structure and density, not a replacement color palette:
-
-- Keep one primary green toolbar at the top. It contains a menu button, the
-  `Search foods to log` shortcut, and compact barcode and diary shortcuts.
-- Use a dark, fixed five-item bottom navigation with Dashboard, Stats, Track,
-  Designs, and Preferences. Track is the raised primary action. The active item
-  must have `aria-current`, a visible text treatment, and an icon; color alone is
-  never the state indicator.
-- Use flat list rows and thin borders for diary sections and settings-style lists.
-  Reserve rounded surfaces for grouped forms and notices, not every row.
-- Keep the diary sequence stable: date navigation, recorded nutrition, Breakfast,
-  Lunch, Dinner, Snack, then clearly labeled out-of-scope Exercise, Weigh-in, and
-  Water locations. Meal rows use a compact heading, a reachable add-food control,
-  and an honest empty or recorded state.
-- Use the shared inline icon set for navigation and tracking actions. Icons are
-  supporting labels, not substitutes for accessible text. Do not use emoji or
-  fallback glyphs that can render as mojibake.
-- The reference shell reserves safe-area space beneath the fixed tabs. Toolbar,
-  meal rows, settings rows, and action controls remain at least 44px tall even
-  when the surrounding layout is compact.
-
-Preferences uses a single column of full-width navigation rows: profile, daily
-goals, password recovery, account rights, and policy locations. Mark preview and
-planned destinations explicitly. Search uses the existing catalog form; the
-reference's freeform speech, restaurant, grocery, history, and recipe features
-do not become working tabs through a visual update. Stats retains its Sprint 1
-summary shortcut until calendar implementation. Do not copy weight charts or
-red/green missed-day counts into previews as real user outcomes.
+Implement design adaptations within their owning PLAN.md stories and dependencies
+before the December 5 freeze. Keep submissions/review, calorie estimates, macro
+setup, calendar/person details and settings compact on phones. Preserve input,
+focus, units, notices, validation and effective dates through recoverable steps.
+December 6-12 is for defects and quality checks, not initial feature construction.
 
 ## Typography and content
 
@@ -339,14 +295,15 @@ Before a pull request:
 ## Alignment and approved scope (2026-11-09)
 
 Read this guide together with `../AGENTS.md`, `SECURE.md`, `LEGAL.md`, `HUMAN.md`,
-and the requested acceptance criteria in `PLAN.md`. HUMAN.md's approved
+[DESIGN.md](DESIGN.md) and the requested acceptance criteria in `PLAN.md`. HUMAN.md's approved
 clarifications qualify its earlier shorthand lists. Preserve all established
 token values; extending tokens requires human approval. Private screens need
 useful titles and accessible headings, with no identifying SEO/social metadata.
 
 ### Accounts, goals, and estimation
 
-- The public audience is adults 18+. Use a clear eligibility flow and explain
+- The public audience remains adults 18+. Require an unchecked signup eligibility
+  checkbox; do not repeat age-gating notices in the general app. Explain
   sensitive input purpose before collection. Do not expose measurements in
   account discovery, avatars, page titles, or notifications.
 - Provide visibly labeled biological-sex, height, weight, age, unit, and approved

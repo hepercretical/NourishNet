@@ -1,3 +1,4 @@
+import CalorieProgress from '../CalorieProgress/CalorieProgress.jsx';
 import NutritionFacts from '../NutritionFacts/NutritionFacts.jsx';
 import FoodCard from '../FoodCard/FoodCard.jsx';
 import { LoadingState, ErrorState } from '../DataState/DataState.jsx';
@@ -34,8 +35,9 @@ export default function Dashboard({
             >
               <h2>Recorded nutrition</h2>
               <p>
-                {diary.date} · {diary.timeZone} · No goal · Day incomplete
+                {diary.date} · {diary.timeZone} · Based on logged foods
               </p>
+              <CalorieProgress calories={diary.totals.calories} goal={diary.goal} />
               <NutritionFacts values={displayNutrition(diary.totals)} />
               <p>
                 These are recorded amounts, not recommendations. Nutrition reflects logged serving
@@ -98,17 +100,9 @@ export default function Dashboard({
                 </section>
               ))}
             </div>
-            <button
-              type="button"
-              className="dashboard-summary-link"
-              onClick={() => {
-                const summary = document.getElementById('daily-summary');
-                summary?.focus();
-                summary?.scrollIntoView?.();
-              }}
-            >
+            <a className="dashboard-summary-link design-action" href="#/app/summary">
               View daily summary
-            </button>
+            </a>
             <p>
               Search and confirm a food to save it to this diary date. Saved entries reload when you
               return or refresh.

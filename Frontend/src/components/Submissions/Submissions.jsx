@@ -3,6 +3,7 @@ import { getSubmission, listSubmissions } from '../../services/submissions.js';
 import { LoadingState, ErrorState, EmptyState } from '../DataState/DataState.jsx';
 import Button from '../Button/Button.jsx';
 import SubmissionCorrection from '../SubmissionCorrection/SubmissionCorrection.jsx';
+import PrivatePhoto from '../PrivatePhoto/PrivatePhoto.jsx';
 import './Submissions.css';
 
 const statuses = {
@@ -71,11 +72,11 @@ export default function Submissions({ id }) {
           )}
           <div className="submissions__photos">
             <figure>
-              <img src={record.photos.front} alt="Submitted package front" />
+              <PrivatePhoto src={record.photos.front} alt="Submitted package front" />
               <figcaption>Package front</figcaption>
             </figure>
             <figure>
-              <img src={record.photos.label} alt="Submitted nutrition label" />
+              <PrivatePhoto src={record.photos.label} alt="Submitted nutrition label" />
               <figcaption>Nutrition label</figcaption>
             </figure>
           </div>

@@ -22,9 +22,10 @@ and formula-review gate also remain applicable. This is a project scheduling
 decision, not a change to legal obligations or a claim of legal compliance.
 
 ## Purpose
+
 The purpose of this LEGAL.md is to specify practices that should be followed in order to ensure the legality of the project and product before it is realeased in any capacity for public use. Please make sure that each rule here is followed and implemented into the project.
 
-## 
+##
 
 ## Important limitation
 
@@ -164,8 +165,12 @@ before launch and material changes.
 
 ### Audience and health estimation
 
-- The approved launch audience is adults 18+. Establish a neutral eligibility
-  screen before sensitive collection and an underage-account handling process.
+- The approved launch audience remains adults 18+. The November 12 design request
+  places a required, initially unchecked 18+ confirmation in signup before account
+  creation/sensitive profile collection; it does not require repeated general-app
+  age-gating banners. Keep an underage-account handling process and the later
+  counsel-reviewed eligibility assessment. [DESIGN.md](DESIGN.md) governs screen
+  placement without changing the adult audience or later policy obligations.
   Do not market the product to children. An age checkbox alone does not resolve
   actual knowledge of child users or all state youth-data obligations. If the
   audience changes, reassess the amended COPPA Rule and state requirements before
@@ -276,4 +281,3 @@ before launch and material changes.
 - [FDA general wellness guidance, January 2026](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/general-wellness-policy-low-risk-devices)
 - [FTC health product claims guidance](https://www.ftc.gov/business-guidance/resources/health-products-compliance-guidance)
 - [W3C WCAG 2.2](https://www.w3.org/TR/WCAG22/)
-

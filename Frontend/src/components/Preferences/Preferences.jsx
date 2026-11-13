@@ -2,6 +2,13 @@ export default function Preferences({ account }) {
   return (
     <>
       <h1>Preferences</h1>
+      <nav className="personal-menu" aria-label="Preferences">
+        <a href="#/app/settings/profile">My profile</a>
+        <a href="#/app/settings/goals">Daily calorie preferences</a>
+        <a href="#/app/settings/notifications">Notifications</a>
+        <a href="#/app/settings/password">Change password</a>
+        <a href="#/app/settings/appearance">Appearance</a>
+      </nav>
       <h2>Your account</h2>
       <dl>
         <dt>Display name</dt>

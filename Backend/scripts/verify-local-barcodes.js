@@ -36,6 +36,13 @@ try {
   const catalog = JSON.parse(
     await readFile(new URL('../catalog/manufacturer-foods.json', import.meta.url), 'utf8'),
   );
+  const fairlife = JSON.parse(
+    await readFile(
+      new URL('../catalog/fairlife-nutrition-plan-chocolate.json', import.meta.url),
+      'utf8',
+    ),
+  );
+  catalog.foods.push(...fairlife.foods);
   const counts = () =>
     database.query(
       'SELECT (SELECT count(*)::int FROM foods) AS foods, (SELECT count(*)::int FROM food_servings) AS servings, (SELECT count(*)::int FROM diary_entries) AS entries',

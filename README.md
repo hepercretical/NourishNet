@@ -5,8 +5,10 @@
 NourishNet is a mobile-first calorie and macronutrient tracker for adults 18+.
 The current local build uses actual manufacturer-sourced foods, account-owned
 PostgreSQL diaries, barcode lookup/camera scanning and pending photo submissions.
-Goals, connections, calendars, catalog publication and later legal/account-rights
-operations are outside this local delivery and have no placeholder app controls.
+The new local build also includes saved calorie/macro goals, daily nutrition
+summary, a goal calendar/streaks, private weight history and Preferences/themes.
+Connections deliberately shows Coming Soon... as requested; functional sharing,
+catalog publication and later legal/account-rights operations remain separate work.
 
 For the existing configured checkout, start PostgreSQL and the backend:
 
@@ -36,20 +38,54 @@ The root opens the real session/account flow. The old demo query switch, design
 map, design examples, planned policies and unfinished routes are not application
 entry points. Retired routes show Page not found with a real diary link. Design
 components and their tests remain isolated in DesignPreviewApp outside this app.
-Four working bottom tabs replace the former placeholder navigation.
+Five tabs are Dashboard, Stats, Track, Connections and Preferences.
 
-Applied local migrations are 001/002/006/008/003. The three actual foods are Quaker
-Old Fashioned Oats (18 oz), Jif Creamy Peanut Butter (16 oz) and Original Cheerios
-(18 oz). Old fictional foods are inactive; existing diary snapshots were retained.
+Applied local migrations are 001/002/006/008/003/009. The four actual foods are Quaker
+Old Fashioned Oats (18 oz), Jif Creamy Peanut Butter (16 oz), Original Cheerios
+(18 oz) and fairlife Nutrition Plan Chocolate (11.5 fl oz bottle). Old fictional foods are inactive; existing diary snapshots were retained.
 A new checkout needs a separately reviewed local schema/catalog setup; do not
 reseed the current database. Local commands and photo instructions appear below.
 
-Current automated local verification covers real PostgreSQL diaries, three known
+Current automated local verification covers real PostgreSQL diaries, four known
 barcodes, and actual Quaker 42 oz package/label photo persistence, retries,
 corrections and owner isolation. Unit/component tests are separate from explicit
 local database commands. Physical-camera, phone/desktop, zoom, keyboard and
 screen-reader review remains manual; CUA had no available browser/native surface.
 Nothing in this local work deploys to or tests Neon/Netlify.
+
+## Try the updated screens locally
+
+1. Open Preferences -> Daily calorie preferences. Optionally calculate a reference
+   estimate with the explained formula inputs, or enter a personal target. Choose
+   a deficit, surplus or maintain comparison. Set optional macro goals in grams or
+   percentages, Review goal, then Save reviewed goal. No adjustment/rate is invented.
+2. Dashboard shows recorded calories, remaining/over target and macro grams for
+   the selected day. View daily summary opens its nutrition totals and macro chart.
+3. Stats shows the month, six exact goal/distance shades and private streak counts.
+   Any saved food counts as a logged day. Select a date for its summary. Below it,
+   record/edit a test-only weight, change interval/dates or display kg/lb, and inspect
+   the graph/table. Missing values are not replaced with fake measurements.
+4. Track offers food search or barcode scanning/manual entry. Existing known-food
+   confirmation and unknown-product photo submission flows remain in place.
+5. Connections is the requested Coming Soon... page. Preferences also offers the
+   actual profile, submission activity under Notifications, password change, and
+   saved Light/Dark plus Green/Blue/Purple/Red appearance settings. Password changes
+   revoke all account sessions; use fictional test accounts/passwords only.
+
+Goal history, weights and appearance persist in local PostgreSQL. New goals start
+today or a future date. Replacing that date's goal requires explicit confirmation;
+older versions remain. Weight removal retains history. Requested weight intervals
+are bounded to ten years; longer histories need a reviewed pagination extension.
+The calendar bands and comparison definitions are in [DESIGN.md](AI_Docs/DESIGN.md).
+This local calculator uses the human-approved internal technical review; independent
+professional review and public-release readiness remain later requirements.
+
+Run `npm run verify:personal` from Backend for the explicit loopback-only check.
+It preserves diaries, restores appearance, restores/tombstones its test measurement,
+retains future test-goal versions in an isolated account, and rolls profile/password
+checks back. Unit tests use mocks. Browser/device/zoom/screen-reader/theme review is
+still manual because no CUA browser/native surface is available. Hosted adapters,
+provider testing and deployment are not included or approved by this work.
 
 ## Tracker integration (Plan-11)
 
@@ -666,8 +702,9 @@ tested. No database migration or service-policy deploy happens in the build pipe
 The local review specification is `contracts/plan-13.md` (intentionally ignored).
 It defines the versioned adult EER formula, units, activity selection, unsupported
 cases, all four objectives, explicit target/range/limit comparisons, completion,
-historical versions and timezone/data-state rules. This is specification work;
-the goal menu/calculator remains Plan-19. The developer explicitly delegated the
+historical versions and timezone/data-state rules. This is the historical
+specification. The current local calculator retains its formula/input/notice
+rules; DESIGN.md supersedes its explicit-completion and outcome-comparison rules. The developer explicitly delegated the
 technical review to the AI and deferred independent professional review for this
 internal phase; completion does not claim clinical validation or public-release
 approval. No paid service was used. Keep this local contract for later implementation.
@@ -675,7 +712,7 @@ approval. No paid service was used. Keep this local contract for later implement
 ## Local barcode lookup and scanner
 
 Sign into the local app at `http://127.0.0.1:5173/#/app/login`, then use the
-toolbar barcode shortcut or **Track -> Scan a food barcode**. Enter a printed
+toolbar barcode shortcut or **Track -> Scan barcode or enter barcode number**. Enter a printed
 barcode, or choose **Start camera** and allow video capture. The camera stops on
 the first decoded result; review servings and meal before **Save entry**. Manual
 entry remains available if camera access or decoding fails. No video is uploaded.
@@ -683,7 +720,18 @@ entry remains available if camera access or decoding fails. No video is uploaded
 The current local catalog recognizes these exact product barcodes (other package
 sizes/product versions can have different codes):
 
+Added November 13 from the user's package/label photos, cross-checked against
+the manufacturer: fairlife Nutrition Plan Chocolate, 11.5 fl oz / 340 mL, single
+bottle UPC **811620022118** (GTIN14 `00811620022118`). The supplied ten middle
+digits `1162002211` omit the printed outside digits; manual entry needs the full
+12-digit code. One bottle is 150 kcal, 30 g protein, 4 g carbohydrate, 2.5 g fat and
+230 mg sodium. Volume is not treated as a known gram mass. Scan or enter the full
+code, confirm servings/meal, then Save entry. `npm run verify:fairlife` from
+Backend verifies this record through the real local Vite proxy and restores its
+test diary entry. No existing food or diary record was overwritten.
+
 - Quaker Old Fashioned Oats, 18 oz: `030000010204`.
+- fairlife Nutrition Plan Chocolate, 11.5 fl oz bottle: `811620022118`.
 - Jif Creamy Peanut Butter, 16 oz: `051500255162`.
 - Original Cheerios, 18 oz: `016000170032`.
 
@@ -750,7 +798,7 @@ webcam/phone, desktop/mobile layout, keyboard, zoom and screen-reader review.
 5. Open My submissions, refresh and check pending status and both photos. Another
    account must not see the submission. Correction controls appear only for
    actual Changes requested records; reviewer/publication controls are not in scope.
-6. Check the toolbar, four bottom tabs, Preferences, keyboard focus, narrow layout
+6. Check the toolbar, five bottom tabs, Preferences, keyboard focus, narrow layout
    and 200% zoom. No design map, demo, fake profile, planned policy or future-feature
    destination should be exposed by the normal app. Retired direct routes recover
    through Page not found. Loading, empty, error and pending-review copy should stay.

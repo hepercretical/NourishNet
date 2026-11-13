@@ -11,6 +11,7 @@ export async function accountRequest(path, { body, signal, method } = {}) {
   let token;
   if (usesNeonAuth) {
     const { neonAuthRequest, neonToken } = await import('./neonAuth.js');
+    if (path === '/personal/password') return neonAuthRequest(path, body);
     if (path.startsWith('/auth/') && !['/auth/session', '/auth/profile'].includes(path)) {
       const result = await neonAuthRequest(path, body);
       if (path !== '/auth/login') return result;
