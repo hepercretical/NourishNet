@@ -7,7 +7,14 @@ import { usePendingAction } from '../../hooks/usePendingAction.js';
 import { displayNutrition, scaleNutrition } from '../../utils/nutrition.js';
 import './AddFood.css';
 
-export default function AddFood({ food, draft, onDraftChange, onBack, onSave }) {
+export default function AddFood({
+  food,
+  draft,
+  onDraftChange,
+  onBack,
+  onSave,
+  backLabel = 'Back to search',
+}) {
   const [entry, setEntry] = useState(null);
   const [invalid, setInvalid] = useState(false);
   const heading = useRef(null);
@@ -70,7 +77,7 @@ export default function AddFood({ food, draft, onDraftChange, onBack, onSave }) 
             <NutritionFacts values={displayNutrition(entry.nutrients)} />
           </section>
           <div className="add-food__actions">
-            <Button pending={pending} pendingLabel="Saving…" onClick={save}>
+            <Button pending={pending} pendingLabel="Saving…" disabled={failed} onClick={save}>
               Save entry
             </Button>
             <Button variant="secondary" disabled={pending} onClick={() => setEntry(null)}>
@@ -96,7 +103,7 @@ export default function AddFood({ food, draft, onDraftChange, onBack, onSave }) 
           {invalid && <ErrorState message={invalid} />}
           <div className="add-food__actions">
             <Button variant="secondary" onClick={onBack}>
-              Back to search
+              {backLabel}
             </Button>
           </div>
         </>

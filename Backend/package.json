@@ -17,8 +17,13 @@
     "db:migrate": "node --env-file-if-exists=.env scripts/database.js migrate",
     "db:seed": "node --env-file-if-exists=.env scripts/database.js seed",
     "db:verify": "node --env-file-if-exists=.env scripts/verify-database.js",
+    "catalog:plan": "node scripts/local-catalog.js plan",
+    "catalog:inspect": "node --env-file-if-exists=.env scripts/local-catalog.js inspect",
     "verify:accounts": "node --env-file-if-exists=.env scripts/verify-accounts.js",
-    "verify:diary": "node --env-file-if-exists=.env scripts/verify-diary.js"
+    "verify:diary": "node --env-file-if-exists=.env scripts/verify-diary.js",
+    "verify:catalog": "node --env-file-if-exists=.env scripts/verify-local-catalog.js",
+    "verify:barcodes": "node --env-file-if-exists=.env scripts/verify-local-barcodes.js",
+    "verify:submissions": "node --env-file-if-exists=.env scripts/verify-local-submissions.js"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

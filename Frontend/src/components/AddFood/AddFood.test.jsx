@@ -11,6 +11,23 @@ const food = {
   servingBasis: '40 g dry oats',
   nutrients: { calories: 150, protein: 5, fat: 3, carbohydrates: 27, sodium: null },
 };
+
+it('uses a contextual back label and invokes the owning scan flow', async () => {
+  const user = userEvent.setup(),
+    back = vi.fn();
+  render(
+    <AddFood
+      food={food}
+      draft={{ amount: '1', meal: 'Lunch' }}
+      onDraftChange={vi.fn()}
+      onBack={back}
+      onSave={vi.fn()}
+      backLabel="Back to barcode results"
+    />,
+  );
+  await user.click(screen.getByRole('button', { name: 'Back to barcode results' }));
+  expect(back).toHaveBeenCalledOnce();
+});
 function Flow({ onSave, onBack = vi.fn() }) {
   const [draft, setDraft] = useState({ amount: '1', meal: '' });
   return (

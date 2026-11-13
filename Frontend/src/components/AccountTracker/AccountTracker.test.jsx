@@ -36,6 +36,86 @@ const savedEntry = {
   nutrients: food.nutrients,
   contribution: { calories: 225, protein: 7.5, fat: 4.5, carbohydrates: 40.5, sodium: null },
 };
+
+it('keeps an unknown-product photo draft on back navigation, then submits to the real API client', async () => {
+  URL.createObjectURL = vi.fn(() => 'blob:test-photo');
+  URL.revokeObjectURL = vi.fn();
+  const user = userEvent.setup(),
+    notice = vi.fn();
+  accountRequest.mockImplementation((path) =>
+    path.startsWith('/foods/barcode')
+      ? Promise.resolve({
+          status: 'unknown',
+          barcode: { input: '030000010402', gtin14: '00030000010402' },
+          foods: [],
+        })
+      : Promise.resolve({ submission: { id: 'record', status: 'pending' } }),
+  );
+  const props = { account, onNotice: notice };
+  const view = render(<AccountTracker {...props} route="/app/scan/Lunch" />);
+  await user.type(screen.getByLabelText('Barcode number'), '030000010402{Enter}');
+  await user.click(await screen.findByRole('button', { name: 'Submit package and label photos' }));
+  expect(window.location.hash).toBe('#/app/submissions/new');
+  view.rerender(<AccountTracker {...props} route="/app/submissions/new" />);
+  await user.type(screen.getByLabelText('Product name (optional)'), 'Quaker oats 42 oz');
+  await user.upload(
+    screen.getByLabelText('Choose package front photo'),
+    new File(['front'], 'front.jpg', { type: 'image/jpeg' }),
+  );
+  await user.click(screen.getByRole('button', { name: 'Back to scan' }));
+  view.rerender(<AccountTracker {...props} route="/app/scan" />);
+  view.rerender(<AccountTracker {...props} route="/app/submissions/new" />);
+  expect(screen.getByLabelText('Product name (optional)')).toHaveValue('Quaker oats 42 oz');
+  expect(screen.getByAltText('Package front photo preview')).toBeVisible();
+  await user.upload(
+    screen.getByLabelText('Choose nutrition label photo'),
+    new File(['label'], 'label.png', { type: 'image/png' }),
+  );
+  await user.click(screen.getByRole('button', { name: 'Submit for review' }));
+  expect(window.location.hash).toBe('#/app/submissions/record');
+  expect(accountRequest).toHaveBeenCalledWith(
+    '/submissions',
+    expect.objectContaining({
+      body: expect.objectContaining({
+        barcode: '030000010402',
+        productName: 'Quaker oats 42 oz',
+        requestKey: expect.any(String),
+      }),
+    }),
+  );
+  expect(notice).toHaveBeenCalledWith(expect.stringContaining('submitted for review'));
+});
+
+it('preserves the selected local date and meal from barcode confirmation into a real diary save', async () => {
+  const user = userEvent.setup(),
+    notice = vi.fn();
+  accountRequest.mockImplementation((path) =>
+    path.startsWith('/foods/barcode')
+      ? Promise.resolve({
+          status: 'found',
+          barcode: { input: '030000010204', gtin14: '00030000010204' },
+          foods: [food],
+        })
+      : Promise.resolve({}),
+  );
+  render(<AccountTracker account={account} route="/app/scan/Lunch" onNotice={notice} />);
+  expect(screen.getByText(/Adding food for 2026-11-09/)).toBeVisible();
+  await user.type(screen.getByLabelText('Barcode number'), '030000010204{Enter}');
+  await user.click(await screen.findByRole('button', { name: 'Review entry' }));
+  await user.click(screen.getByRole('button', { name: 'Save entry' }));
+  expect(accountRequest).toHaveBeenCalledWith(
+    '/diary',
+    expect.objectContaining({
+      body: expect.objectContaining({
+        date: '2026-11-09',
+        meal: 'lunch',
+        servingId: 'serving',
+        quantity: 1,
+      }),
+    }),
+  );
+  expect(window.location.hash).toBe('#/app/dashboard');
+});
 it('moves through local diary dates using previous and next controls and preserves the selected day', async () => {
   const user = userEvent.setup();
   accountRequest.mockImplementation((path) => Promise.resolve(day(path.split('=')[1])));

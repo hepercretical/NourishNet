@@ -27,31 +27,35 @@ const diary = {
   meals: [],
 };
 it.each(['login', 'signup', 'verify', 'recover', 'reset'])(
-  'keeps toolbar and five tabs on the %s account screen with a working skip link',
+  'keeps toolbar and four working tabs on the %s account screen with a working skip link',
   async (mode) => {
     accountRequest.mockRejectedValueOnce(Object.assign(new Error(), { status: 401 }));
     const user = userEvent.setup();
     render(<LiveApp route={`/app/${mode}`} />);
     await screen.findByRole('form');
+    if (mode === 'signup') {
+      expect(screen.getByRole('checkbox', { name: 'I am 18 or older' })).not.toBeChecked();
+    } else {
+      expect(screen.queryByRole('checkbox', { name: 'I am 18 or older' })).not.toBeInTheDocument();
+    }
+    expect(screen.queryByText(/Adults 18\+|adults aged 18/i)).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Menu' })).toBeVisible();
     expect(
       within(screen.getByRole('navigation', { name: 'Main navigation' })).getAllByRole('link'),
-    ).toHaveLength(5);
+    ).toHaveLength(4);
     const skip = screen.getByRole('link', { name: 'Skip to main content' });
     skip.focus();
     await user.keyboard('{Enter}');
     expect(screen.getByRole('main')).toHaveFocus();
   },
 );
-it('shows sign-in after an expired session and retains the adult synthetic-data notice', async () => {
+it('shows sign-in after an expired session without repeating age eligibility', async () => {
   accountRequest.mockRejectedValueOnce(Object.assign(new Error(), { status: 401 }));
   render(<LiveApp route="/app/login" />);
   expect(await screen.findByRole('heading', { name: 'Sign in to NourishNet' })).toBeVisible();
-  expect(screen.getByText(/Adults 18\+/)).toBeVisible();
-  expect(screen.getByRole('link', { name: 'Try without login' })).toHaveAttribute(
-    'href',
-    '?demo=1#/app/dashboard',
-  );
+  expect(screen.queryByText(/Adults 18\+|adults aged 18/i)).not.toBeInTheDocument();
+  expect(screen.queryByRole('link', { name: 'Try without login' })).not.toBeInTheDocument();
+  expect(screen.queryByText(/Privacy \(planned\)|Terms \(planned\)/)).not.toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Menu' })).toHaveAttribute('aria-expanded', 'false');
   expect(screen.getByRole('link', { name: 'Forgot password' })).toHaveAttribute(
     'href',
@@ -67,6 +71,7 @@ it('loads the signed-in account diary then removes all private content on logout
   const user = userEvent.setup();
   render(<LiveApp route="/app/dashboard" />);
   expect(await screen.findByText('10 kcal')).toBeVisible();
+  expect(screen.queryByText(/18\+|18 or older|adults aged 18/i)).not.toBeInTheDocument();
   await user.click(screen.getByRole('button', { name: 'Sign out' }));
   expect(await screen.findByRole('heading', { name: 'Sign in to NourishNet' })).toBeVisible();
   expect(screen.queryByText('10 kcal')).not.toBeInTheDocument();

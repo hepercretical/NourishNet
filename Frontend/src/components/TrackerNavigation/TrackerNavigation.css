@@ -88,6 +88,10 @@
   overflow-wrap: anywhere;
 }
 
+.tracker-tabs--live {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .tracker-tabs a[aria-current] {
   text-decoration: underline;
   text-decoration-thickness: 2px;

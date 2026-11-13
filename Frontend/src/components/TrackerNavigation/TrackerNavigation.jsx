@@ -29,9 +29,10 @@ export default function TrackerNavigation({ route, children, preview = false }) 
   const trackActive =
     ['/search', '/food/', '/diary/', '/scan', '/submissions/', '/review'].some((path) =>
       route.startsWith(path),
-    ) || route.startsWith('/app/search');
+    ) || ['/app/search', '/app/scan', '/app/submissions'].some((path) => route.startsWith(path));
   const preferencesActive = [
     '/settings',
+    '/app/settings',
     '/account',
     '/app/login',
     '/app/signup',
@@ -47,9 +48,10 @@ export default function TrackerNavigation({ route, children, preview = false }) 
     ? primaryRoutes
     : [
         [diaryPath, 'Daily diary'],
-        ['/goals', 'Goals preview'],
-        ['/connections', 'Connections preview'],
-        ['/calendar', 'Calendar preview'],
+        [searchPath, 'Search foods'],
+        ['/app/scan', 'Scan a product'],
+        ['/app/submissions', 'My submissions'],
+        ['/app/settings', 'Preferences'],
       ];
   return (
     <>
@@ -69,8 +71,8 @@ export default function TrackerNavigation({ route, children, preview = false }) 
         </a>
         <a
           className="tracker-toolbar__icon-link"
-          href="#/scan"
-          aria-label="Barcode scanner design preview"
+          href={preview ? '#/scan' : '#/app/scan'}
+          aria-label={preview ? 'Barcode scanner design preview' : 'Scan a food barcode'}
         >
           <Icon name="barcode" />
         </a>
@@ -105,13 +107,20 @@ export default function TrackerNavigation({ route, children, preview = false }) 
             {label}
           </a>
         ))}
-        <a href="#/design">All screen designs</a>
-        <a href="#/submissions/status">My submissions preview</a>
-        <a href="#/review">Catalog review preview</a>
-        <a href="#/account">Account preview</a>
-        <a href="?demo=0#/app/login">Test account flows</a>
+        {preview && (
+          <>
+            <a href="#/design">All screen designs</a>
+            <a href="#/submissions/status">My submissions preview</a>
+            <a href="#/review">Catalog review preview</a>
+            <a href="#/account">Account preview</a>
+            <a href="?demo=0#/app/login">Test account flows</a>
+          </>
+        )}
       </nav>
-      <nav className="tracker-tabs" aria-label="Main navigation">
+      <nav
+        className={`tracker-tabs${preview ? '' : ' tracker-tabs--live'}`}
+        aria-label="Main navigation"
+      >
         <a
           href={`#${diaryPath}`}
           aria-current={route === diaryPath || route === '/app' ? 'page' : undefined}
@@ -142,16 +151,21 @@ export default function TrackerNavigation({ route, children, preview = false }) 
           <Icon name="plus" />
           <span>Track</span>
         </a>
+        {preview && (
+          <a
+            href="#/design"
+            aria-current={
+              route.startsWith('/design') || route === '/development' ? 'page' : undefined
+            }
+          >
+            <Icon name="designs" />
+            <span>Designs</span>
+          </a>
+        )}
         <a
-          href="#/design"
-          aria-current={
-            route.startsWith('/design') || route === '/development' ? 'page' : undefined
-          }
+          href={preview ? '#/settings' : '#/app/settings'}
+          aria-current={preferencesActive ? 'page' : undefined}
         >
-          <Icon name="designs" />
-          <span>Designs</span>
-        </a>
-        <a href="#/settings" aria-current={preferencesActive ? 'page' : undefined}>
           <Icon name="settings" />
           <span>Preferences</span>
         </a>

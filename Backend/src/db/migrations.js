@@ -9,6 +9,8 @@ export const migrationNames = [
   '005_connections.sql',
   '006_local_accounts.sql',
   '007_hosted_profiles.sql',
+  // Prepared Plan-14A design; inclusion is not human approval to apply it.
+  '008_actual_food_catalog.sql',
 ];
 
 export async function loadMigration(name) {

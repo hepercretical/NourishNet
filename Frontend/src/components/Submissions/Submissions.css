@@ -1,0 +1,14 @@
+.submissions__photos {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.submissions__photos figure {
+  margin: 0;
+}
+
+.submissions__photos img {
+  width: 100%;
+  max-height: calc(var(--toolbar-height) * 6);
+  object-fit: contain;
+}

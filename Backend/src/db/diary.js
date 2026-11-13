@@ -135,7 +135,8 @@ export function diaryRepository(database) {
         }
         const catalog = await client.query(
           `SELECT f.name, f.version, s.* FROM food_servings s
-           JOIN foods f ON f.id = s.food_id WHERE s.id = $1 FOR SHARE OF f, s`,
+           JOIN foods f ON f.id = s.food_id WHERE s.id = $1
+           AND f.catalog_active = true AND f.provenance <> 'synthetic' FOR SHARE OF f, s`,
           [draft.servingId],
         );
         const food = catalog.rows[0];

@@ -1,8 +1,8 @@
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import App from './App.jsx';
-import { estimateNotice, screens } from './design/screens.js';
+import App from './DesignPreviewApp.jsx';
+import { estimateNotice, screens } from '../../design/screens.js';
 
 function openRoute(path) {
   window.history.replaceState(null, '', `#${path}`);

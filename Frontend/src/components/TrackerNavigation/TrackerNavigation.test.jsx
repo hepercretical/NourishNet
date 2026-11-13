@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { expect, it } from 'vitest';
 import TrackerNavigation from './TrackerNavigation.jsx';
 
-it('opens the menu with the keyboard and exposes honest preview and account destinations', async () => {
+it('opens the menu with the keyboard and exposes only working live destinations', async () => {
   const user = userEvent.setup();
   render(
     <TrackerNavigation route="/app/dashboard">
@@ -16,11 +16,15 @@ it('opens the menu with the keyboard and exposes honest preview and account dest
   menu.focus();
   await user.keyboard('{Enter}');
   expect(menu).toHaveAttribute('aria-expanded', 'true');
-  expect(screen.getByRole('link', { name: 'Goals preview' })).toHaveAttribute('href', '#/goals');
-  expect(screen.getByRole('link', { name: 'Test account flows' })).toHaveAttribute(
+  expect(screen.getByRole('link', { name: 'Scan a product' })).toHaveAttribute(
     'href',
-    '?demo=0#/app/login',
+    '#/app/scan',
   );
+  expect(screen.getByRole('link', { name: 'My submissions' })).toHaveAttribute(
+    'href',
+    '#/app/submissions',
+  );
+  expect(screen.queryByText(/preview|planned|All screen designs/)).not.toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Sign out' })).toBeVisible();
   await user.click(screen.getByRole('link', { name: 'Daily diary' }));
   expect(menu).toHaveAttribute('aria-expanded', 'false');
@@ -34,7 +38,21 @@ it('keeps search reachable and marks the current bottom tab', () => {
   );
   const nav = screen.getByRole('navigation', { name: 'Main navigation' });
   expect(within(nav).getByRole('link', { name: 'Track' })).toHaveAttribute('aria-current', 'page');
-  expect(within(nav).getAllByRole('link')).toHaveLength(5);
+  expect(within(nav).getAllByRole('link')).toHaveLength(4);
+  expect(within(nav).queryByRole('link', { name: 'Designs' })).not.toBeInTheDocument();
+  expect(within(nav).getByRole('link', { name: 'Preferences' })).toHaveAttribute(
+    'href',
+    '#/app/settings',
+  );
+});
+
+it('opens the real scan route from the toolbar and marks Track active', () => {
+  render(<TrackerNavigation route="/app/scan" />);
+  expect(screen.getByRole('link', { name: 'Scan a food barcode' })).toHaveAttribute(
+    'href',
+    '#/app/scan',
+  );
+  expect(screen.getByRole('link', { name: 'Track' })).toHaveAttribute('aria-current', 'page');
 });
 
 it.each([

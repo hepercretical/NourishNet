@@ -150,6 +150,9 @@ it('saves a catalog snapshot, session ownership and local timezone atomically', 
   const saved = await diaryRepository(database).create(account, draft);
   expect(saved.entry.contribution.calories).toBe(225);
   const calls = client.query.mock.calls;
+  expect(calls.find(([sql]) => sql.includes('FROM food_servings'))[0]).toContain(
+    'f.catalog_active = true',
+  );
   expect(calls[0][0]).toBe('BEGIN');
   expect(calls.find(([sql]) => sql.includes('INSERT INTO diary_days'))[1].slice(1)).toEqual([
     account.id,

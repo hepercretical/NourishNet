@@ -51,11 +51,12 @@ export function accountRoutes({ getServices, origin = 'http://127.0.0.1:5173' })
       : null;
     const isAuth = action && Object.hasOwn(methods, action);
     const isDiary = url.pathname === '/api/diary';
+    const isBarcode = url.pathname === '/api/foods/barcode';
     const diaryEntry = url.pathname.match(/^\/api\/diary\/entries\/([^/]+)$/);
     if (
       !isAuth &&
       !diaryEntry &&
-      !['/api/foods', '/api/dashboard', '/api/diary'].includes(url.pathname)
+      !['/api/foods', '/api/foods/barcode', '/api/dashboard', '/api/diary'].includes(url.pathname)
     )
       return false;
     try {
@@ -100,6 +101,10 @@ export function accountRoutes({ getServices, origin = 'http://127.0.0.1:5173' })
               throw new AccountError('Select one local diary date.');
             send(response, 200, await services.diary.get(account, url.searchParams.get('date')));
           }
+        } else if (isBarcode) {
+          if ([...url.searchParams.keys()].join(',') !== 'code')
+            throw new AccountError('Supply one barcode code parameter.');
+          send(response, 200, await services.foods.lookupBarcode(url.searchParams.get('code')));
         } else if (url.pathname === '/api/foods') {
           const query = url.searchParams.get('q') ?? '';
           if (query.length > 100) throw new AccountError('Use at most 100 search characters.');

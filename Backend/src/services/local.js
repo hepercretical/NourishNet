@@ -5,6 +5,8 @@ import { foodRepository } from '../db/foods.js';
 import { diaryRepository } from '../db/diary.js';
 import { createAuthService } from '../auth/service.js';
 import { deliverLocalMessage } from '../auth/outbox.js';
+import { submissionRepository } from '../db/submissions.js';
+import { localPhotoStore } from './localPhotos.js';
 
 export function localServices(env = process.env) {
   requireSyntheticDevelopment(env);
@@ -21,6 +23,7 @@ export function localServices(env = process.env) {
     }),
     foods: foodRepository(database),
     diary: diaryRepository(database),
+    submissions: submissionRepository(database, localPhotoStore()),
     close: () => database.end(),
   };
 }
