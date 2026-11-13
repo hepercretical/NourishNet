@@ -134,6 +134,64 @@ it('aborts late camera grants and pending lookups when leaving', async () => {
   view.unmount();
   expect(lookupSignal.aborted).toBe(true);
 });
+it('offers recovery when decoding fails after the camera has already opened', async () => {
+  const user = userEvent.setup();
+  openBarcodeCamera.mockResolvedValue(vi.fn());
+  render(<BarcodeScanner onSave={vi.fn()} />);
+  await user.click(screen.getByRole('button', { name: 'Start camera' }));
+  await act(async () => openBarcodeCamera.mock.calls[0][2].onError(new Error('frame failure')));
+  expect(screen.getByRole('alert')).toHaveTextContent('barcode detection stopped');
+  expect(screen.getByRole('button', { name: 'Start camera' })).toBeEnabled();
+  expect(screen.getByRole('textbox', { name: 'Barcode number' })).toBeEnabled();
+});
+it('offers practical scan help after waiting and removes it when the camera stops', async () => {
+  const timeout = globalThis.setTimeout;
+  const timer = vi
+    .spyOn(globalThis, 'setTimeout')
+    .mockImplementation((callback, delay, ...args) =>
+      timeout(callback, delay === 8000 ? 0 : delay, ...args),
+    );
+  try {
+    const user = userEvent.setup();
+    openBarcodeCamera.mockResolvedValue(vi.fn());
+    render(<BarcodeScanner onSave={vi.fn()} />);
+    await user.click(screen.getByRole('button', { name: 'Start camera' }));
+    expect(await screen.findByText(/Still looking/)).toHaveTextContent('811620022118');
+    expect(timer).toHaveBeenCalledWith(expect.any(Function), 8000);
+    await user.click(screen.getByRole('button', { name: 'Stop camera' }));
+    expect(screen.queryByText(/Still looking/)).not.toBeInTheDocument();
+  } finally {
+    timer.mockRestore();
+  }
+});
+it('looks up a detected fairlife UPC and deliberately saves its bottle serving once', async () => {
+  const user = userEvent.setup();
+  const fairlife = {
+    ...food,
+    name: 'fairlife Nutrition Plan Chocolate (11.5 fl oz)',
+    servingBasis: '1 bottle (340 mL)',
+    grams: null,
+    nutrients: { calories: 150, protein: 30, fat: 2.5, carbohydrates: 4, sodium: 230 },
+  };
+  lookupBarcode.mockResolvedValue({ status: 'found', foods: [fairlife] });
+  openBarcodeCamera.mockResolvedValue(vi.fn());
+  const save = vi.fn().mockResolvedValue({});
+  render(<BarcodeScanner initialMeal="Snack" onSave={save} />);
+  await user.click(screen.getByRole('button', { name: 'Start camera' }));
+  await act(async () => openBarcodeCamera.mock.calls[0][1]('811620022118'));
+  expect(lookupBarcode).toHaveBeenCalledWith('811620022118', expect.any(Object));
+  expect(await screen.findByText(fairlife.name)).toBeVisible();
+  expect(save).not.toHaveBeenCalled();
+  await user.click(screen.getByRole('button', { name: 'Review entry' }));
+  expect(screen.getByText('150 kcal')).toBeVisible();
+  expect(screen.getByText('30 g')).toBeVisible();
+  expect(screen.getByText('230 mg')).toBeVisible();
+  await user.dblClick(screen.getByRole('button', { name: 'Save entry' }));
+  expect(save).toHaveBeenCalledOnce();
+  expect(save).toHaveBeenCalledWith(
+    expect.objectContaining({ amount: 1, meal: 'Snack', nutrients: fairlife.nutrients }),
+  );
+});
 it('returns to the actual matching serving choices with the scan-specific back action', async () => {
   const user = userEvent.setup();
   lookupBarcode.mockResolvedValue(found);

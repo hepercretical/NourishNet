@@ -40,6 +40,7 @@ export function accountRoutes({ getServices, origin = 'http://127.0.0.1:5173' })
     verify: 'POST',
     resend: 'POST',
     login: 'POST',
+    guest: 'POST',
     session: 'GET',
     logout: 'POST',
     recover: 'POST',
@@ -135,7 +136,7 @@ export function accountRoutes({ getServices, origin = 'http://127.0.0.1:5173' })
       } else {
         const body = await readBody(request);
         const result = await services.auth[action](body);
-        if (action === 'login') {
+        if (action === 'login' || action === 'guest') {
           response.setHeader(
             'Set-Cookie',
             cookie(result.sessionToken, 8 * 3600, origin.startsWith('https:')),

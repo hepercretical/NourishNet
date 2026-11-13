@@ -137,6 +137,15 @@ export default function LiveApp({ route }) {
       setLoggingOut(false);
     }
   }
+  async function guest() {
+    const result = await accountRequest('/auth/guest', { body: {} });
+    generation.current += 1;
+    setSession({ status: 'ready', account: result.account });
+    setNotice(
+      'Guest testing session. Use fictional data only. Sign out to end access to this diary.',
+    );
+    window.location.hash = '/app/dashboard';
+  }
   return (
     <div className="live-app">
       <a
@@ -216,6 +225,7 @@ export default function LiveApp({ route }) {
               hosted={usesNeonAuth}
               initialEmail={email}
               onSubmit={submit}
+              onGuest={guest}
               onResend={(body) => accountRequest('/auth/resend', { body })}
             />
             <nav className="live-app__links" aria-label="Account actions">

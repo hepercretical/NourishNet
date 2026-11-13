@@ -8,13 +8,14 @@ let server;
 afterEach(async () => {
   if (server) await new Promise((resolve) => server.close(resolve));
 });
-async function setup() {
+async function setup(allowGuest = false) {
   const repository = testRepository(),
     messages = [];
   const foods = { search: vi.fn().mockResolvedValue([]) };
   const auth = createAuthService({
     repository,
     deliver: async (message) => messages.push(message),
+    allowGuest,
   });
   server = createApp({ services: { auth, foods } });
   server.listen(0, '127.0.0.1');
@@ -44,6 +45,27 @@ async function setup() {
   }
   return { base, post, login, foods, repository };
 }
+it('only starts guest sessions when enabled, checks origin and keeps tokens in the session cookie', async () => {
+  const { base, post } = await setup(true);
+  expect((await fetch(`${base}/api/auth/guest`, { method: 'POST' })).status).toBe(403);
+  const response = await post('guest', {});
+  expect(response.status).toBe(200);
+  expect(response.headers.get('set-cookie')).toContain('HttpOnly; SameSite=Strict');
+  const body = await response.json();
+  expect(body).toEqual({ account: expect.objectContaining({ displayName: 'Guest tester' }) });
+  const cookie = response.headers.get('set-cookie').split(';')[0];
+  const session = await fetch(`${base}/api/auth/session`, { headers: { Cookie: cookie } });
+  expect(await session.json()).toEqual(body);
+  await post('logout', {}, cookie);
+  expect((await fetch(`${base}/api/auth/session`, { headers: { Cookie: cookie } })).status).toBe(
+    401,
+  );
+});
+it('rejects guest sessions when local testing has not been enabled', async () => {
+  const { post, repository } = await setup();
+  expect((await post('guest', {})).status).toBe(404);
+  expect(repository.accounts.size).toBe(0);
+});
 it('requires the local origin for mutations and restricts HTTP methods', async () => {
   const { base } = await setup();
   expect((await fetch(`${base}/api/auth/signup`, { method: 'POST' })).status).toBe(403);

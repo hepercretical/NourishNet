@@ -23,6 +23,7 @@ export function localServices(env = process.env) {
     auth: createAuthService({
       repository: accountRepository(database),
       deliver: deliverLocalMessage,
+      allowGuest: env.LOCAL_GUEST_ENABLED === 'true',
     }),
     personal,
     foods: foodRepository(database),

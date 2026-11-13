@@ -578,3 +578,19 @@ neon-api-key*.json
 neon-api-key*.json.*
 neon-api-key*.txt
 neon-api-key*.txt.*
+
+# Provider credential/environment exports and local Codex session metadata.
+# Keep shared app configuration and placeholder-only .env.example files visible.
+neon-credentials*.json
+neon-credentials*.json.*
+netlify-credentials*.json
+netlify-credentials*.json.*
+neon-profiles*.json
+neon-profiles*.json.*
+neon-env*.json
+neon-env*.json.*
+netlify-env*.json
+netlify-env*.json.*
+**/.codex/session_index.jsonl
+**/.codex/session_index.jsonl.*
+**/.codex/shell_snapshots/
