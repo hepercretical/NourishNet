@@ -1,13 +1,13 @@
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import App from './App.jsx';
+import App from './DesignPreviewApp.jsx';
 
-vi.mock('./design/sharedExamples.js', async (importOriginal) => ({
+vi.mock('../../design/sharedExamples.js', async (importOriginal) => ({
   ...(await importOriginal()),
   previewAction: vi.fn().mockResolvedValue(undefined),
 }));
-import { previewAction } from './design/sharedExamples.js';
+import { previewAction } from '../../design/sharedExamples.js';
 
 beforeEach(() => {
   window.history.replaceState(null, '', '#/design/components');

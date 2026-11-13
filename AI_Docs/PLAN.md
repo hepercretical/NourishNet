@@ -58,6 +58,16 @@ than silently using the quality week or moving features into the later phase.
 - Root AGENTS.md and every applicable AI_Docs/*.md file remain the guidance set.
   This is the only PLAN.md; no root duplicate is maintained.
 
+## Local acceptance authorization (2026-11-12)
+
+The human explicitly requested that acceptance criteria be checked as work passes.
+During the current local-only task, criteria that mention Neon or Netlify may pass
+using the equivalent working local implementation and verification. Hosted
+pushes, migrations, provider testing and deployment stay deferred until a later
+human-approved sprint release. A checked box in this phase is local evidence,
+not a claim of hosted verification or release approval. Record the local checks
+and limitations; do not claim physical-camera or human-review testing not done.
+
 ## Shared initial acceptance criteria
 
 Mark each acceptance criterion as `[x]` when its requirements have been completed
@@ -423,19 +433,30 @@ product photo intake and no temporary filler by November 28.
 
 **Acceptance criteria**
 
-- [ ] Human confirms actual food source and representative catalog/search/scan cases. Records have
+- [x] Human confirms actual food source and representative catalog/search/scan cases. Records have
       product name, serving basis, calories, macros, sodium or explicit unknown, source and correct
       barcode mappings. No generated synthetic foods or invented nutrition/barcodes enter the app.
-- [ ] Inspect target/migration history; prepare only needed approved imports/catalog changes and
+- [x] Inspect target/migration history; prepare only needed approved imports/catalog changes and
       fictional-food cleanup. Obtain exact approval before application; preserve dependent history.
-- [ ] Configure approved private tester access and exercise two isolated authenticated test
+- [x] Configure approved private tester access and exercise two isolated authenticated test
       accounts through browser -> backend -> Neon. Health checks/mock/demo success are insufficient.
-- [ ] Verify search, decimal servings, all four meals, local dates, add/edit/remove, correct totals
+- [x] Verify search, decimal servings, all four meals, local dates, add/edit/remove, correct totals
       and refresh/relogin persistence. Account diaries stay separate; food corrections preserve
       logged serving/nutrition snapshots.
-- [ ] Check no-results, empty days, unknown nutrients, failed reads/writes, repeated saves, retries
+- [x] Check no-results, empty days, unknown nutrients, failed reads/writes, repeated saves, retries
       and date boundaries. Record environment/outcomes/blockers without secrets; keep mocked tests
       separate from approved database checks. Hosted acceptance stays open until actually verified.
+
+Local verification (November 12): human approved the exact 008 migration and
+three manufacturer-sourced foods; applied only on the pinned loopback database.
+Two isolated accounts passed 59 initial local API/database checks and 56 repeat
+checks, including actual-food snapshot preservation, search/no-results, all meals,
+decimal totals, mutation retries, edit/remove, account separation, logout/relogin
+and date boundaries. Backend unit tests and frontend component/integration tests
+pass. Browser UI/physical-device review is pending because CUA has no available
+surface; no human visual pass is claimed. Hosted criteria use the local substitute
+authorized above; no Neon/Netlify service was contacted. Private detailed evidence
+is in contracts/plan-14a.md and private-artifacts/plan14a-verification.json.
 
 ### Plan-14 Barcode lookup service
 
@@ -444,15 +465,22 @@ product photo intake and no temporary filler by November 28.
 
 **Acceptance criteria**
 
-- [ ] Known barcodes return product/serving/nutrition; unknown barcodes return an actionable not-
+- [x] Known barcodes return product/serving/nutrition; unknown barcodes return an actionable not-
       found result without creating partial catalog data.
-- [ ] Supported barcode strings preserve leading zeros with documented normalization/check-digit and
+- [x] Supported barcode strings preserve leading zeros with documented normalization/check-digit and
       duplicate rules.
-- [ ] Tests cover known, unknown, malformed, and leading-zero examples.
-- [ ] Result/unknown fixtures support compact scanner confirmation and the local demo;
+- [x] Tests cover known, unknown, malformed, and leading-zero examples.
+- [x] Result/unknown fixtures support compact scanner confirmation and the local demo;
       a lookup alone never saves a diary entry or creates a catalog record.
-- [ ] Actual supported product barcodes resolve to the correct database food/serving ID.
+- [x] Actual supported product barcodes resolve to the correct database food/serving ID.
       Unknown results prompt package-front and nutrition-label submission without an invented match.
+
+Local verification (November 12): approved read-only barcode API, 35 focused
+normalization/repository/route tests and 17 local Vite-proxied API checks pass.
+Canonical 12/13/14-digit equivalents return the three actual catalog identities;
+unknown/invalid inputs and unchanged catalog/diary counts are verified. The
+unknown-product photo prompt is completed with its dependent UI/intake, without
+inventing a match or exposing a placeholder action.
 
 ### Plan-15 Camera scanner and manual fallback
 
@@ -461,17 +489,25 @@ product photo intake and no temporary filler by November 28.
 
 **Acceptance criteria**
 
-- [ ] Camera starts after deliberate user action; manual barcode entry remains available.
-- [ ] Known matches enter serving/meal confirmation; repeat detections pause and a deliberate save
+- [x] Camera starts after deliberate user action; manual barcode entry remains available.
+- [x] Known matches enter serving/meal confirmation; repeat detections pause and a deliberate save
       logs one entry.
-- [ ] Denial, unsupported camera, scanner failure, and unknown barcode states explain recovery;
+- [x] Denial, unsupported camera, scanner failure, and unknown barcode states explain recovery;
       camera tracks stop on leaving.
-- [ ] Toolbar barcode and Track shortcuts reach the same scan/manual flow. Reuse serving/meal
+- [x] Toolbar barcode and Track shortcuts reach the same scan/manual flow. Reuse serving/meal
       confirmation, preserve selected local date/meal and return to the diary after save.
       Bottom tabs never obscure camera recovery or confirmation controls.
 - [ ] Verify decoding on a physical phone in the approved private setup with actual product
       barcodes; record device/browser and supported formats. Manual entry/mocked detections alone
       cannot pass scanner acceptance. Repeated detections and retries create one persisted entry.
+
+Local verification (November 12): camera-session/service tests and scanner,
+confirmation, navigation and date/meal integration tests pass. Full frontend
+format/lint, 220 tests, build and format check pass. Camera frames are decoded
+locally using the human-approved pinned packages; late grants and navigation
+release tracks, duplicate detections pause before lookup and save retries keep
+one key. Physical-phone decoding is still unchecked pending human local testing;
+no camera/device visual pass is claimed.
 
 ### Plan-16 Unknown-food photo submission interface
 
@@ -480,16 +516,28 @@ product photo intake and no temporary filler by November 28.
 
 **Acceptance criteria**
 
-- [ ] Form collects barcode, actual package-front photo and actual nutrition-label photo, with
+- [x] Form collects barcode, actual package-front photo and actual nutrition-label photo, with
       reviewable product fields. Do not require the user to transcribe the label merely to submit
       photos; a reviewer can enter nutrition from the label in Plan-18. No invented photo values.
-- [ ] Preview/replace/remove, required fields, basic file limits, pending/upload/error/retry, and
+- [x] Preview/replace/remove, required fields, basic file limits, pending/upload/error/retry, and
       success states work on mobile and keyboard.
-- [ ] Pending data is clearly distinct from approved catalog nutrition.
-- [ ] Stack package/label previews and compact labeled fields on phones; keyboard and tabs
+- [x] Pending data is clearly distinct from approved catalog nutrition.
+- [x] Stack package/label previews and compact labeled fields on phones; keyboard and tabs
       leave correction/save reachable. Returning to scan/search preserves recoverable input.
       Build with actual manually entered barcodes first; verify the scan-to-intake connection
       by Plan-18A, then publication/reuse in Plan-18.
+
+Local verification (November 12): controlled form/photo components pass five
+focused tests covering required photos, preview/replace/remove, file limits,
+optional metadata/nutrition, validation, pending controls and preserved retry.
+Submission callbacks are mocked; no fake app success or placeholder route is
+exposed. Route/back-navigation integration follows the approved Plan-17 service.
+
+Local integration (November 12): unknown scan opens the real form; draft
+photos/fields survive return navigation, submission uses the real API client and
+opens the persisted status page. Image/API/correction tests pass; actual
+manufacturer image persistence is verified in Plan-17. Browser visual testing
+remains a human task; no placeholder upload destination is exposed.
 
 ### Plan-17 Submission API and review-ready records
 
@@ -498,15 +546,23 @@ product photo intake and no temporary filler by November 28.
 
 **Acceptance criteria**
 
-- [ ] Human approves development image storage and submission schema/API before adoption or applied
+- [x] Human approves development image storage and submission schema/API before adoption or applied
       migrations; use actual package/label images containing no personal details.
-- [ ] Backend stores submission metadata/images with pending, needs-review, approved, and rejected
+- [x] Backend stores submission metadata/images with pending, needs-review, approved, and rejected
       states; pending data is not searchable as catalog food.
-- [ ] Submitter can see status and correct requested fields; basic upload failure/retry and
+- [x] Submitter can see status and correct requested fields; basic upload failure/retry and
       duplicate-submission behavior are tested. Review actions arrive with Plan-18 in Sprint 3;
       do not expose inactive review controls or fabricate review outcomes in Sprint 2.
-- [ ] Menu exposes My submissions with compact status/correction rows, readable text status
+- [x] Menu exposes My submissions with compact status/correction rows, readable text status
       and persistent retry. Show actual persisted submission status in the testing application.
+
+Local verification (November 12): human approved storage/API rules and exact
+003 migration, applied only on loopback. Full backend format/lint and 222 tests,
+frontend format/lint and 237 tests/build pass. Actual Quaker package/label
+photos passed 25 local API/database checks: stored bytes, replay/duplicates,
+owner isolation and correction back to pending. Catalog/diary counts unchanged.
+All review status labels are tested with mocks; no reviewer/publication API was
+implemented. No Neon/Netlify action occurred.
 
 ### Plan-18A Sprint 2 core-functionality and no-filler handoff
 
@@ -520,17 +576,31 @@ product photo intake and no temporary filler by November 28.
 - [ ] Physical-phone scanning and manual lookup resolve actual known barcode -> catalog ID ->
       confirmation -> one saved diary entry. Check unknown, malformed, leading-zero, camera
       denial, retry, repeated detection/save and date/meal preservation.
-- [ ] Unknown barcode prompts both photos, and submission/status persist with usable retry.
+- [x] Unknown barcode prompts both photos, and submission/status persist with usable retry.
       Pending photos do not pretend to be catalog food; photo-to-catalog review is due December 5.
-- [ ] Audit every normal/direct route, navigation item, control, image, metadata and copy against
+- [x] Audit every normal/direct route, navigation item, control, image, metadata and copy against
       the no-filler deadline. No invented food data, fake values, placeholder text/buttons, design
       previews, unfinished destinations or dead actions remain. Keep genuine current-state copy.
 - [ ] Frontend lint/test/build/format and backend lint/test/format pass; development services and
       approved database journeys have been exercised. Human checks phone/desktop, keyboard,
       camera, empty/existing isolated accounts and recoverable failures; record evidence/defects.
-- [ ] Private testing target/access instructions are usable. Hosted journeys remain unpassed
+- [x] Private testing target/access instructions are usable. Hosted journeys remain unpassed
       until verified. Any remote cleanup/import/upload/deploy needs its own exact approval and
       budget; local/demo results cannot stand in for database-backed hosted acceptance.
+
+Local implementation evidence (November 12): unknown scan -> real two-photo
+form -> persisted pending record -> owner status/correction passes component
+integration tests and 25 local API/database checks with actual manufacturer
+photos. App route/transport tests remove fixture/demo access and reject retired
+design/future routes; active navigation has four working tabs. The actual catalog
+was imported without deleting history. Final package and built-asset audit
+results are recorded in the local handoff.
+
+The three unchecked criteria retain their explicit human/physical-device steps:
+manual food journey, real phone camera decoding, and human phone/desktop/keyboard
+review. Automated portions are implemented and tested locally; no manual pass is
+inferred from mocked cameras or the unavailable CUA browser surface. Hosted
+portions use the human-approved local substitute and remain deferred.
 
 ## Sprint 3 Week 1: Photo-to-catalog, goals, connections and calendars (November 29-December 5)
 

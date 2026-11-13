@@ -1,0 +1,5 @@
+.product-submission summary {
+  min-height: var(--touch-target);
+  padding-block: var(--space-3);
+  cursor: pointer;
+}

@@ -2,6 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { accountRequest } from '../../services/accounts.js';
 import AccountDiary from '../AccountDiary/AccountDiary.jsx';
 import FoodSearch from '../FoodSearch/FoodSearch.jsx';
+import BarcodeScanner from '../BarcodeScanner/BarcodeScanner.jsx';
+import ProductSubmission from '../ProductSubmission/ProductSubmission.jsx';
+import Submissions from '../Submissions/Submissions.jsx';
+import Preferences from '../Preferences/Preferences.jsx';
+import { emptySubmission } from '../../utils/submissionDraft.js';
+import { submitProduct } from '../../services/submissions.js';
 import { meals } from '../../utils/foodForm.js';
 
 function validDate(value) {
@@ -29,11 +35,16 @@ export default function AccountTracker({ account, route, onNotice }) {
   const [dateError, setDateError] = useState(false);
   const saveController = useRef(null);
   const active = useRef(true);
+  const [submission, setSubmission] = useState(emptySubmission);
+  const submissionAttempt = useRef(null);
+  const submissionController = useRef(null);
+  const scanMeal = useRef('');
   useEffect(() => {
     active.current = true;
     return () => {
       active.current = false;
       saveController.current?.abort();
+      submissionController.current?.abort();
     };
   }, [route]);
   useEffect(() => {
@@ -75,10 +86,50 @@ export default function AccountTracker({ account, route, onNotice }) {
     window.location.hash = '/app/dashboard';
   }
   const searching = route.split('/')[2] === 'search';
+  const scanning = route.split('/')[2] === 'scan';
+  const submitting = route.split('/')[2] === 'submissions';
   const meal = route.split('/')[3];
+  function unknown(barcode) {
+    scanMeal.current = meals.includes(meal) ? meal : '';
+    if (submission.barcode !== barcode) setSubmission(emptySubmission(barcode));
+    window.location.assign('#/app/submissions/new');
+  }
+  async function sendSubmission(value) {
+    if (submissionAttempt.current?.draft !== value)
+      submissionAttempt.current = { draft: value, key: crypto.randomUUID() };
+    const controller = new AbortController();
+    submissionController.current = controller;
+    const result = await submitProduct(value, {
+      requestKey: submissionAttempt.current.key,
+      signal: controller.signal,
+    });
+    if (controller.signal.aborted) throw new DOMException('Cancelled', 'AbortError');
+    return result;
+  }
+  if (route.split('/')[2] === 'settings') return <Preferences account={account} />;
+  if (submitting) {
+    if (meal === 'new')
+      return (
+        <ProductSubmission
+          draft={submission}
+          onDraftChange={setSubmission}
+          onSubmit={sendSubmission}
+          onBack={() => {
+            window.location.hash = `/app/scan${scanMeal.current ? '/' + scanMeal.current : ''}`;
+          }}
+          onSubmitted={(result) => {
+            setSubmission(emptySubmission());
+            submissionAttempt.current = null;
+            onNotice('Your photos were submitted for review. They are not catalog food yet.');
+            window.location.hash = `/app/submissions/${result.id}`;
+          }}
+        />
+      );
+    return <Submissions key={meal || 'list'} id={meal} />;
+  }
   return (
     <>
-      {!searching && (
+      {!searching && !scanning && (
         <div className="shared-field diary-datebar">
           <button
             type="button"
@@ -123,12 +174,21 @@ export default function AccountTracker({ account, route, onNotice }) {
           )}
         </div>
       )}
-      {searching ? (
+      {searching || scanning ? (
         <>
           <p>
             Adding food for {date} · {account.timeZone}
           </p>
-          <FoodSearch key={date} initialMeal={meals.includes(meal) ? meal : ''} onSave={save} />
+          {scanning ? (
+            <BarcodeScanner
+              key={date}
+              initialMeal={meals.includes(meal) ? meal : ''}
+              onSave={save}
+              onUnknown={unknown}
+            />
+          ) : (
+            <FoodSearch key={date} initialMeal={meals.includes(meal) ? meal : ''} onSave={save} />
+          )}
         </>
       ) : (
         <AccountDiary key={date} account={account} date={date} />

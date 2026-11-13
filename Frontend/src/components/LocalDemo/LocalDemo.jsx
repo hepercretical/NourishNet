@@ -1,10 +1,12 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useLayoutEffect } from 'react';
+import { installPreviewTransport } from '../../services/previewTransport.js';
 import AccountTracker from '../AccountTracker/AccountTracker.jsx';
 import TrackerNavigation from '../TrackerNavigation/TrackerNavigation.jsx';
-import { demoAccount } from '../../services/localDemo.js';
+import { demoAccount, demoRequest } from '../../services/localDemo.js';
 import '../LiveApp/LiveApp.css';
 
 export default function LocalDemo({ route }) {
+  useLayoutEffect(() => installPreviewTransport(demoRequest), []);
   const [notice, setNotice] = useState('');
   const main = useRef(null);
   useEffect(() => {

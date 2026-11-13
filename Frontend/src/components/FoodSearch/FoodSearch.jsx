@@ -29,8 +29,13 @@ export default function FoodSearch({ onSave, initialMeal = '' }) {
       )}
       <div ref={searchPanel} hidden={choosing}>
         <h1>Search foods</h1>
-        <p>Find a synthetic food, then choose its serving amount and meal.</p>
+        <p>Find a catalog food, then choose its serving amount and meal.</p>
         <SearchForm query={query} onQueryChange={setQuery} onSearch={search} />
+        {onSave && (
+          <a className="design-action" href={`#/app/scan${initialMeal ? '/' + initialMeal : ''}`}>
+            Scan a food barcode
+          </a>
+        )}
         <section aria-label="Food search results" aria-busy={status === 'loading'}>
           <h2>Search results</h2>
           {status === 'idle' && (

@@ -1,11 +1,12 @@
-import { demoRequest, isLocalDemo } from './localDemo.js';
+import { getPreviewTransport } from './previewTransport.js';
 import { usesNeonAuth } from './hostedConfig.js';
 
 const base = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '');
 
 export async function accountRequest(path, { body, signal, method } = {}) {
-  if (isLocalDemo() && !path.startsWith('/auth/')) {
-    return demoRequest(path, { body, signal, method });
+  const previewTransport = getPreviewTransport();
+  if (previewTransport && !path.startsWith('/auth/')) {
+    return previewTransport(path, { body, signal, method });
   }
   let token;
   if (usesNeonAuth) {

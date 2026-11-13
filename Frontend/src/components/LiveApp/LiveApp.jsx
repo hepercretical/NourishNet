@@ -32,6 +32,30 @@ export default function LiveApp({ route }) {
       ? requested
       : 'login';
   useEffect(() => {
+    const featureTitles = {
+      dashboard: 'Your daily diary',
+      search: 'Search foods',
+      scan: 'Scan a food barcode',
+      submissions: 'Your product submissions',
+      settings: 'Preferences',
+    };
+    const title =
+      session.status === 'loading'
+        ? 'Opening your diary'
+        : session.status === 'error'
+          ? 'API unavailable'
+          : session.account
+            ? featureTitles[requested] || 'Your daily diary'
+            : titles[mode];
+    document.title = `NourishNet | ${title}`;
+    document
+      .querySelector('meta[name="description"]')
+      ?.setAttribute(
+        'content',
+        'NourishNet food diary: search foods, review servings, scan barcodes and track recorded nutrition.',
+      );
+  }, [requested, mode, session.status, session.account]);
+  useEffect(() => {
     const controller = new AbortController();
     const version = generation.current;
     accountRequest('/auth/session', { signal: controller.signal })
@@ -112,7 +136,6 @@ export default function LiveApp({ route }) {
         Skip to main content
       </a>
       <TrackerNavigation route={route}>
-        <a href="?demo=1#/app/dashboard">Try without login</a>
         {(session.account || session.needsProfile) && (
           <Button pending={loggingOut} onClick={logout}>
             Sign out
@@ -121,13 +144,13 @@ export default function LiveApp({ route }) {
       </TrackerNavigation>
       {usesNeonAuth ? (
         <p className="live-app__notice">
-          Internal hosted testing · Adults 18+ · Approved tester accounts only. Use fictional diary
-          data. Neon delivers authentication emails.
+          Internal hosted testing · Approved tester accounts only. Use fictional diary data. Neon
+          delivers authentication emails.
         </p>
       ) : (
         <p className="live-app__notice">
-          Internal development · Adults 18+ · Fictional accounts and test-only passwords. Account
-          data is saved locally. No external email is sent.
+          Internal development · Fictional accounts and test-only passwords. Account data is saved
+          locally. No external email is sent.
         </p>
       )}
       <main ref={main} id="live-content" tabIndex={-1}>
@@ -191,9 +214,6 @@ export default function LiveApp({ route }) {
           </>
         )}
       </main>
-      <footer>
-        <a href="#/privacy">Privacy (planned)</a> · <a href="#/terms">Terms (planned)</a>
-      </footer>
     </div>
   );
 }

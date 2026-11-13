@@ -98,14 +98,6 @@ export default function Dashboard({
                 </section>
               ))}
             </div>
-            <section className="dashboard-extras" aria-label="Additional tracking options">
-              <h2>Additional tracking</h2>
-              <p>Exercise · Weigh-in · Water</p>
-              <p>
-                Not included in Sprint 1. Food tracking does not estimate calories burned or a
-                remaining calorie allowance.
-              </p>
-            </section>
             <button
               type="button"
               className="dashboard-summary-link"

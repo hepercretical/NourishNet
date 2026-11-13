@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "checkedOn": "2026-11-12",
+  "foods": [
+    {
+      "id": "79a0da43-8ab3-4c39-902f-cdf708d192ce",
+      "servingId": "cd8c386f-c9a9-4b7d-8b47-e5e29c778ea6",
+      "name": "Quaker Old Fashioned Oats (18 oz canister)",
+      "gtin14": "00030000010204",
+      "servingBasis": "1/2 cup dry (40 g)",
+      "grams": 40,
+      "nutrients": { "calories": 150, "protein": 5, "fat": 3, "carbohydrates": 27, "sodium": 0 },
+      "sourceUrls": [
+        "https://digitalassets.pepsico.com/m/3462d84914f5228c/original/00030000010204_L1.pdf",
+        "https://smartlabel.pepsico.info/030000010204-0005-en-US/index.html"
+      ]
+    },
+    {
+      "id": "b74fdc87-7857-4087-9a61-e686b48daf07",
+      "servingId": "6fabdbea-b1ed-4705-bf46-54af4d08a231",
+      "name": "Jif Creamy Peanut Butter (16 oz jar)",
+      "gtin14": "00051500255162",
+      "servingBasis": "2 tbsp (33 g)",
+      "grams": 33,
+      "nutrients": { "calories": 190, "protein": 7, "fat": 16, "carbohydrates": 8, "sodium": 140 },
+      "sourceUrls": [
+        "https://www.jif.com/products/creamy/creamy-peanut-butter",
+        "https://smartlabel.1worldsync.com/smuckers/00051500255162-US-001.html"
+      ]
+    },
+    {
+      "id": "5f24b45c-18e6-4c3e-93e6-049ae4931b66",
+      "servingId": "2998cd16-f6bb-40fc-b57a-0db4d4e42341",
+      "name": "Original Cheerios (18 oz family-size box)",
+      "gtin14": "00016000170032",
+      "servingBasis": "1 1/2 cups, as packaged",
+      "grams": null,
+      "nutrients": {
+        "calories": 140,
+        "protein": 5,
+        "fat": 2.5,
+        "carbohydrates": 29,
+        "sodium": 190
+      },
+      "sourceUrls": [
+        "https://www.cheerios.com/products/original-cheerios",
+        "https://smartlabel.generalmills.com/16000170032"
+      ]
+    }
+  ]
+}

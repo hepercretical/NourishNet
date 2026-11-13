@@ -19,6 +19,9 @@ it('starts empty, validates blank input and searches only on keyboard submission
   searchFoods.mockResolvedValue([food]);
   const user = userEvent.setup();
   render(<FoodSearch />);
+  expect(
+    screen.getByText('Find a catalog food, then choose its serving amount and meal.'),
+  ).toBeVisible();
   expect(screen.getByText('Find your first food')).toBeVisible();
   await user.tab();
   expect(screen.getByRole('searchbox')).toHaveFocus();
@@ -43,6 +46,14 @@ it('starts empty, validates blank input and searches only on keyboard submission
     '#/app/dashboard',
   );
   expect(searchFoods).toHaveBeenCalledOnce();
+});
+
+it('keeps the selected meal in the working Track-to-scanner shortcut', () => {
+  render(<FoodSearch initialMeal="Lunch" onSave={vi.fn()} />);
+  expect(screen.getByRole('link', { name: 'Scan a food barcode' })).toHaveAttribute(
+    'href',
+    '#/app/scan/Lunch',
+  );
 });
 
 it('keeps text and prevents repeat submission while a delayed search is pending', async () => {

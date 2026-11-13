@@ -6,20 +6,46 @@ import App from './App.jsx';
 
 afterEach(() => vi.unstubAllGlobals());
 
-it('opens the opt-in local diary at the root without checking authentication', async () => {
-  const fetch = vi.fn();
+it('opens the actual account flow at the root and ignores the retired demo query switch', async () => {
+  const fetch = vi.fn().mockResolvedValue({ ok: false, status: 401 });
   vi.stubGlobal('fetch', fetch);
   window.history.replaceState({}, '', '/?demo=1');
   localStorage.clear();
   try {
     render(<App />);
-    expect(await screen.findByRole('heading', { name: 'Your daily diary' })).toBeVisible();
-    expect(await screen.findByRole('region', { name: 'Recorded daily nutrition' })).toBeVisible();
-    expect(screen.queryByLabelText('Password')).not.toBeInTheDocument();
-    expect(fetch).not.toHaveBeenCalled();
+    expect(await screen.findByRole('heading', { name: 'Sign in to NourishNet' })).toBeVisible();
+    expect(screen.getByLabelText('Password')).toBeVisible();
+    expect(screen.queryByText(/Sample rolled oats|Sample diary/)).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Try without login' })).not.toBeInTheDocument();
+    expect(fetch).toHaveBeenCalledWith('/api/auth/session', expect.any(Object));
   } finally {
     window.history.replaceState({}, '', '/');
   }
+});
+
+it.each([
+  '/design',
+  '/design/components',
+  '/development',
+  '/scan',
+  '/goals',
+  '/privacy',
+  '/terms',
+  '/app/unknown',
+  '/app/submissions/invalid',
+])('does not expose retired or unimplemented route %s', (route) => {
+  const fetch = vi.fn();
+  vi.stubGlobal('fetch', fetch);
+  window.history.replaceState({}, '', `/#${route}`);
+  render(<App />);
+  expect(screen.getByRole('heading', { name: 'Page not found' })).toBeVisible();
+  expect(screen.getByRole('link', { name: 'Open your diary' })).toHaveAttribute(
+    'href',
+    '#/app/dashboard',
+  );
+  expect(screen.queryByText(/preview|planned|coming soon/i)).not.toBeInTheDocument();
+  expect(fetch).not.toHaveBeenCalled();
+  window.history.replaceState({}, '', '/');
 });
 
 describe('development setup', () => {

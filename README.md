@@ -1,61 +1,60 @@
 # NourishNet
 
-## Try the local app without login
-
-From `Frontend/`, run `npm ci` and `npm run dev`, then open
-<http://127.0.0.1:5173/?demo=1#/app/dashboard>. No backend or database is needed
-for this development-only demo. Search for `sample` or `oats`, choose a food,
-review a decimal serving and meal, then save. Edit or remove the entry from its
-meal, change the diary day with the arrows/date picker, and refresh to verify
-browser persistence. Synthetic entries stay separate from account diaries.
-Use fictional data only. Clearing this site's browser storage clears the demo.
-
-The mobile diary follows the supplied reference: green toolbar, date strip,
-compact nutrition totals, meal headers with plus controls, and five bottom tabs.
-Menu opens later-sprint screen previews. Exercise, weigh-in, water and recipes
-are outside Sprint 1; the UI does not claim to implement them.
-
-For actual signup, login, verification, recovery, sessions and database-backed
-diaries, start the local backend/database as described below and open
-<http://127.0.0.1:5173/?demo=0#/app/login>. Account testing uses the existing
-synthetic-account API; the demo does not bypass backend authentication.
-Production builds ignore `demo=1`.
+## Run and test locally
 
 NourishNet is a mobile-first calorie and macronutrient tracker for adults 18+.
-This repository includes **Plan-01: Foundation and development setup**,
-**Plan-02: development schema and API contracts**, **Plan-03: screen-design
-preview and app shell**, and **Plan-04: shared food, form, and state components**. **Plans 05-07** add
-local synthetic accounts, backend food queries, and an account-owned dashboard.
-**Plan-08** adds live food search through a focused API client and cancellable hook.
-**Plan-09** adds serving/meal selection and scaled confirmation.
-**Plan-10** adds the authenticated diary API, persistent snapshots, and meal/day totals.
-**Plan-11** connects the tracker to saved diaries, selected dates, and authoritative totals.
-The shell uses fictional examples to review the initial
-screens. Account, tracking, scanning, upload, goal, and sharing operations are not
-available in the preview. Database foundation commands run separately from the app.
+The current local build uses actual manufacturer-sourced foods, account-owned
+PostgreSQL diaries, barcode lookup/camera scanning and pending photo submissions.
+Goals, connections, calendars, catalog publication and later legal/account-rights
+operations are outside this local delivery and have no placeholder app controls.
 
-## Current checkout verification (November 9, 2026)
+For the existing configured checkout, start PostgreSQL and the backend:
 
-Frontend/backend lint and formatting, the frontend production build, 149 frontend
-tests and 126 backend tests pass. The 31 explicit Plan-10 local integration checks
-also pass. Both development services respond locally,
-including the health endpoint through the frontend proxy. Open
-<http://127.0.0.1:5173/#/design/components> for interactive control testing,
-<http://127.0.0.1:5173/#/design> for the screen map, or
-<http://127.0.0.1:5173/#/development> for the API check.
+```powershell
+cd Backend
+npm ci
+node scripts/local-postgres.js start
+npm run dev
+```
 
-Local PostgreSQL 18.6 is now running only on 127.0.0.1:55432. The approved
-foundation migration and synthetic seed were applied; all five schema designs
-passed 27 integration checks in a separate transaction that rolled back. The
-Plan-04 preview was opened in the default browser. No hosted services were used.
+In a second terminal:
 
-Original ignored contracts were unavailable and have been reconstructed from
-source, with missing historical review evidence clearly identified.
+```powershell
+cd Frontend
+npm ci
+$env:VITE_AUTH_MODE = 'local'
+npm run dev
+```
+
+Open <http://127.0.0.1:5173/#/app/login>. Create a private test account using a
+fictional .test/.invalid address and a test-only password, verify with its code in
+ignored Backend/outbox, then sign in. Existing local verification accounts and
+credentials stay in ignored private-artifacts/; never copy their contents to Git.
+No external authentication or email service is used in local mode.
+
+The root opens the real session/account flow. The old demo query switch, design
+map, design examples, planned policies and unfinished routes are not application
+entry points. Retired routes show Page not found with a real diary link. Design
+components and their tests remain isolated in DesignPreviewApp outside this app.
+Four working bottom tabs replace the former placeholder navigation.
+
+Applied local migrations are 001/002/006/008/003. The three actual foods are Quaker
+Old Fashioned Oats (18 oz), Jif Creamy Peanut Butter (16 oz) and Original Cheerios
+(18 oz). Old fictional foods are inactive; existing diary snapshots were retained.
+A new checkout needs a separately reviewed local schema/catalog setup; do not
+reseed the current database. Local commands and photo instructions appear below.
+
+Current automated local verification covers real PostgreSQL diaries, three known
+barcodes, and actual Quaker 42 oz package/label photo persistence, retries,
+corrections and owner isolation. Unit/component tests are separate from explicit
+local database commands. Physical-camera, phone/desktop, zoom, keyboard and
+screen-reader review remains manual; CUA had no available browser/native surface.
+Nothing in this local work deploys to or tests Neon/Netlify.
 
 ## Tracker integration (Plan-11)
 
 Open <http://127.0.0.1:5173/#/app/dashboard> and sign in with a fictional account.
-Choose **Diary date**, then **Add food to lunch**. Search for `sample`, choose a
+Choose **Diary date**, then **Add food to lunch**. Search for `Quaker`, choose a
 food, enter `1.5` servings, review, and save. The tracker returns to the same day,
 showing the saved serving amount, its scaled nutrition, and updated daily totals.
 For example, 150 kcal per serving contributes 225 kcal at 1.5 servings.
@@ -113,7 +112,7 @@ zero recorded totals; that does not mean the day is complete.
 }
 ```
 
-Use an actual `servingId` from `/api/foods?q=sample` and a new UUID `requestKey`
+Use an actual `servingId` from `/api/foods?q=Quaker` and a new UUID `requestKey`
 for each intentional save. Meals are `breakfast`, `lunch`, `dinner`, or `snack`;
 quantity must be positive, below 100000000, and have at most four decimal places.
 Send JSON from the existing local app origin. Ownership and timezone come only
@@ -146,8 +145,9 @@ Ignore rules cannot detect every secret embedded in an otherwise allowed file.
 
 ## Local accounts, food queries and dashboard (Plans 05-07)
 
-Open <http://127.0.0.1:5173/#/app> for the working local app. The screen-design
-previews remain at <http://127.0.0.1:5173/#/design>. Use fictional input only.
+Open <http://127.0.0.1:5173/#/app/login> for the working local app. Use fictional
+account details and the actual manufacturer-sourced food catalog. Design previews
+are isolated test fixtures and are no longer application routes.
 Accounts and session records persist in the isolated local PostgreSQL database.
 This is an internal development implementation, not a public authentication release.
 
@@ -179,11 +179,12 @@ codes exist only in the ignored local outbox. Never commit or share that folder,
 Backend/.env, database data, browser sessions or private testing artifacts.
 
 The approved account schema is migration 006_local_accounts.sql, applied after 001.
-Only 001 and 006 are persisted; later diary/submission/goal/connection migrations
-remain staged. No provider, external email service, paid resource or new npm package
-was added. Public deployment and production authentication review remain later work.
+The current local schema also includes approved diary 002, catalog 008 and submission
+003 migrations. Goal/connection migrations remain staged. Account setup added no
+provider or external email service. Public deployment and production authentication
+review remain later work.
 
-The authenticated GET /api/foods?q=... endpoint searches the synthetic catalog with
+The authenticated GET /api/foods?q=... endpoint searches the active actual-food catalog with
 bound, case-insensitive literal substring matching, at most 100 query characters,
 stable ordering and a fixed 25-row limit. Blank or unmatched searches return an empty
 foods array. Results include serving basis, kcal, macros and nullable sodium; zero
@@ -192,7 +193,7 @@ and unknown sodium stay distinct.
 ### Live food search (Plan-08)
 
 After signing in, choose **Search foods** or an **Add food** link from a meal,
-or open <http://127.0.0.1:5173/#/app/search>. Type `sample` and press Enter or
+or open <http://127.0.0.1:5173/#/app/search>. Type `Quaker` and press Enter or
 choose **Search foods**. Results show each food's name, serving basis, calories,
 protein, fat, carbohydrates, and sodium. Unknown sodium reads **Not provided**.
 Search runs only on submission or retry, not while typing or rendering. Blank
@@ -255,18 +256,9 @@ prints credentials or codes. Unit tests mock repositories and never contact Neon
 
 ## Shared controls (Plan-04)
 
-Open <http://127.0.0.1:5173/#/design/components> or choose **Try shared food, form,
-and state components** on the design map. Search for **oats**, choose the fictional
-food, enter a decimal serving amount, select a meal, and choose **Confirm preview**.
-Nothing is saved or sent. **Back to search** keeps both your search and serving
-choices during this flow. Use fictional input only; leaving the preview resets it.
-
-Choose **Recoverable error** or **No results** in **Preview response** to review
-failure/retry and empty states. Actions pause briefly to show disabled pending
-controls. Try an empty search, a zero serving, keyboard Tab/Enter, and repeated
-clicks. Errors remain beside their fields or retry controls, and retry preserves
-input. The estimate example displays the mathematical-estimate notice and leaves
-values uncalculated pending formula review.
+The shared-control examples and their automated tests remain in the isolated
+design harness. They are not reachable from the application and do not supply
+application foods, diary entries or fake success responses.
 
 Reusable controls live in their own folders, such as
 `Frontend/src/components/FoodCard/FoodCard.jsx`, with tests beside each component.
@@ -286,34 +278,13 @@ Nutrition presentation keeps supplied precision, shows kcal/g/mg, and displays
 missing values as **Not provided**. These controls perform no nutrition scaling
 or goal calculations. Existing design tokens are used unchanged.
 
-## Screen-design preview (Plan-03)
+## Design reference components
 
-Open <http://127.0.0.1:5173/#/design> after starting the frontend. The screen map
-links accounts, diary, food search/confirmation/edit/removal, scan/manual fallback,
-photo submission/review, goals/history, connections/sharing, and calendars. The
-footer includes settings and clearly labeled future privacy, terms, and account
-rights locations. Unknown routes offer a recovery link.
-
-Each screen has a **Preview state** selector for example, loading, error/retry,
-empty, validation, and success layouts. Navigation links work; disabled operation
-buttons and fields illustrate later functionality without collecting credentials,
-measurements, or files. Refresh and browser back/forward retain the selected hash
-route. Goal estimates are not calculated before formula approval.
-
-For layout review, compare a narrow phone viewport (390 px) and a wide viewport
-(1440 px), then check 200% zoom and keyboard access. All routes now share the green
-toolbar, expandable menu, compact flat sections and five fixed bottom tabs. Wide
-screens keep the same organization inside a centered container. A skip link moves focus to
-the main content; route changes focus the main landmark. Calendar previews offer
-native month buttons and an announced day-detail list. All established design-token
-values remain unchanged. Earlier Plan-03 layout approval remains recorded in the
-plan. The latest cross-page styling is covered by route and keyboard regression
-tests; fresh phone/desktop, zoom, mobile-keyboard and screen-reader review remains
-pending because browser automation is unavailable in this session.
-
-The reconstructed local review summary and manual checklist are in the ignored
-`Frontend/contracts/plan-03.md`. The original API check remains at
-<http://127.0.0.1:5173/#/development>.
+Initial screen designs remain in source and the isolated DesignPreviewApp test
+harness for reference. The normal app has no design-preview route or fixture
+transport, even when a legacy demo query flag is present. Implemented flows are
+reviewed directly through the local account app. Human visual/device review
+remains separate from automated component tests. Established tokens are unchanged.
 
 ## Plan-02 development database
 
@@ -413,10 +384,9 @@ configuration; the working account app requires the approved local database setu
 On Windows, use `npm.cmd` if PowerShell blocks `npm.ps1`. On macOS/Linux, use
 `cp .env.example .env` in place of `Copy-Item`.
 
-Open <http://127.0.0.1:5173/#/development> and click **Check API connection**. A successful
-check displays "The API is running. Your local services can communicate."
-Stop the backend and check again to see the persistent error and **Try again**
-action. The check times out after five seconds and disables the button while pending.
+Open <http://127.0.0.1:5173/#/app/login>. To inspect process health directly,
+request <http://127.0.0.1:3001/api/health> or the proxied
+<http://127.0.0.1:5173/api/health>. Health is not a database/feature check.
 Stop development services with Ctrl+C in each terminal.
 
 Vite forwards `/api` requests to <http://127.0.0.1:3001> during development.
@@ -437,7 +407,7 @@ instead of a cross-origin API URL; CORS is not configured in this foundation.
 
 Every `VITE_` value is exposed to the browser. Database settings belong only in
 the backend. The local account app calls the backend API, which accesses only the configured
-synthetic loopback database. The design previews make no database requests.
+synthetic loopback database. The isolated design-test harness makes no database requests and is not an app entry point.
 Manual migration/verification commands are explicit and use the ignored backend environment.
 
 ## Local API
@@ -469,6 +439,46 @@ Invoke-RestMethod http://127.0.0.1:3001/api/health
 ```
 
 ## Quality checks
+
+### Local catalog preparation (Plan-14A)
+
+From `Backend/`, preview the proposed actual-food catalog without opening a database:
+
+```powershell
+npm run catalog:plan
+```
+
+The proposal contains manufacturer nutrition/source links, barcode mappings and
+SHA-256 checksums for `migrations/008_actual_food_catalog.sql` and
+`catalog/manufacturer-foods.json`. These files are prepared for review; their
+presence does not mean the local schema or catalog has been updated.
+
+With the existing local PostgreSQL cluster running, inspect migration history and
+catalog/diary counts without changing records:
+
+```powershell
+npm run catalog:inspect
+```
+
+The inspector accepts only `127.0.0.1:55432/nourishnet_plan02_dev` with the existing
+development confirmations. It rejects hosted databases before opening a connection.
+The proposed migration retains existing foods/servings and diary snapshots while
+marking fictional foods inactive; the import adds three source-backed foods without
+overwriting existing records. No catalog operation runs during startup or build.
+
+To repeat the approved local API/database integration checks against those actual
+foods and the same two isolated test accounts:
+
+```powershell
+npm run verify:catalog
+```
+
+This explicit local command exercises all meals, decimal totals, retries, edits/
+removal, account separation and date boundaries. It preserves existing diaries
+and stores test credentials/results only under ignored `private-artifacts/`.
+Manual browser/phone review is separate from these automated checks.
+
+### Package checks
 
 Run from `Frontend/`:
 
@@ -661,3 +671,90 @@ the goal menu/calculator remains Plan-19. The developer explicitly delegated the
 technical review to the AI and deferred independent professional review for this
 internal phase; completion does not claim clinical validation or public-release
 approval. No paid service was used. Keep this local contract for later implementation.
+
+## Local barcode lookup and scanner
+
+Sign into the local app at `http://127.0.0.1:5173/#/app/login`, then use the
+toolbar barcode shortcut or **Track -> Scan a food barcode**. Enter a printed
+barcode, or choose **Start camera** and allow video capture. The camera stops on
+the first decoded result; review servings and meal before **Save entry**. Manual
+entry remains available if camera access or decoding fails. No video is uploaded.
+
+The current local catalog recognizes these exact product barcodes (other package
+sizes/product versions can have different codes):
+
+- Quaker Old Fashioned Oats, 18 oz: `030000010204`.
+- Jif Creamy Peanut Butter, 16 oz: `051500255162`.
+- Original Cheerios, 18 oz: `016000170032`.
+
+The approved local `GET /api/foods/barcode?code=...` endpoint validates 8/12/13/14
+digits and their check digit, pads canonical IDs to 14 digits, and returns actual
+active catalog servings or an explicit unknown result. UPC-E is not expanded;
+enter the full UPC-A instead. Lookup never writes a diary/catalog record.
+Check-digit rules follow [GS1](https://www.gs1uk.org/knowledge-hub/standards/what-is-a-check-digit).
+
+From Backend, `npm run verify:barcodes` runs the local Vite-proxied lookup checks
+using the existing verification accounts and confirms catalog/diary counts stay
+unchanged. No provider is contacted. The decoder is bundled from the approved,
+pinned ZXing packages; physical-phone camera quality/compatibility still needs
+manual testing. Camera capture needs a browser-approved secure context; loopback
+is supported for desktop local testing. Do not expose the local servers publicly
+or deploy to obtain a camera test URL without approval.
+
+## Local unknown-product photo submissions
+
+When a barcode is unknown, choose **Submit package and label photos**. Upload the
+package front and nutrition label (JPEG/PNG/WebP, at most 5 MB each). Product name,
+serving text and label nutrients are optional; leaving values blank does not turn
+them into zero. Submit once, then open **Menu -> My submissions** for persisted
+status and the uploaded images. A submission stays pending and is not searchable
+food or a diary entry. Review/publication is a later feature.
+
+Requested corrections become editable only when status is **Changes requested**.
+Existing photos can be retained while correcting fields, or replaced. A correction
+returns to pending. The local API supports authenticated create/list/detail/photo/
+correction routes under `/api/submissions`; repeat saves replay an actor-scoped
+key, and concurrent/stale/conflicting changes do not silently overwrite records.
+
+The human-approved local migration `003_submissions.sql` was applied November 12.
+Generated image files live under ignored `Backend/uploads/submissions/`, outside
+static assets; images are retrieved through owner-only endpoints. Production
+upload hardening and retention remain in the later phase. No hosted storage or
+submission service was configured or tested.
+
+From Backend, `npm run verify:submissions` uses the existing two test accounts and
+the actual Quaker 42 oz images under ignored `private-artifacts/package-photos/`.
+It retains one test submission, checks exact bytes, duplicates/retries, ownership
+and requested correction, and leaves food catalog/diary counts unchanged. It does
+not invent a product or publish submitted data. A fresh checkout needs its own
+actual package images and approved local test setup before running that command.
+
+## Manual local acceptance checklist
+
+Use the local account app, not a design harness. This checkout still needs human
+webcam/phone, desktop/mobile layout, keyboard, zoom and screen-reader review.
+
+1. Sign in, search Quaker, choose 1.5 servings for Lunch and save. Refresh and
+   sign out/in; confirm the selected date, saved entry and totals. Edit its meal/
+   quantity, then remove only your test entry and confirm totals recover.
+2. Open the barcode shortcut. Enter `030000010204`, confirm serving/meal and save
+   once. Try rapid repeated saves and a retry; confirm one entry.
+3. Start the camera, scan a supported real product and confirm the match before
+   saving. Leave the scanner and confirm the camera indicator stops. Deny camera
+   permission and verify manual entry still works. Physical-phone decoding remains
+   unchecked until performed on a suitable local device setup.
+4. Enter unknown catalog barcode `030000010402` (Quaker 42 oz), choose package/
+   label photos, navigate back and return, then submit. Actual manufacturer image
+   files used in automated local checks are under ignored
+   `private-artifacts/package-photos/quaker-front.jpg` and `quaker-label.jpg`.
+5. Open My submissions, refresh and check pending status and both photos. Another
+   account must not see the submission. Correction controls appear only for
+   actual Changes requested records; reviewer/publication controls are not in scope.
+6. Check the toolbar, four bottom tabs, Preferences, keyboard focus, narrow layout
+   and 200% zoom. No design map, demo, fake profile, planned policy or future-feature
+   destination should be exposed by the normal app. Retired direct routes recover
+   through Page not found. Loading, empty, error and pending-review copy should stay.
+
+See AI_Docs/PLAN.md for checked local acceptance criteria and remaining explicit
+human/device checks. Hosted acceptance uses the authorized local substitute for
+now; no provider push/test/deploy is implied.

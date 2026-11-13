@@ -541,3 +541,23 @@ release-approval*.json.*
 # Keep security source, policies, secret-free examples and public assets tracked.
 # Do not ignore SECURITY.md, AI_Docs/SECURE.md, auth modules, or whole image/JSON
 # categories. Store private screenshots/exports in private-artifacts/ instead.
+
+# Standalone bearer/session tokens and private API-client workspaces.
+# Public keys and checked-in request examples remain eligible for tracking.
+*.jwt
+*.jwt.*
+*.token
+*.token.*
+.postman/
+.insomnia/
+
+# Vite/Vitest transient configuration, runtime caches and coverage exports.
+.vite-temp/
+.vitest/
+.v8-coverage/
+*.lcov
+
+# Alternate private browser profile locations and PostgreSQL administration state.
+.user-data/
+.playwright/
+.pgadmin4/
