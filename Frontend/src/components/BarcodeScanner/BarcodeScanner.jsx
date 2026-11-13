@@ -16,12 +16,18 @@ export default function BarcodeScanner({ initialMeal = '', onSave, onUnknown }) 
   const [lookupError, setLookupError] = useState('');
   const [cameraError, setCameraError] = useState('');
   const [cameraState, setCameraState] = useState('idle');
+  const [scanHelp, setScanHelp] = useState(false);
   const video = useRef(null);
   const camera = useRef(null);
   const request = useRef(null);
   const locked = useRef(false);
   const active = useRef(true);
   const lastCode = useRef('');
+  useEffect(() => {
+    if (cameraState !== 'scanning') return;
+    const timer = setTimeout(() => setScanHelp(true), 8000);
+    return () => clearTimeout(timer);
+  }, [cameraState]);
   useEffect(() => {
     active.current = true;
     return () => {
@@ -33,7 +39,10 @@ export default function BarcodeScanner({ initialMeal = '', onSave, onUnknown }) 
   function stopCamera() {
     camera.current?.abort();
     camera.current = null;
-    if (active.current) setCameraState('idle');
+    if (active.current) {
+      setCameraState('idle');
+      setScanHelp(false);
+    }
   }
   async function lookup(value) {
     if (locked.current || !active.current) return;
@@ -77,7 +86,16 @@ export default function BarcodeScanner({ initialMeal = '', onSave, onUnknown }) 
           stopCamera();
           void lookup(value);
         },
-        { signal: controller.signal },
+        {
+          signal: controller.signal,
+          onError: () => {
+            if (!active.current || controller.signal.aborted) return;
+            stopCamera();
+            setCameraError(
+              'The camera preview opened, but barcode detection stopped. Try again or enter the printed barcode below.',
+            );
+          },
+        },
       );
       if (!controller.signal.aborted && active.current) setCameraState('scanning');
     } catch {
@@ -132,7 +150,14 @@ export default function BarcodeScanner({ initialMeal = '', onSave, onUnknown }) 
       )}
       {cameraState === 'scanning' && (
         <p role="status">
-          Point the camera at a UPC-A, EAN or ITF-14 product barcode. Hold it steady.
+          Looking for a barcode. Fill the center of the preview with the whole barcode, including
+          the blank space at both ends. Hold steady and move back slightly if it is blurry.
+        </p>
+      )}
+      {scanHelp && (
+        <p role="status">
+          Still looking. Try more light without glare, rotate the bottle, or use the printed number
+          below. For the fairlife 11.5 fl oz chocolate bottle, enter 811620022118.
         </p>
       )}
       {cameraError && <ErrorState message={cameraError} onRetry={startCamera} />}

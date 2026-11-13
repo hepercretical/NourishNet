@@ -17,6 +17,7 @@ export default function AccountForm({
   initialEmail = '',
   onSubmit,
   onResend,
+  onGuest,
   hosted = false,
 }) {
   const [draft, setDraft] = useState({
@@ -163,9 +164,21 @@ export default function AccountForm({
           'password',
           'Use 15 to 128 characters. Use a test-only password.',
         )}
-      <Button type="submit" pending={pending} pendingLabel="Please wait…">
-        {labels[mode]}
-      </Button>
+      <div className="account-form__actions">
+        <Button type="submit" pending={pending} pendingLabel="Please wait…">
+          {labels[mode]}
+        </Button>
+        {mode === 'login' && onGuest && (
+          <Button variant="secondary" disabled={pending} onClick={() => run(onGuest)}>
+            Continue as guest
+          </Button>
+        )}
+      </div>
+      {mode === 'login' && onGuest && (
+        <p>
+          Temporary testing: opens a fresh guest diary. Refresh keeps it; signing out ends access.
+        </p>
+      )}
       {mode === 'verify' && (
         <Button
           variant="secondary"

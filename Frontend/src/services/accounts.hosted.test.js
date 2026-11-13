@@ -6,9 +6,43 @@ const { neonToken, neonAuthRequest } = vi.hoisted(() => ({
 vi.mock('./hostedConfig.js', () => ({ usesNeonAuth: true }));
 vi.mock('./neonAuth.js', () => ({ neonToken, neonAuthRequest }));
 import { accountRequest } from './accounts.js';
+import { setGuestSession } from './guestSession.js';
 afterEach(() => {
+  setGuestSession(false);
   vi.unstubAllGlobals();
   vi.resetAllMocks();
+});
+it('uses guest cookies in a production build, remembers explicit guest entry and revokes it on logout', async () => {
+  vi.stubEnv('DEV', false);
+  const fetch = vi
+    .fn()
+    .mockResolvedValue({ ok: true, status: 200, json: async () => ({ account: { id: 'guest' } }) });
+  vi.stubGlobal('fetch', fetch);
+  try {
+    await accountRequest('/auth/guest', { body: {} });
+    await accountRequest('/auth/session');
+    await accountRequest('/diary?date=2026-11-13');
+    expect(neonAuthRequest).not.toHaveBeenCalled();
+    expect(neonToken).not.toHaveBeenCalled();
+    expect(
+      fetch.mock.calls.every(
+        ([, options]) => options.credentials === 'same-origin' && !options.headers?.Authorization,
+      ),
+    ).toBe(true);
+    await accountRequest('/auth/logout', { body: {} });
+    neonToken.mockResolvedValue(undefined);
+    await expect(accountRequest('/diary?date=2026-11-13')).rejects.toMatchObject({ status: 401 });
+  } finally {
+    vi.unstubAllEnvs();
+  }
+});
+it('does not trust a guest transport marker when the server rejects its session', async () => {
+  setGuestSession(true);
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 401 }));
+  await expect(accountRequest('/auth/session')).rejects.toMatchObject({ status: 401 });
+  neonToken.mockResolvedValue(undefined);
+  await expect(accountRequest('/diary?date=2026-11-13')).rejects.toMatchObject({ status: 401 });
+  expect(neonToken).toHaveBeenCalledOnce();
 });
 it('attaches the verified managed session token to same-origin API calls', async () => {
   neonToken.mockResolvedValue('synthetic-jwt');

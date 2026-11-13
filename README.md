@@ -34,6 +34,33 @@ ignored Backend/outbox, then sign in. Existing local verification accounts and
 credentials stay in ignored private-artifacts/; never copy their contents to Git.
 No external authentication or email service is used in local mode.
 
+For temporary guest testing, start the backend with `$env:LOCAL_GUEST_ENABLED = 'true'`
+before `npm run dev`. In the local Vite app, choose **Continue as guest** beside
+**Sign in** without filling the email/password fields. Each click after signing
+out creates a separate synthetic Guest tester account with an empty diary.
+The normal private API/session checks still apply. Refresh preserves the session
+for up to eight hours; signing out ends access. Guest records remain in the local
+database and cannot be recovered through this button. Use fictional data only.
+The temporary button is included in development and production frontend builds,
+including Neon Auth mode, through Sprint 3 (ending December 12, 2026). It is to
+be removed afterward. Backend guest creation remains explicitly enabled per environment;
+`NODE_ENV=production` does not hide or disable the requested test flow.
+Unset `LOCAL_GUEST_ENABLED` and restart the backend to disable guest creation.
+
+The hosted adapter supports guest sessions when `GUEST_TESTING_ENABLED=true` on
+the synthetic testing backend. It requires the existing account/session tables
+from migration `006_local_accounts.sql`, in addition to each tested feature's
+migrations. Prepare and review any missing remote migrations before applying them;
+no remote migration, environment change or deployment is performed by this change.
+Hosted guest cookies are HttpOnly/Secure, expire after eight hours, and are
+revoked on sign-out. Each guest has separate ownership; Neon sign-in still uses
+its verified bearer token. The browser remembers only the explicit choice to use
+a guest cookie in session storage, never the cookie/token or diary. With storage
+blocked, guest access lasts for the current page but cannot resume after reload.
+
+If a local page goes blank after formatting source files, restart Vite and reload.
+The file watcher now waits for writes to finish before updating cached modules.
+
 The root opens the real session/account flow. The old demo query switch, design
 map, design examples, planned policies and unfinished routes are not application
 entry points. Retired routes show Page not found with a real diary link. Design
@@ -740,6 +767,24 @@ digits and their check digit, pads canonical IDs to 14 digits, and returns actua
 active catalog servings or an explicit unknown result. UPC-E is not expanded;
 enter the full UPC-A instead. Lookup never writes a diary/catalog record.
 Check-digit rules follow [GS1](https://www.gs1uk.org/knowledge-hub/standards/what-is-a-check-digit).
+
+The updated camera requests a 1920×1080 rear-camera stream when available and
+continuous focus only on devices that support it. Pixel decoding explicitly
+handles horizontal/vertical and reversed retail barcodes in rectangular frames.
+It samples a bounded set of rows across the preview instead of scanning every
+row on unreadable frames. Fatal decoder failures show recovery instead of leaving
+an apparently active preview; after eight seconds the screen offers focus,
+lighting and manual-entry guidance. Keep the entire barcode and its blank end
+margins visible. A clear, close-up image works better than the whole bottle.
+Decoded pixels stay on-device. There is no automatic internet-wide product lookup:
+known reviewed catalog products open serving/meal review, then Save entry logs
+the food once. Unknown products still offer pending photo submission.
+
+Regression checks use real ZXing decoding on generated UPC pixel frames (four
+orientations, off-center placement, reduced contrast, noise, blank/bad-checksum
+frames and a second product), plus mocked camera lifecycle and scanner UI tests.
+These tests do not establish a physical-camera or supplied-photo decoding pass;
+actual webcam/phone focus, glare and bottle curvature still need manual testing.
 
 From Backend, `npm run verify:barcodes` runs the local Vite-proxied lookup checks
 using the existing verification accounts and confirms catalog/diary counts stay

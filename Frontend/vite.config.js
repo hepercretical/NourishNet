@@ -8,6 +8,9 @@ export default defineConfig({
     fs: { allow: ['.', '../shared'] },
     port: 5173,
     strictPort: true,
+    // Formatters can briefly truncate a file before rewriting it. Wait for the
+    // completed write so HMR never caches an empty application module.
+    watch: { awaitWriteFinish: { stabilityThreshold: 200, pollInterval: 50 } },
     proxy: { '/api': 'http://127.0.0.1:3001' },
   },
   build: { sourcemap: false },

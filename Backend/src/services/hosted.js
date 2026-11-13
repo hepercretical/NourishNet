@@ -6,6 +6,8 @@ import { diaryRepository } from '../db/diary.js';
 import { personalRepository } from '../db/personal.js';
 import { submissionRepository } from '../db/submissions.js';
 import { hostedPhotoStore } from './hostedPhotos.js';
+import { accountRepository } from '../db/accounts.js';
+import { createAuthService } from '../auth/service.js';
 
 export function hostedServices(env = process.env) {
   requireSyntheticDevelopment(env);
@@ -16,6 +18,12 @@ export function hostedServices(env = process.env) {
   const diary = diaryRepository(database);
   return {
     accounts: hostedAccountRepository(database),
+    // Temporary guest support uses migration 006's existing private sessions.
+    // Applying that migration remotely remains a separately approved release.
+    guestAuth: createAuthService({
+      repository: accountRepository(database),
+      allowGuest: env.GUEST_TESTING_ENABLED === 'true',
+    }),
     foods: foodRepository(database),
     personal,
     submissions: submissionRepository(database, hostedPhotoStore(database)),
