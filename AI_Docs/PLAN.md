@@ -80,6 +80,56 @@ this larger scope fits. Escalate a schedule conflict rather than silently move w
 No remote provider operation, API rule, migration application, package or exact
 palette/formula approval is implied. Prepare concrete proposals locally first.
 
+## Remaining-feature audit and Week 1 completion update (2026-11-13)
+
+The human requested explicit Sprint 3 Week 1 tasks for the large design changes
+that are not yet fully functional. This audit uses DESIGN.md, the current React
+screens, API/repository code, migrations and tests. All new criteria start unchecked.
+Existing verified local work stays checked; do not rebuild it merely because
+hosted or human verification is pending. This update grants no schema, formula,
+deployment or spending approval.
+
+Dashboard progress/remaining and macro grams, daily nutrition summary/chart and
+macro goals, personal goal history/calendar/streaks, weight history, Track and
+Preferences already work locally. Current checks pass 293 frontend and 261 backend
+tests, lint, formatting and the frontend build. Hosted adapters, managed password
+changes and private photo retrieval/storage are prepared with mocked tests; eight
+rolled-back local checks verify migration 010 without retaining its schema. These
+are not hosted persistence, physical-camera or human usability passes. Provider
+sign-in and read-only inspection are release preparation, not feature acceptance.
+The subsequent read-only hosted inspection finds the existing application
+migrations and Fairlife catalog record. Migrations 008/009/010 match the current
+checkout bytes; 007 matches after CRLF-to-LF normalization. Earlier LF-only
+review hashes can differ from Windows CRLF bytes without a SQL-content change.
+Pin exact artifact bytes during release review, without rewriting applied history.
+No hosted authenticated feature journey is established by that inspection.
+
+| Remaining deliverable                                                            | Owner stories/tasks | Completion target          |
+| -------------------------------------------------------------------------------- | ------------------- | -------------------------- |
+| Four-objective intent menu and approved estimate/target handoff                  | Plan-19, Plan-19B   | Nov 30                     |
+| Actual photos -> reviewer decisions -> catalog/barcode -> second-account logging | Plan-18             | Dec 2; hard deadline Dec 5 |
+| Real accepted connections, selected sharing, revoke/remove/block/report          | Plan-20             | Dec 3                      |
+| Own/friend progress summary and historical-goal comparison                       | Plan-22             | Dec 4                      |
+| Hosted functional parity and managed account/private-photo journeys              | Plan-23B            | Dec 4                      |
+| Isolated interactive development preview for all completed features              | Plan-23C            | Dec 4                      |
+| Remaining functional mobile, calendar, weight and theme acceptance               | Plan-23D            | Dec 5                      |
+| Combined journeys, human acceptance and feature freeze                           | Plan-23             | Dec 5                      |
+
+Plans 19B and 23B-23D complete requested scope. Review and connection schema/API
+decisions remain owned by Plan-18/20. Existing goals use personal_goal_versions
+from 009; do not blindly apply older 004/005 designs or create competing goal
+histories. Resolve required formula, reviewer, discovery/report and provider
+approvals before dependent implementation. Review remaining capacity before
+November 29; do not assume these added tasks fit without checking effort.
+
+Sprint 2 human/physical-camera gates in Plan-03/15/18A retain their deadlines and
+must be reported at that handoff, not silently moved or marked passed. Complete
+them before dependent Week 1 acceptance. December 6-12 can retest and repair
+features completed by December 5; it cannot supply missing first versions.
+SECURE.md/LEGAL.md implementation and public-readiness review stay in Plan-26
+through Plan-29 starting December 13. Existing AGENTS.md safeguards and the
+mathematical-estimate notice continue throughout private testing.
+
 ## Local acceptance authorization (2026-11-12)
 
 The human explicitly requested that acceptance criteria be checked as work passes.
@@ -204,11 +254,12 @@ application check run for this documentation change.
 | Nov 23                   | Plan-16             | Unknown barcode opens working package-front/label photo form                                   |
 | Nov 25                   | Plan-17             | Photo intake, pending status, correction and retry persist                                     |
 | Nov 27-28                | Plan-18A            | Database/logging/scanner human testing and complete application filler removal                 |
-| Nov 30                   | Plan-19             | Goal estimate review, acceptance and persistence                                               |
+| Nov 30                   | Plan-19/19B         | Four-objective goal menu, estimate review, acceptance and persistence                          |
 | Dec 2                    | Plan-18             | Read actual package/label photos, review values, publish catalog food/barcode and verify reuse |
 | Dec 3                    | Plan-20 and Plan-21 | Connections/sharing plus historical goals and personal calendar                                |
 | Dec 4                    | Plan-22             | Shared-progress comparison against each person's historical goal                               |
-| Dec 5                    | Plan-23             | Combined journeys, human review, photo-to-catalog deadline and feature freeze                  |
+| Dec 4                    | Plan-23B/23C        | Hosted functional parity and isolated interactive development preview complete                 |
+| Dec 5                    | Plan-23D/23         | Close functional mobile/theme gaps, combine journeys, human review and feature freeze          |
 | Dec 6-12                 | Plan-24/25          | Existing-feature defects, regression and quality only                                          |
 | Dec 13 onward            | Plan-26/27/28/29    | Security/legal implementation, verification and later public-release gate                      |
 
@@ -651,11 +702,12 @@ review. Automated portions are implemented and tested locally; no manual pass is
 inferred from mocked cameras or the unavailable CUA browser surface. Hosted
 portions use the human-approved local substitute and remain deferred.
 
-## Sprint 3 Week 1: Photo-to-catalog, goals, connections and calendars (November 29-December 5)
+## Sprint 3 Week 1: Complete all requested functionality (November 29-December 5)
 
 **Goal:** Complete adding actual foods from submitted photos by halfway through
 Sprint 3, finish goals/accountability features and freeze new functionality by
-December 5. Keep the working Sprint 2 core and no-filler gate intact.
+December 5. Keep the working Sprint 2 core and no-filler gate intact. Follow the
+remaining-feature audit above; finish new functionality before the quality week.
 
 ### Plan-18 Catalog review and reusable publication
 
@@ -676,11 +728,47 @@ December 5. Keep the working Sprint 2 core and no-filler gate intact.
       reviewer selection grants no backend privileges. Verify scan -> submit -> review -> reuse.
 - [ ] By December 5 at the latest, a submitted actual product is added from its photos to the
       catalog with serving/nutrition/source and barcode mapping; another account scans and logs it.
+- [ ] Publication atomically binds the reviewed food, serving and barcode; retries,
+      competing reviews and barcode conflicts cannot create duplicate or partially
+      reusable records. Preserve existing diary nutrition snapshots.
+- [ ] Real request-changes/approve/reject outcomes reach the submitter's persisted
+      status and existing Notifications activity. Corrections return to review;
+      permitted submitters/reviewers can read the appropriate photos and feedback.
+
+### Plan-19B Complete objective selection and estimate handoff
+
+- **Phase:** S3 W1 | **Due:** 2026-11-30 | **Estimate:** needs review
+- **Branch:** `/plan-19b` | **Depends on:** Plan-13, Plan-05, Plan-11
+
+Complete Plan-19's missing original objective flow using the existing local
+goal editor/calculator. Plan-19B feeds Plan-19; it does not depend on Plan-19's
+unfinished acceptance and must not introduce a circular dependency.
+
+**Acceptance criteria**
+
+- [ ] A working menu explicitly offers gain, lose, maintain and muscle gain. The
+      user reviews their intent and chooses the calorie comparison mode; muscle
+      gain never silently implies a surplus, macro split or promised outcome.
+- [ ] Record human-approved intent-to-target behavior before implementation.
+      Reuse the frozen Health Canada reference estimate and manual-target path.
+      If distinct gain/loss recommendations or adjustments are required, obtain
+      specific formula/assumption/review approval first; do not invent deficits,
+      surpluses, safety limits or rates from screenshot examples.
+- [ ] Persist the approved objective and accepted calorie/macro target through a
+      reviewed schema/API update if needed, preserving effective dates, estimate
+      source and deliberate acceptance. Existing history remains readable and
+      unchanged; cancel/decline leaves the saved goal alone.
+- [ ] Selection, supported/unsupported calculator cases, unit conversion, manual
+      targets, review/edit/save and reload work from Preferences/Menu. Dashboard,
+      daily summary and Stats consume the same saved effective goal.
+- [ ] Tests cover all four objectives, explicit muscle-gain mode choice, preserved
+      inputs, notices, failed/repeated saves, account changes and historical goals.
+      Mocks do not establish hosted functionality or professional validation.
 
 ### Plan-19 Goal menu and estimate acceptance
 
 - **Phase:** S3 W1 | **Due:** 2026-11-30 | **Points:** 13
-- **Branch:** `/plan-19` | **Depends on:** Plan-13, Plan-11, Plan-05
+- **Branch:** `/plan-19` | **Depends on:** Plan-13, Plan-11, Plan-05, Plan-19B
 
 **Acceptance criteria**
 
@@ -749,6 +837,9 @@ layout/assistive-technology review remains in the shared quality gate.
       pending/accepted/removed/unavailable states have readable labels. Revoke, remove, block
       and report work by touch/keyboard, including report routing and confirmation. Verify
       these behaviors with isolated synthetic demo actors as well as authenticated accounts.
+- [ ] Replace Connections' Coming Soon... content with the working requests,
+      accepted connections and sharing controls. The temporary page is not
+      completion; public discovery, messaging and leaderboards remain out of scope.
 
 ### Plan-21 Personal goal history, calendar and streaks
 
@@ -826,6 +917,11 @@ are documented. The combined keyboard/zoom/device criterion is still unchecked.
       on phones; month/date controls, text legend, day-list alternative and bottom tabs work
       at narrow widths and 200% zoom. Test sharing/revocation and differing timezones in the
       isolated demo too.
+- [ ] Connections provides the requested own/friend progress summary and a working
+      path to the selected comparison. Every friend value is explicitly shared;
+      private/no-goal/unavailable states stay neutral. Revoke/remove/block updates
+      the ordinary summary/comparison flow on refresh without exposing sensitive
+      measurements, sex, age or detailed food logs.
 
 ### Plan-23A Preferences and appearance
 
@@ -855,10 +951,108 @@ with the latter sensitive test changes rolled back. Twenty-nine proposed normal-
 text contrast combinations pass. All-theme visual/zoom/assistive-technology review
 is still pending, so those combined criteria remain unchecked.
 
+### Plan-23B Hosted functionality parity and persistent journeys
+
+- **Phase:** S3 W1 | **Due:** 2026-12-04 | **Estimate:** needs review
+- **Branch:** `/plan-23b` | **Depends on:** completed local functionality of each owning feature; Plan-18/20/22 before their hosted extensions
+
+Finish the requested Netlify/Neon compatibility work after the corresponding
+local behavior works. Mock/local evidence does not close this hosted-specific
+task. Exact release/budget approvals and approved private tester access remain
+prerequisites for remote verification; this plan does not authorize deployment.
+
+**Acceptance criteria**
+
+- [ ] Match frontend requests to working hosted account, catalog, diary, barcode,
+      submission/correction/photo, goal/history/Stats, weight, profile, appearance
+      and notification routes, plus completed review/connections/comparison.
+      No visible feature requires a local-only API or Functions filesystem, or
+      falls back to fake data when the hosted implementation is unavailable.
+- [ ] Managed signup/verification/profile completion, sign-in/recovery/logout and
+      current-password change work through the approved Neon Auth integration.
+      Password changes revoke sessions as specified; never transfer local password
+      tables, local test users or local session credentials into Neon.
+- [ ] Approved hosted storage and bearer photo retrieval support preview, submit,
+      reload, review and correction. Explicit 2 MiB/photo and 100 MiB total test
+      caps, bounded requests, cancellation, object-URL cleanup, full-storage and
+      retry behavior work; local 5 MiB uploads remain local.
+- [ ] Reconcile exact approved migration history and actual-food records,
+      including Fairlife UPC 811620022118. Preserve existing data/diary snapshots;
+      never reset/reseed or transfer local private accounts, diaries or uploads.
+- [ ] After exact provider/artifact/budget approval, two isolated approved hosted
+      testers exercise saved/reloaded core and new-feature journeys, deliberate
+      barcode saves, reviewed product reuse and sharing/revocation. Record actual
+      results; a build or health response alone does not establish feature parity.
+- [ ] Hosted build, bundled API check and secret/static-output audit pass. Retain
+      restricted internal access, stopped automatic Git deploys and Free-plan
+      reserves. This is functional integration, not public-release approval or
+      the later security/legal implementation.
+
+### Plan-23C Complete the isolated interactive development preview
+
+- **Phase:** S3 W1 | **Due:** 2026-12-04 | **Estimate:** needs review
+- **Branch:** `/plan-23c` | **Depends on:** each completed owning feature; Plan-18/20/22 before their preview journeys
+
+Extend the preserved developer-only harness instead of restoring demo/design
+routes in the real app. This supplies the interactive all-state preview still
+missing from Plan-19/21/22/23; component mocks alone do not complete it.
+
+**Acceptance criteria**
+
+- [ ] Document a separate local entry using the real five-tab components for
+      Dashboard, daily summary/macros, objectives/goals, Stats, weight history,
+      Preferences and completed review/connections/comparison journeys.
+- [ ] Use actual source-backed foods and non-personal real package/label images.
+      Synthetic actors/personal histories are isolated development fixtures;
+      never invent foods/nutrients/photos, mutate live data or grant backend
+      reviewer privileges through preview actor selection.
+- [ ] Interactive journeys cover known/unknown scans, confirmation, photo review/
+      reuse, historical/no-goal and all calendar states, streaks, weight intervals,
+      themes, sharing/revocation and recovery while preserving date/meal. Simulated
+      detections do not count as physical-camera decoding evidence.
+- [ ] Loading/empty/error/validation/pending/success states work. Production ignores
+      preview switches and cannot install its transport; normal authenticated
+      navigation stays free of demo/filler routes.
+- [ ] Component/integration tests and a documented manual harness walkthrough pass.
+      Record authenticated database/hosted checks separately; preview success is
+      never substituted for persistence, ownership or provider verification.
+
+### Plan-23D Close functional mobile and design acceptance gaps
+
+- **Phase:** S3 W1 | **Due:** 2026-12-05, before Plan-23 freeze | **Estimate:** needs review
+- **Branch:** `/plan-23d` | **Depends on:** implemented Plan-18/19/19A/20/21/21A/22/23A, Plan-23B, Plan-23C
+
+Complete first-version mobile functionality and the remaining combined automated/
+human acceptance. Week 2 repeats quality checks and fixes defects; missing initial
+controls, navigation or behavior must already be completed before that week.
+
+**Acceptance criteria**
+
+- [ ] Human completes Dashboard -> Track/search/scan -> diary -> selected-day
+      summary -> goal edit -> Stats -> weight history -> Preferences, then review/
+      reuse and connection/comparison, on phone and desktop. Record device/browser,
+      steps, observations and unresolved functional blockers.
+- [ ] Calendar month/day controls, list/text alternatives and historical date/meal
+      preservation work; weight intervals/edit/remove and macro mode changes
+      retain units and review. Close remaining Plan-19/21/21A criteria with actual
+      interactions, including keyboard access and 200% zoom.
+- [ ] Check all eight Light/Dark x Green/Blue/Purple/Red combinations: charts, six
+      calendar shades, text/focus/errors, pending/disabled controls, tabs, safe
+      areas and mobile keyboard. Saved appearance survives refresh/account changes
+      without another account's theme or data flashing. Close Plan-23A gaps.
+- [ ] Blank/existing isolated accounts, retry/conflict/session expiry, back/refresh
+      and repeated taps work. All controls reach real destinations. Connections'
+      temporary Coming Soon... content is replaced when its functionality passes;
+      no other filler or dead actions remain.
+- [ ] Resolve missing initial functionality by December 5 and rerun affected
+      checks. Close owning criteria only with evidence. Record reproducible bugs
+      and owners for Week 2; do not relabel missing features as quality tickets
+      or mark unperformed human/device checks passed.
+
 ### Plan-23 Full initial-feature integration and freeze
 
 - **Phase:** S3 W1 | **Due:** 2026-12-05 | **Points:** 8
-- **Branch:** `/plan-23` | **Depends on:** Plan-11, Plan-12, Plan-18A, Plan-18, Plan-19, Plan-19A, Plan-20, Plan-21, Plan-21A, Plan-22, Plan-23A
+- **Branch:** `/plan-23` | **Depends on:** Plan-11, Plan-12, Plan-18A, Plan-18, Plan-19, Plan-19A, Plan-19B, Plan-20, Plan-21, Plan-21A, Plan-22, Plan-23A, Plan-23B, Plan-23C, Plan-23D
 
 **Acceptance criteria**
 
@@ -866,7 +1060,8 @@ is still pending, so those combined criteria remain unchecked.
       barcode reuse, goals/history, connections, and both calendars are integrated.
 - [ ] Every initial route and interaction is implemented with working navigation and data states; no
       future feature is left for Sprint 3 Week 2. Include Plan-19A daily summary,
-      Plan-21A weight history and Plan-23A Preferences/themes.
+      Plan-21A weight history and Plan-23A Preferences/themes, plus Plan-19B
+      objective completion and Plan-23B/23C/23D integration/preview/mobile closure.
 - [ ] Initial designs are fully implemented; frontend lint/test/build/format and backend
       lint/test/format pass with development smoke journeys.
 - [ ] Human reviews the feature milestone by December 5; remaining defects have reproduction steps
@@ -1020,7 +1215,8 @@ their combined result before release.
       photo intake and Plan-18A no-filler gate pass with private human-testing evidence.
 - [ ] December 5: submitted photos produce a reviewed catalog food/barcode reusable by another
       account; full automatic OCR is not implied.
-- [ ] December 5: all initial designs and functional stories pass; record feature freeze.
+- [ ] December 5: all initial designs and functional stories, including Plan-19B
+      and Plan-23B/23C/23D, pass with evidence; record the feature freeze.
 - [ ] December 6-12: only defect fixes and quality checks; record internal handoff.
 - [ ] December 13 onward: implement and verify all SECURE.md and LEGAL.md requirements.
 - [ ] Later: repeat affected product tests and obtain public-release approval.
