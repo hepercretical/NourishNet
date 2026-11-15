@@ -1,80 +1,116 @@
-| ------------------------------- | ---------- | --------------- |
-| Step                            | Date       | Hours & Minutes |
-| ------------------------------- | ---------- | --------------- |
-| Initial Setup:                  | 11/04/2026 | 0 Hr 0 Min      |
-| Daily total:                    | 11/09/2026 | 2 Hr 4 Min      |
-| Initial Setup:                  | 11/09/2026 |                 |
-| Plan-01:                        | 11/09/2026 |                 |
-| Plan-02:                        | 11/09/2026 | 0 Hr 03 Min     |
-| Plan-03:                        | 11/09/2026 |                 |
-| Plan-04:                        | 11/09/2026 | 0 Hr 08 Min     |
-| Plans 01-04 verification:       | 11/09/2026 | 0 Hr 08 Min     |
-| Plan-05:                        | 11/09/2026 |                 |
-| Plan-06:                        | 11/09/2026 |                 |
-| Plan-07:                        | 11/09/2026 |                 |
-| Plans 05-07 (shared):           | 11/09/2026 | 0 Hr 18 Min     |
-| Plan-08:                        | 11/09/2026 | 0 Hr 10 Min     |
-| Plan-09:                        | 11/09/2026 | 0 Hr 14 Min     |
-| Plan-10:                        | 11/09/2026 | 0 Hr 09 Min     |
-| Plan-11:                        | 11/09/2026 | 0 Hr 10 Min     |
-| Plan-12:                        | 11/09/2026 |                 |
-| Plan-13:                        | 11/09/2026 |                 |
-| Plans 12-13 (shared):           | 11/09/2026 | 0 Hr 16 Min     |
-| Sprint-1:                       | 11/09/2026 |                 |
-| Mobile UI/style guide:          | 11/09/2026 | 0 Hr 12 Min     |
-| Sprint planning:                | 11/09/2026 | 0 Hr 04 Min     |
-| All-screen UI update:           | 11/09/2026 | 0 Hr 07 Min     |
-| Security/ignore review:         | 11/09/2026 | 0 Hr 04 Min     |
-| Manual-test startup:            | 11/09/2026 | 0 Hr 01 Min     |
-| Daily total:                    | 11/12/2026 | 2 Hr 12 Min     |
-| Sprint 2/3 planning:            | 11/12/2026 | 0 Hr 07 Min     |
-| Plan-14A:                       | 11/12/2026 | 0 Hr 17 Min     |
-| Plan-14:                        | 11/12/2026 | 0 Hr 06 Min     |
-| Plan-15:                        | 11/12/2026 | 0 Hr 07 Min     |
-| Plan-16:                        | 11/12/2026 | 0 Hr 06 Min     |
-| Plan-17:                        | 11/12/2026 | 0 Hr 16 Min     |
-| Plan-18A:                       | 11/12/2026 | 0 Hr 17 Min     |
-| Signup age-copy update:         | 11/12/2026 | 0 Hr 03 Min     |
-| Security/ignore review:         | 11/12/2026 | 0 Hr 01 Min     |
-| Cleanup/test support:           | 11/12/2026 | 0 Hr 02 Min     |
-| Dashboard/Stats/Preferences UI: | 11/12/2026 | 0 Hr 44 Min     |
-| Catalog/Sprint 1-2 checks:      | 11/12/2026 | 0 Hr 06 Min     |
-| Daily total:                    | 11/13/2026 | 0 Hr 39 Min     |
-| Plan-15:                        | 11/13/2026 | 0 Hr 05 Min     |
-| Hosted release/ignore review:   | 11/13/2026 | 0 Hr 22 Min     |
-| Sprint 3/release follow-up:     | 11/13/2026 | 0 Hr 12 Min     |
-| Plan-16:                        | 11/14/2026 |                 |
-| Plan-17:                        | 11/15/2026 |                 |
-| Plan-18:                        | 11/16/2026 |                 |
-| Plan-19:                        | 11/17/2026 |                 |
-| Plan-20:                        | 11/18/2026 |                 |
-| Sprint-2:                       | 11/19/2026 |                 |
-| Plan-21:                        | 11/20/2026 |                 |
-| Plan-22:                        | 11/21/2026 |                 |
-| Plan-23:                        | 11/22/2026 |                 |
-| Plan-24:                        | 11/23/2026 |                 |
-| Plan-25:                        | 11/24/2026 |                 |
-| Plan-26:                        | 11/25/2026 |                 |
-| Plan-27:                        | 11/26/2026 |                 |
-| ------------------------------- | ---------- | --------------- |
+| Step                             | Date       | Hours & Minutes |
+| -------------------------------- | ---------- | --------------- |
+| Initial Setup:                   | 11/04/2026 | 0 Hr 0 Min      |
+| Daily total:                     | 11/09/2026 | 4 Hr 39 Min     |
+| Initial Setup:                   | 11/09/2026 | 0 Hr 12 Min     |
+| Plan-01:                         | 11/09/2026 | 0 Hr 17 Min     |
+| Plan-02:                         | 11/09/2026 | 0 Hr 38 Min     |
+| Plan-03:                         | 11/09/2026 | 0 Hr 48 Min     |
+| Plan-04:                         | 11/09/2026 | 0 Hr 25 Min     |
+| Plans 01-04 verification:        | 11/09/2026 | 0 Hr 08 Min     |
+| Plan-05:                         | 11/09/2026 |                 |
+| Plan-06:                         | 11/09/2026 |                 |
+| Plan-07:                         | 11/09/2026 |                 |
+| Plans 05-07 (shared):            | 11/09/2026 | 0 Hr 18 Min     |
+| Plan-08:                         | 11/09/2026 | 0 Hr 10 Min     |
+| Plan-09:                         | 11/09/2026 | 0 Hr 14 Min     |
+| Plan-10:                         | 11/09/2026 | 0 Hr 09 Min     |
+| Plan-11:                         | 11/09/2026 | 0 Hr 10 Min     |
+| Plan-12:                         | 11/09/2026 |                 |
+| Plan-13:                         | 11/09/2026 |                 |
+| Plans 12-13 (shared):            | 11/09/2026 | 0 Hr 16 Min     |
+| Sprint-1:                        | 11/09/2026 |                 |
+| Mobile UI/style guide:           | 11/09/2026 | 0 Hr 12 Min     |
+| Sprint planning:                 | 11/09/2026 | 0 Hr 20 Min     |
+| All-screen UI update:            | 11/09/2026 | 0 Hr 07 Min     |
+| Security/ignore review:          | 11/09/2026 | 0 Hr 13 Min     |
+| Manual-test startup:             | 11/09/2026 | 0 Hr 01 Min     |
+| Time-log maintenance:            | 11/09/2026 | 0 Hr 01 Min     |
+| Daily total:                     | 11/11/2026 | 2 Hr 06 Min     |
+| Sprint 1 review/UI update:       | 11/11/2026 | 0 Hr 32 Min     |
+| Security/ignore review:          | 11/11/2026 | 0 Hr 02 Min     |
+| Neon/Netlify setup and pipeline: | 11/11/2026 | 1 Hr 32 Min     |
+| Daily total:                     | 11/12/2026 | 2 Hr 52 Min     |
+| Sprint 2/3 planning:             | 11/12/2026 | 0 Hr 07 Min     |
+| Plan-14A:                        | 11/12/2026 | 0 Hr 17 Min     |
+| Plan-14:                         | 11/12/2026 | 0 Hr 06 Min     |
+| Plan-15:                         | 11/12/2026 | 0 Hr 07 Min     |
+| Plan-16:                         | 11/12/2026 | 0 Hr 06 Min     |
+| Plan-17:                         | 11/12/2026 | 0 Hr 16 Min     |
+| Plan-18A:                        | 11/12/2026 | 0 Hr 17 Min     |
+| Signup age-copy update:          | 11/12/2026 | 0 Hr 03 Min     |
+| Security/ignore review:          | 11/12/2026 | 0 Hr 06 Min     |
+| Cleanup/test support:            | 11/12/2026 | 0 Hr 02 Min     |
+| Dashboard/Stats/Preferences UI:  | 11/12/2026 | 0 Hr 44 Min     |
+| Catalog/Sprint 1-2 checks:       | 11/12/2026 | 0 Hr 06 Min     |
+| Neon/Netlify setup and pipeline: | 11/12/2026 | 0 Hr 35 Min     |
+| Daily total:                     | 11/13/2026 | 2 Hr 27 Min     |
+| Plan-15:                         | 11/13/2026 | 0 Hr 27 Min     |
+| Hosted release/ignore review:    | 11/13/2026 | 1 Hr 06 Min     |
+| Sprint 3/release follow-up:      | 11/13/2026 | 0 Hr 12 Min     |
+| Manual-test startup:             | 11/13/2026 | 0 Hr 13 Min     |
+| Guest testing access:            | 11/13/2026 | 0 Hr 14 Min     |
+| Guest testing/blank-screen fix:  | 11/13/2026 | 0 Hr 15 Min     |
+| Plan-16:                         | 11/14/2026 |                 |
+| Plan-17:                         | 11/15/2026 |                 |
+| Plan-18:                         | 11/16/2026 |                 |
+| Plan-19:                         | 11/17/2026 |                 |
+| Plan-20:                         | 11/18/2026 |                 |
+| Sprint-2:                        | 11/19/2026 |                 |
+| Plan-21:                         | 11/20/2026 |                 |
+| Plan-22:                         | 11/21/2026 |                 |
+| Plan-23:                         | 11/22/2026 |                 |
+| Plan-24:                         | 11/23/2026 |                 |
+| Plan-25:                         | 11/24/2026 |                 |
+| Plan-26:                         | 11/25/2026 |                 |
+| Plan-27:                         | 11/26/2026 |                 |
 
-Daily total rows are subtotals, not extra time. The detail rows for each recovered
-date add up to its existing daily total; no time was added twice.
+Daily total rows are subtotals, not extra time. Recorded detail rows add up to
+their daily total. Blank future-dated rows are retained and do not count as work.
+The November 4 initial-setup entry is preserved; no local session was recovered
+for that date, so no additional time is claimed.
 
-This is an estimated breakdown of recorded work-turn elapsed time, not an exact
-per-plan stopwatch. Plan-02 on November 9 covers local database restoration, and
-Plan-04 covers component organization/tests. Other initial implementation time
-without recoverable records remains blank. Plans 05-07 and 12-13 share entries
-because their implementation and tests overlapped.
+This is an estimate of recorded assistant work-turn elapsed time, not an exact
+per-plan stopwatch or human working time. Existing entries from the earlier
+review are preserved. The November 14, 2026 review adds this PC's locally stored
+Codex sessions, including additional work on dates and steps already logged:
 
-November 12 splits Plans 14A-18A at recorded progress/handoff timestamps. The
-November 13 Plan-15 entry is barcode follow-up; its earlier implementation is
-logged on November 12. Broader UI, planning, security, cleanup and release work
-has separate rows rather than being assigned to an unrelated plan. Existing
-future-dated blank rows are retained and do not count as recorded work.
+| Date | Previously recorded | Added from this PC | Combined daily total |
+| --- | --- | --- | --- |
+| 11/09/2026 | 2 Hr 04 Min | 2 Hr 35 Min | 4 Hr 39 Min |
+| 11/11/2026 | 0 Hr 00 Min | 2 Hr 06 Min | 2 Hr 06 Min |
+| 11/12/2026 | 2 Hr 12 Min | 0 Hr 40 Min | 2 Hr 52 Min |
+| 11/13/2026 | 0 Hr 39 Min | 1 Hr 48 Min | 2 Hr 27 Min |
+| Total | 4 Hr 55 Min | 7 Hr 09 Min | 12 Hr 04 Min |
 
-Times use America/Denver dates. Between-turn gaps and overlapping automated
-approval reviews are excluded. Minutes are apportioned by fractional remainder
-so rounded details preserve the rounded daily totals: November 9, 2 Hr 4 Min;
-November 12, 2 Hr 12 Min; November 13, 0 Hr 39 Min. Total: 4 Hr 55 Min.
-November 14 remains excluded, and existing edits to other entries are preserved.
+The summary above repeats the main table's totals; do not add it again. Matching
+date/step entries include both the existing time and this PC's additional time.
+For example, November 9 Plan-02 is 3 existing minutes plus 35 local minutes,
+for 0 Hr 38 Min. Shared Plans 05-07 and 12-13 remain shared because their earlier
+implementation and tests overlapped.
+
+The local review checked session metadata and turn timestamps in this Windows
+user's Codex sessions and archived_sessions folders, selecting NourishNet working
+directories. Ten matching session files contain completed or interrupted turns
+before today. Dates use America/Denver. November 14 and later are excluded,
+including this review. Session folder dates are not used as work dates: the
+November 11 thread also contains November 12 work.
+
+Between-turn gaps are excluded, and overlapping local turns count once. Where
+time-log maintenance overlaps implementation, that interval belongs to the
+implementation step. A stalled tool interval on November 13 from 11:03:35 to
+15:35:26 MST (4 Hr 31 Min 51 Sec) is excluded. Other in-turn tool execution and
+short waits remain part of the elapsed-time estimate. Local minutes are rounded
+by daily total and apportioned by fractional remainder so the detail rows agree.
+
+Initial Setup covers project guidance; Plan-01 covers scaffolding; Plan-02 covers
+schema/contracts and local database work; Plan-03 covers screen design/app shell;
+Plan-04 covers shared components and tests. Sprint planning includes renumbering
+and schedule changes. Broader UI, security, guest testing, pipeline and release
+work has its own portion instead of being assigned to an unrelated plan. The
+November 13 Plan-15 row combines barcode follow-up from both reviews.
+
+Only recoverable local records are claimed. Deleted sessions, other Windows
+profiles, and sessions not stored on this PC cannot be verified by this review.
+An ignored private audit records the local session IDs, turn intervals and added
+minutes so a later review can avoid adding these same sessions again.
