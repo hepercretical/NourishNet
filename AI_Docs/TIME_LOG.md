@@ -1,6 +1,5 @@
 | Step                             | Date       | Hours & Minutes |
 | -------------------------------- | ---------- | --------------- |
-| Initial Setup:                   | 11/04/2026 | 0 Hr 0 Min      |
 | Daily total:                     | 11/09/2026 | 4 Hr 39 Min     |
 | Initial Setup:                   | 11/09/2026 | 0 Hr 12 Min     |
 | Plan-01:                         | 11/09/2026 | 0 Hr 17 Min     |
@@ -8,18 +7,12 @@
 | Plan-03:                         | 11/09/2026 | 0 Hr 48 Min     |
 | Plan-04:                         | 11/09/2026 | 0 Hr 25 Min     |
 | Plans 01-04 verification:        | 11/09/2026 | 0 Hr 08 Min     |
-| Plan-05:                         | 11/09/2026 |                 |
-| Plan-06:                         | 11/09/2026 |                 |
-| Plan-07:                         | 11/09/2026 |                 |
 | Plans 05-07 (shared):            | 11/09/2026 | 0 Hr 18 Min     |
 | Plan-08:                         | 11/09/2026 | 0 Hr 10 Min     |
 | Plan-09:                         | 11/09/2026 | 0 Hr 14 Min     |
 | Plan-10:                         | 11/09/2026 | 0 Hr 09 Min     |
 | Plan-11:                         | 11/09/2026 | 0 Hr 10 Min     |
-| Plan-12:                         | 11/09/2026 |                 |
-| Plan-13:                         | 11/09/2026 |                 |
 | Plans 12-13 (shared):            | 11/09/2026 | 0 Hr 16 Min     |
-| Sprint-1:                        | 11/09/2026 |                 |
 | Mobile UI/style guide:           | 11/09/2026 | 0 Hr 12 Min     |
 | Sprint planning:                 | 11/09/2026 | 0 Hr 20 Min     |
 | All-screen UI update:            | 11/09/2026 | 0 Hr 07 Min     |
@@ -27,7 +20,7 @@
 | Manual-test startup:             | 11/09/2026 | 0 Hr 01 Min     |
 | Time-log maintenance:            | 11/09/2026 | 0 Hr 01 Min     |
 | Daily total:                     | 11/11/2026 | 2 Hr 06 Min     |
-| Sprint 1 review/UI update:       | 11/11/2026 | 0 Hr 32 Min     |
+| Review/UI update:                | 11/11/2026 | 0 Hr 32 Min     |
 | Security/ignore review:          | 11/11/2026 | 0 Hr 02 Min     |
 | Neon/Netlify setup and pipeline: | 11/11/2026 | 1 Hr 32 Min     |
 | Daily total:                     | 11/12/2026 | 2 Hr 52 Min     |
@@ -51,19 +44,10 @@
 | Manual-test startup:             | 11/13/2026 | 0 Hr 13 Min     |
 | Guest testing access:            | 11/13/2026 | 0 Hr 14 Min     |
 | Guest testing/blank-screen fix:  | 11/13/2026 | 0 Hr 15 Min     |
-| Plan-16:                         | 11/14/2026 |                 |
-| Plan-17:                         | 11/15/2026 |                 |
-| Plan-18:                         | 11/16/2026 |                 |
-| Plan-19:                         | 11/17/2026 |                 |
-| Plan-20:                         | 11/18/2026 |                 |
-| Sprint-2:                        | 11/19/2026 |                 |
-| Plan-21:                         | 11/20/2026 |                 |
-| Plan-22:                         | 11/21/2026 |                 |
-| Plan-23:                         | 11/22/2026 |                 |
-| Plan-24:                         | 11/23/2026 |                 |
-| Plan-25:                         | 11/24/2026 |                 |
-| Plan-26:                         | 11/25/2026 |                 |
-| Plan-27:                         | 11/26/2026 |                 |
+| Daily total:                     | 11/14/2026 | 0 Hr 11 Min     |
+| Time-log review and maintenance: | 11/14/2026 | 0 Hr 08 Min     |
+| Class-reflection README:         | 11/14/2026 | 0 Hr 02 Min     |
+| Documentation protection/rules: | 11/14/2026 | 0 Hr 01 Min     |
 
 Daily total rows are subtotals, not extra time. Recorded detail rows add up to
 their daily total. Blank future-dated rows are retained and do not count as work.
@@ -92,8 +76,9 @@ implementation and tests overlapped.
 The local review checked session metadata and turn timestamps in this Windows
 user's Codex sessions and archived_sessions folders, selecting NourishNet working
 directories. Ten matching session files contain completed or interrupted turns
-before today. Dates use America/Denver. November 14 and later are excluded,
-including this review. Session folder dates are not used as work dates: the
+before today. Dates use America/Denver. That historical review excluded November
+14 and later; today's separately calculated entry is documented below.
+Session folder dates are not used as work dates: the
 November 11 thread also contains November 12 work.
 
 Between-turn gaps are excluded, and overlapping local turns count once. Where
@@ -114,3 +99,19 @@ Only recoverable local records are claimed. Deleted sessions, other Windows
 profiles, and sessions not stored on this PC cannot be verified by this review.
 An ignored private audit records the local session IDs, turn intervals and added
 minutes so a later review can avoid adding these same sessions again.
+
+The November 14 entry covers this computer's recorded NourishNet work through
+6:15:07 PM America/Denver (2026-11-15T01:15:07Z). Time-log review and maintenance
+includes the earlier daily/history reviews, splitting time by work step, and
+today's update. README work includes the interrupted attempt and its continuation.
+Documentation rules cover protecting README.md and sprint_time_log.md and adding
+the daily TIME_LOG.md requirement. Another project's time review and its automated
+review session are excluded, even though their working directory was NourishNet.
+
+The unrounded portions are approximately 474.85, 97.02 and 59.58 seconds,
+respectively: 10 minutes 31 seconds in total, rounded to 11 minutes. Whole minutes
+are apportioned by fractional remainder so the breakdown equals the daily total.
+This is a partial-day estimate from local assistant records; later work and any
+unrecorded human work are not included. Resume counting after the cutoff above
+when updating this day again. The historical summary table above remains a
+summary of November 9-13 only.

@@ -133,10 +133,22 @@ scaffolding plan instead of silently substituting an unrelated command.
 - Do not run `npm audit fix --force`. Review a supported upstream fix before
   updating dependencies; do not automatically adopt an unsupported downgrade
   suggested by an audit tool.
-- Keep README.md focused on project information, local setup, configuration,
-  usage, and verification commands. Put agent workflow rules and approval
-  requirements in AGENTS.md, consolidating existing rules instead of duplicating
-  them in the README. Changes to AGENTS.md still require explicit human approval.
+- Do not edit README.md in future work. Preserve its completed class-reflection
+  template and content.
+- Do not edit sprint_time_log.md in future work. Preserve its existing content.
+- Update AI_Docs/TIME_LOG.md every day that NourishNet work is performed on the
+  current computer, keeping it current at the end of each work session. Include
+  all project work done on that computer during the day, across sessions, with
+  one daily total followed immediately by a breakdown of the steps or parts
+  worked on and the time spent on each. Use America/Denver dates. The breakdown
+  must add up to the daily total; exclude idle gaps and count overlapping work
+  only once. Use available local records or human-provided times, label estimates,
+  and report gaps instead of inventing time. Preserve existing entries and avoid
+  counting previously logged work again. This rule authorizes routine daily
+  updates to AI_Docs/TIME_LOG.md only; README.md and sprint_time_log.md remain
+  protected from edits.
+- Put agent workflow rules and approval requirements in AGENTS.md. Changes to
+  AGENTS.md still require explicit human approval.
 
 ## Tech stack
 
