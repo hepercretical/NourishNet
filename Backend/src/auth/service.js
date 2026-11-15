@@ -38,7 +38,12 @@ function publicAccount(record) {
   };
 }
 
-export function createAuthService({ repository, deliver, now = () => new Date() }) {
+export function createAuthService({
+  repository,
+  deliver,
+  now = () => new Date(),
+  allowGuest = false,
+}) {
   async function sendCode(record, purpose) {
     const code = token();
     await repository.issueToken(
@@ -51,6 +56,33 @@ export function createAuthService({ repository, deliver, now = () => new Date() 
   }
 
   return {
+    // Temporary synthetic local testing only; never use a shared guest identity.
+    async guest(body) {
+      if (!allowGuest) throw new AccountError('Guest testing is disabled.', 404);
+      if (Object.keys(body).length)
+        throw new AccountError('Guest testing takes no account details.');
+      const id = randomUUID();
+      const email = `guest-${id}@nourishnet.invalid`;
+      const record = await repository.createAccount({
+        id,
+        email,
+        displayName: 'Guest tester',
+        timeZone: 'America/Denver',
+        passwordHash: await hashPassword(token()),
+      });
+      if (!record) throw new AccountError('Guest testing could not start. Try again.', 503);
+      const verification = digest(token());
+      await repository.issueToken(id, 'verify', verification, new Date(now().getTime() + 60000));
+      if (!(await repository.consumeToken(email, 'verify', verification, now())))
+        throw new AccountError('Guest testing could not start. Try again.', 503);
+      const sessionToken = token();
+      await repository.createSession(
+        id,
+        digest(sessionToken),
+        new Date(now().getTime() + 8 * 3600000),
+      );
+      return { account: publicAccount(record), sessionToken };
+    },
     async signup(body) {
       const email = emailAddress(body.email);
       const password = passwordValue(body.password);

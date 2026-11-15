@@ -2,17 +2,21 @@
 const photoPath =
   /^\/api\/submissions\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/photos\/(front|label)$/i;
 const limit = 2 * 1024 * 1024;
+import { usesGuestSession } from './guestSession.js';
 export async function loadPrivatePhoto(path, { signal } = {}) {
   if (!photoPath.test(path)) throw new Error('Invalid photo address.');
-  const { neonToken } = await import('./neonAuth.js');
-  const token = await neonToken();
-  if (!token) throw new Error('Sign in again to view this photo.');
+  let token;
+  if (!usesGuestSession()) {
+    const { neonToken } = await import('./neonAuth.js');
+    token = await neonToken();
+    if (!token) throw new Error('Sign in again to view this photo.');
+  }
   const response = await fetch(path, {
     signal,
     cache: 'no-store',
     credentials: 'same-origin',
     redirect: 'error',
-    headers: { Authorization: `Bearer ${token}` },
+    ...(token ? { headers: { Authorization: `Bearer ${token}` } } : {}),
   });
   const type = response.headers.get('content-type');
   if (

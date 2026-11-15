@@ -27,6 +27,30 @@ async function registered(body = draft) {
   return service.login(body);
 }
 describe('local synthetic accounts', () => {
+  it('disables guest creation by default', async () => {
+    await expect(service.guest({})).rejects.toMatchObject({ status: 404 });
+    expect(repository.accounts.size).toBe(0);
+  });
+  it('creates separate guest owners with expiring revocable sessions and no delivered codes', async () => {
+    const guest = createAuthService({
+      repository,
+      deliver: vi.fn(),
+      now: () => time,
+      allowGuest: true,
+    });
+    await expect(guest.guest({ id: 'another-owner' })).rejects.toMatchObject({ status: 400 });
+    const first = await guest.guest({});
+    const second = await guest.guest({});
+    expect(first.account).toMatchObject({ displayName: 'Guest tester', sharing: false });
+    expect(first.account.id).not.toBe(second.account.id);
+    expect(await guest.session(first.sessionToken)).toEqual(first.account);
+    expect(messages).toEqual([]);
+    await guest.logout(first.sessionToken);
+    await expect(guest.session(first.sessionToken)).rejects.toMatchObject({ status: 401 });
+    expect(await guest.session(second.sessionToken)).toEqual(second.account);
+    time = new Date(time.getTime() + 8 * 3600000);
+    await expect(guest.session(second.sessionToken)).rejects.toMatchObject({ status: 401 });
+  });
   it('stores salted password hashes and only token digests, verifies once and creates a private account session', async () => {
     const { account, sessionToken } = await registered();
     expect(account).toMatchObject({ displayName: 'Avery Fiction', sharing: false });

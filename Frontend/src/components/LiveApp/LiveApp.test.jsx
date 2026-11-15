@@ -1,9 +1,10 @@
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import LiveApp from './LiveApp.jsx';
 import { accountRequest } from '../../services/accounts.js';
 vi.mock('../../services/accounts.js', () => ({ accountRequest: vi.fn() }));
+afterEach(() => vi.unstubAllEnvs());
 beforeEach(() => {
   accountRequest.mockReset();
   sessionStorage.clear();
@@ -26,6 +27,25 @@ const diary = {
   totals: { calories: 10 },
   meals: [],
 };
+it('continues as a guest into the actual tracker and clears it on sign out', async () => {
+  vi.stubEnv('DEV', false);
+  const user = userEvent.setup();
+  accountRequest.mockImplementation(async (path) => {
+    if (path === '/auth/session') throw Object.assign(new Error(), { status: 401 });
+    if (path === '/auth/guest') return { account: { ...account, displayName: 'Guest tester' } };
+    if (path.startsWith('/diary')) return diary;
+    if (path === '/auth/logout') return null;
+    return {};
+  });
+  render(<LiveApp route="/app/login" />);
+  await user.click(await screen.findByRole('button', { name: 'Continue as guest' }));
+  expect(accountRequest).toHaveBeenCalledWith('/auth/guest', { body: {} });
+  expect(window.location.hash).toBe('#/app/dashboard');
+  expect(await screen.findByRole('button', { name: 'Sign out' })).toBeVisible();
+  expect(screen.getByRole('status')).toHaveTextContent('Guest testing session');
+  await user.click(screen.getByRole('button', { name: 'Sign out' }));
+  expect(await screen.findByRole('button', { name: 'Continue as guest' })).toBeVisible();
+});
 it.each(['login', 'signup', 'verify', 'recover', 'reset'])(
   'keeps toolbar and five tabs on the %s account screen with a working skip link',
   async (mode) => {

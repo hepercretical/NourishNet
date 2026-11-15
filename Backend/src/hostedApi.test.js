@@ -1,6 +1,8 @@
 import { beforeEach, expect, it, vi } from 'vitest';
 import { createHostedApi } from './hostedApi.js';
 import { AccountError } from './auth/service.js';
+import { createAuthService } from './auth/service.js';
+import { testRepository } from './auth/testRepository.js';
 import handler from '../../netlify/functions/api.mjs';
 
 const origin = 'https://app.example.test';
@@ -34,6 +36,48 @@ function request(path, body, method = body ? 'POST' : 'GET', from = origin) {
 it('serves hosted health without any credentials or database', async () => {
   expect(await (await handler(request('/health'))).json()).toEqual({ status: 'ok' });
   expect(verify).not.toHaveBeenCalled();
+});
+it('requires explicit hosted guest enablement before any account is created', async () => {
+  expect((await api(request('/auth/guest', {}))).status).toBe(404);
+  expect(verify).not.toHaveBeenCalled();
+});
+it('creates isolated hosted guests with private cookies, refresh and revocable logout', async () => {
+  services.guestAuth = createAuthService({ repository: testRepository(), allowGuest: true });
+  api = createHostedApi({ verify, getServices: () => services, origin, allowGuest: true });
+  expect((await api(request('/auth/guest', {}, 'POST', 'https://wrong.test'))).status).toBe(403);
+  const first = await api(request('/auth/guest', {}));
+  expect(first.status).toBe(200);
+  expect(first.headers.get('set-cookie')).toContain('HttpOnly; Secure; SameSite=Strict');
+  const firstBody = await first.json();
+  expect(firstBody.sessionToken).toBeUndefined();
+  const second = await api(request('/auth/guest', {}));
+  const secondBody = await second.json();
+  expect(firstBody.account.id).not.toBe(secondBody.account.id);
+  const cookie = first.headers.get('set-cookie').split(';')[0];
+  const secondCookie = second.headers.get('set-cookie').split(';')[0];
+  const withCookie = (path, value, body) => {
+    const req = request(path, body);
+    req.headers.set('Cookie', value);
+    return req;
+  };
+  expect(await (await api(withCookie('/auth/session', cookie))).json()).toMatchObject(firstBody);
+  await api(withCookie('/diary?date=2026-11-13', cookie));
+  await api(withCookie('/diary?date=2026-11-13', secondCookie));
+  expect(services.diary.get.mock.calls.map(([owner]) => owner.id)).toEqual([
+    firstBody.account.id,
+    secondBody.account.id,
+  ]);
+  expect(verify).not.toHaveBeenCalled();
+  const managed = withCookie('/auth/session', cookie);
+  managed.headers.set('Authorization', 'Bearer managed-test-token');
+  expect(await (await api(managed)).json()).toMatchObject({ account });
+  expect(verify).toHaveBeenCalledOnce();
+  const logout = await api(withCookie('/auth/logout', cookie, {}));
+  expect(logout.status).toBe(204);
+  expect(logout.headers.get('set-cookie')).toContain('Max-Age=0');
+  expect((await api(withCookie('/auth/session', cookie))).status).toBe(401);
+  expect((await api(withCookie('/auth/session', 'nourishnet_guest=forged'))).status).toBe(401);
+  expect((await api(withCookie('/auth/session', secondCookie))).status).toBe(200);
 });
 it('rejects methods and unknown routes without authenticating or loading services', async () => {
   expect((await api(request('/missing'))).status).toBe(404);

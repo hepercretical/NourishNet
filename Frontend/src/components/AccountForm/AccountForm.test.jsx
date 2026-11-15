@@ -3,6 +3,58 @@ import userEvent from '@testing-library/user-event';
 import { expect, it, vi } from 'vitest';
 import AccountForm from './AccountForm.jsx';
 
+it('opens a guest diary by keyboard without requiring sign-in fields and prevents repeat requests', async () => {
+  const user = userEvent.setup();
+  let reject;
+  const guest = vi
+    .fn()
+    .mockImplementationOnce(
+      () =>
+        new Promise((_yes, no) => {
+          reject = no;
+        }),
+    )
+    .mockResolvedValueOnce({});
+  render(<AccountForm mode="login" onSubmit={vi.fn()} onGuest={guest} />);
+  const button = screen.getByRole('button', { name: 'Continue as guest' });
+  button.focus();
+  await user.keyboard('{Enter}');
+  expect(guest).toHaveBeenCalledTimes(1);
+  expect(button).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'Please wait…' })).toBeDisabled();
+  await user.click(button);
+  expect(guest).toHaveBeenCalledTimes(1);
+  await act(async () => reject(new Error('Guest testing could not start. Try again.')));
+  expect(screen.getByRole('alert')).toHaveTextContent('Try again');
+  await user.click(button);
+  expect(guest).toHaveBeenCalledTimes(2);
+});
+
+it.each([{ mode: 'signup' }, { mode: 'login' }])(
+  'keeps guest testing out of unrelated or hosted forms: %j',
+  (props) => {
+    render(
+      <AccountForm
+        onSubmit={vi.fn()}
+        {...(props.mode === 'signup' || props.hosted ? { onGuest: vi.fn() } : {})}
+        {...props}
+      />,
+    );
+    expect(screen.queryByRole('button', { name: 'Continue as guest' })).not.toBeInTheDocument();
+  },
+);
+
+it('offers the temporary guest option beside sign in in hosted builds', async () => {
+  const guest = vi.fn().mockResolvedValue({});
+  const user = userEvent.setup();
+  render(<AccountForm mode="login" hosted onSubmit={vi.fn()} onGuest={guest} />);
+  expect(screen.getByRole('button', { name: 'Sign in' }).parentElement).toBe(
+    screen.getByRole('button', { name: 'Continue as guest' }).parentElement,
+  );
+  await user.click(screen.getByRole('button', { name: 'Continue as guest' }));
+  expect(guest).toHaveBeenCalledOnce();
+});
+
 it('accepts a six-digit hosted verification code and explains mailbox delivery', async () => {
   const user = userEvent.setup();
   const submit = vi.fn().mockResolvedValue({});

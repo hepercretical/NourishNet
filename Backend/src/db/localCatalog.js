@@ -100,7 +100,8 @@ export function validateCatalog(value) {
   return value;
 }
 
-// Called only by the explicit, checksum-confirmed local catalog command. It
+// Shared transaction for explicit, checksum-confirmed catalog releases. Callers
+// validate their approved local/hosted target before supplying the client. It
 // neither opens a connection nor creates identities/diary entries itself.
 export async function importLocalCatalog(client, input) {
   const catalog = validateCatalog(input);

@@ -36,7 +36,7 @@ async function bodyOf(request, limit = 8192) {
   }
 }
 
-export function createHostedApi({ verify, getServices, origin }) {
+export function createHostedApi({ verify, getServices, origin, allowGuest = false }) {
   return async (request) => {
     const url = new URL(request.url);
     const path = url.pathname;
@@ -46,7 +46,7 @@ export function createHostedApi({ verify, getServices, origin }) {
       feature?.methods ??
       (path === '/api/diary'
         ? ['GET', 'POST']
-        : path === '/api/auth/profile'
+        : ['/api/auth/profile', '/api/auth/guest', '/api/auth/logout'].includes(path)
           ? ['POST']
           : entry
             ? ['PATCH', 'DELETE']
@@ -60,11 +60,40 @@ export function createHostedApi({ verify, getServices, origin }) {
     try {
       if (request.method !== 'GET' && request.headers.get('origin') !== origin)
         throw new AccountError('Use the approved app origin.', 403);
-      const identity = await verify(request);
+      if (path === '/api/auth/guest' && !allowGuest)
+        throw new AccountError('Guest testing is disabled.', 404);
       const services = getServices();
+      const guestCookie = (request.headers.get('cookie') || '')
+        .split(';')
+        .map((part) => part.trim())
+        .find((part) => part.startsWith('nourishnet_guest='))
+        ?.slice('nourishnet_guest='.length);
+      const cookie = (value, age) =>
+        `nourishnet_guest=${value}; HttpOnly; Secure; SameSite=Strict; Path=/api; Max-Age=${age}`;
+      if (path === '/api/auth/guest') {
+        const body = await bodyOf(request);
+        const result = await services.guestAuth.guest(body);
+        return json({ account: result.account }, 200, {
+          'Set-Cookie': cookie(result.sessionToken, 8 * 3600),
+        });
+      }
+      if (path === '/api/auth/logout') {
+        if (guestCookie) await services.guestAuth.logout(guestCookie);
+        return new Response(null, {
+          status: 204,
+          headers: { 'Cache-Control': 'no-store', 'Set-Cookie': cookie('', 0) },
+        });
+      }
+      // Bearer-authenticated accounts never inherit another guest's cookie.
+      const guest = allowGuest && guestCookie && !request.headers.has('authorization');
+      const identity = guest ? null : await verify(request);
+      if (path === '/api/auth/profile' && guest)
+        throw new AccountError('Guest accounts do not need onboarding.', 400);
       if (path === '/api/auth/profile')
         return json({ account: await services.accounts.onboard(identity, await bodyOf(request)) });
-      const account = await services.accounts.find(identity);
+      const account = guest
+        ? await services.guestAuth.session(guestCookie)
+        : await services.accounts.find(identity);
       if (path === '/api/auth/session') return json({ account, needsProfile: !account });
       if (!account) throw new AccountError('Complete your account setup.', 403);
       if (feature)

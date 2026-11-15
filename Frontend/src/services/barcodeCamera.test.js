@@ -10,15 +10,19 @@ const { decode, Reader } = vi.hoisted(() => {
   };
 });
 vi.mock('@zxing/browser', () => ({ BrowserMultiFormatReader: Reader }));
-vi.mock('@zxing/library', () => ({
-  BarcodeFormat: { UPC_A: 1, EAN_13: 2, EAN_8: 3, ITF: 4 },
-  DecodeHintType: { POSSIBLE_FORMATS: 1 },
+vi.mock('./barcodeFrameDecoder.js', () => ({
+  barcodeHints: new Map([
+    [1, [1, 2, 3, 4]],
+    [2, true],
+  ]),
+  createBarcodeFrameDecoder: vi.fn(() => vi.fn()),
+  isBarcodeMiss: (error) => error.name === 'NotFoundException',
 }));
 let tracks, stream, video, media, controls;
 beforeEach(() => {
   vi.clearAllMocks();
   tracks = [{ stop: vi.fn() }];
-  stream = { getTracks: () => tracks };
+  stream = { getTracks: () => tracks, getVideoTracks: () => tracks };
   video = document.createElement('video');
   media = vi.fn().mockResolvedValue(stream);
   controls = { stop: vi.fn() };
@@ -32,7 +36,11 @@ it('requests video only, limits barcode formats, and stops all resources after o
   await openBarcodeCamera(video, found, { signal: controller.signal });
   expect(media).toHaveBeenCalledWith({
     audio: false,
-    video: { facingMode: { ideal: 'environment' } },
+    video: {
+      facingMode: { ideal: 'environment' },
+      width: { ideal: 1920 },
+      height: { ideal: 1080 },
+    },
   });
   const callback = decode.mock.calls[0][2];
   callback({ getText: () => '030000010204' }, null, controls);
@@ -61,11 +69,31 @@ it('releases the stream on navigation abort and ignores ordinary no-match frames
   const controller = new AbortController(),
     found = vi.fn();
   await openBarcodeCamera(video, found, { signal: controller.signal });
-  decode.mock.calls[0][2](undefined, new Error('no barcode in this frame'), controls);
+  decode.mock.calls[0][2](
+    undefined,
+    Object.assign(new Error('no barcode in this frame'), { name: 'NotFoundException' }),
+    controls,
+  );
   expect(found).not.toHaveBeenCalled();
   controller.abort();
   expect(tracks[0].stop).toHaveBeenCalled();
   expect(controls.stop).toHaveBeenCalled();
+});
+it('uses continuous focus when supported without failing cameras that reject optional constraints', async () => {
+  tracks[0].getCapabilities = () => ({ focusMode: ['continuous', 'manual'] });
+  tracks[0].applyConstraints = vi.fn().mockRejectedValue(new Error('not supported'));
+  await openBarcodeCamera(video, vi.fn());
+  expect(tracks[0].applyConstraints).toHaveBeenCalledWith({
+    advanced: [{ focusMode: 'continuous' }],
+  });
+  expect(decode).toHaveBeenCalledOnce();
+});
+it('reports fatal decoding failures instead of leaving an apparently active preview', async () => {
+  const error = vi.fn();
+  await openBarcodeCamera(video, vi.fn(), { onError: error });
+  decode.mock.calls[0][2](undefined, new Error('canvas failure'), controls);
+  expect(error).toHaveBeenCalledOnce();
+  expect(tracks[0].stop).toHaveBeenCalled();
 });
 it('releases camera tracks if decoder initialization fails', async () => {
   decode.mockRejectedValueOnce(new Error('decoder unavailable'));

@@ -1,5 +1,6 @@
 import { getPreviewTransport } from './previewTransport.js';
 import { usesNeonAuth } from './hostedConfig.js';
+import { setGuestSession, usesGuestSession } from './guestSession.js';
 
 const base = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '');
 
@@ -9,7 +10,8 @@ export async function accountRequest(path, { body, signal, method } = {}) {
     return previewTransport(path, { body, signal, method });
   }
   let token;
-  if (usesNeonAuth) {
+  const guest = usesGuestSession();
+  if (usesNeonAuth && path !== '/auth/guest' && !guest) {
     const { neonAuthRequest, neonToken } = await import('./neonAuth.js');
     if (path === '/personal/password') return neonAuthRequest(path, body);
     if (path.startsWith('/auth/') && !['/auth/session', '/auth/profile'].includes(path)) {
@@ -45,6 +47,7 @@ export async function accountRequest(path, { body, signal, method } = {}) {
     throw new Error('Cannot reach the local API. Your input is kept. Try again.', { cause: error });
   }
   if (!response.ok) {
+    if (response.status === 401 && guest) setGuestSession(false);
     const error = new Error(
       response.status === 401
         ? 'Email or password is incorrect, or your session expired. Sign in again.'
@@ -63,5 +66,8 @@ export async function accountRequest(path, { body, signal, method } = {}) {
       window.dispatchEvent(new Event('nourishnet:expired'));
     throw error;
   }
-  return response.status === 204 ? null : response.json();
+  const result = response.status === 204 ? null : await response.json();
+  if (path === '/auth/guest') setGuestSession(true);
+  if (path === '/auth/logout') setGuestSession(false);
+  return result;
 }

@@ -9,6 +9,7 @@ export default async function handler(request) {
     origin: process.env.APP_ORIGIN,
     verify: (req) => (verify ??= neonVerifier())(req),
     getServices: () => (services ??= hostedServices()),
+    allowGuest: process.env.GUEST_TESTING_ENABLED === 'true',
   });
   return api(request);
 }
